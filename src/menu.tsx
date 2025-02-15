@@ -73,6 +73,28 @@ const menu: MenuItem[] = [
 		],
 	},
 	{
+		label: "RBAC 管理",
+		key: "rbac",
+		icon: "shield",
+		children: [
+			{
+				label: "API 路径",
+				key: "api-path",
+				icon: "api",
+			},
+			{
+				label: "角色",
+				key: "role",
+				icon: "badge",
+			},
+			{
+				label: "用户的角色",
+				key: "user-roles",
+				icon: "person",
+			},
+		],
+	},
+	{
 		label: "预生产环境密钥",
 		key: "stg-secret",
 		icon: "key",

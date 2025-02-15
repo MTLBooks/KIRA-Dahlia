@@ -18,6 +18,7 @@
 					<Logo />
 					<NFlex class="items-center">
 						<NFlex class="items-center gap-1.5">
+							<!-- TODO: 头像的链接计算... 要根据生产环境还是测试环境计算吗？ -->
 							<NAvatar round :size="20" />
 							<span>{{ selfUserInfoStore.userNickname }}</span>
 							<span class="text-slate-500">@{{ selfUserInfoStore.username }}</span>

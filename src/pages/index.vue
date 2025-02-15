@@ -29,7 +29,7 @@
 			<NCard title="登录">
 				<NForm>
 					<NFormItem label="邮箱">
-						<NInput v-model:value="email" placeholder="请输入邮箱" type="email" />
+						<NInput v-model:value="email" placeholder="请输入邮箱" type="text" />
 					</NFormItem>
 					<NFormItem label="密码">
 						<NInput v-model:value="password" placeholder="请输入密码" type="password" />
@@ -39,6 +39,10 @@
 					</div>
 				</NForm>
 			</NCard>
+		</div>
+		<div v-else>
+			<p>你已登录</p>
+			<p>你的角色是：{{ selfUserInfoStore.roles }}</p>
 		</div>
 	</div>
 </template>

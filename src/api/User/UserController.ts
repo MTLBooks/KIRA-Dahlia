@@ -30,7 +30,7 @@ export const getSelfUserInfo = async (getSelfUserInfoRequest?: GetSelfUserInfoRe
 		selfUserInfoStore.isLogined = true;
 		selfUserInfoStore.uid = selfUserInfoResult.uid;
 		selfUserInfoStore.userCreateDateTime = selfUserInfoResult.userCreateDateTime ?? 0;
-		selfUserInfoStore.role = selfUserInfoResult.role ?? "user";
+		selfUserInfoStore.roles = selfUserInfoResult.roles ?? ["user"];
 		selfUserInfoStore.userEmail = selfUserInfoResult.email ?? "";
 		selfUserInfoStore.userAvatar = selfUserInfoResult.avatar || "";
 		selfUserInfoStore.username = selfUserInfoResult.username || "Anonymous"; // TODO: 使用多语言，为未设置用户名的用户提供国际化的缺省用户名
@@ -64,7 +64,7 @@ export async function userLogout(): Promise<UserLogoutResponseDto> {
 		selfUserInfoStore.isLogined = false;
 		selfUserInfoStore.uid = undefined;
 		selfUserInfoStore.userCreateDateTime = 0;
-		selfUserInfoStore.role = "user";
+		selfUserInfoStore.roles = ["user"];
 		selfUserInfoStore.userEmail = "";
 		selfUserInfoStore.userAvatar = "";
 		selfUserInfoStore.username = "";
