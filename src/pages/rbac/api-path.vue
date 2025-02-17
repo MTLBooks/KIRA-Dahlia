@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { getRbacApiPath } from "../../api/Rbac/RbacController";
+	// import { getRbacApiPath } from "../../api/Rbac/RbacController";
 	import { DeleteRbacApiPathRequestDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto } from "api/Rbac/RbacControllerDto";
 	import { DataTableColumns, NButton, NTag } from "naive-ui";
 
@@ -65,7 +65,7 @@
 	/**
 	 * 获取 RBAC API 路径
 	 */
-	async function getRbacApi() {
+	async function fetchRbacApiPath() {
 		const getRbacApiPathRequest: GetRbacApiPathRequestDto = {
 			search: {},
 			pagination: {
@@ -93,10 +93,10 @@
 		if (!deleteRbacApiPathResult.success)
 			console.error("ERROR", "删除 RBAC API 路径失败。");
 
-		await getRbacApi();
+		await fetchRbacApiPath();
 	}
 
-	onMounted(getRbacApi);
+	onMounted(fetchRbacApiPath);
 </script>
 
 <template>
@@ -124,6 +124,7 @@
 			:data="rbacApiPath"
 			:pagination="false"
 			:bordered="false"
+			:rowKey="row => row.apiPath"
 		/>
 	</div>
 </template>
