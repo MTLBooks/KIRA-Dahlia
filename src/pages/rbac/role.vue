@@ -130,14 +130,21 @@
 			<n-collapse-item title="使用说明" name="1">
 				<p>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</p>
 				<ul>
-					<li>一个用户可以拥有多个角色</li>
-					<li>一个角色可以对应多位用户</li>
-					<li>一个角色可以拥有对多个 API 的访问权限</li>
-					<li>一个 API 可以对应多个角色</li>
+					<li class="ml-[20px] mt-[5px]">一个用户可以拥有多个角色</li>
+					<li class="ml-[20px]">一个角色可以对应多位用户</li>
+					<li class="ml-[20px]">一个角色可以拥有对多个 API 的访问权限</li>
+					<li class="ml-[20px]">一个 API 可以对应多个角色</li>
 				</ul>
 				<br />
-				<p>你可以添加新的 API 路径，前提是后端中该 API 的 Controller 层受 RBAC 管制，否则添加 API 路径无效。</p>
-				<p>你也可以删除 API 路径，前提是该 API 路径没有绑定到任何角色。</p>
+				<p>你可以添加或删除角色。</p>
+				<p>拥有以下特殊名称的角色具有特殊效果，在创建、分配和删除时请多加注意：</p>
+				<ul>
+					<li class="ml-[20px] mt-[5px]">root - 拥有 RBAC 的管理权限</li>
+					<li class="ml-[20px]">adminsitrator - 拥有对内容管理权限</li>
+					<li class="ml-[20px]">developer - 拥有某些开发资源的访问权限</li>
+					<li class="ml-[20px]">user - 普通用户</li>
+					<li class="ml-[20px]">blocked - 已封禁的用户</li>
+				</ul>
 				<n-divider />
 			</n-collapse-item>
 		</n-collapse>
