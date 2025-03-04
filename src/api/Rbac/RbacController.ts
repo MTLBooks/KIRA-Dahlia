@@ -1,4 +1,4 @@
-import { DeleteRbacApiPathRequestDto, DeleteRbacApiPathResponseDto, DeleteRbacRoleRequestDto, DeleteRbacRoleResponseDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "./RbacControllerDto";
+import { AdminGetUserRolesByUidRequestDto, AdminGetUserRolesByUidResponseDto, DeleteRbacApiPathRequestDto, DeleteRbacApiPathResponseDto, DeleteRbacRoleRequestDto, DeleteRbacRoleResponseDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "./RbacControllerDto";
 
 const BACK_END_URL = getCorrectUri();
 const RBAC_API_URL = `${BACK_END_URL}/rbac`;
@@ -42,3 +42,23 @@ export const deleteRbacRole = async (deleteRbacRoleRequest: DeleteRbacRoleReques
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	return await DELETE(`${RBAC_API_URL}/deleteRbacRole`, deleteRbacRoleRequest, { credentials: "include" }) as DeleteRbacRoleResponseDto;
 };
+
+/**
+ * 通过 UID 获取一个用户的角色
+ * @param adminGetUserRolesByUidRequest 通过 UID 获取一个用户的角色的请求载荷
+ * @returns 通过 UID 获取一个用户的角色的请求响应
+ */
+export const adminGetUserRoles = async (adminGetUserRolesByUidRequest: AdminGetUserRolesByUidRequestDto): Promise<AdminGetUserRolesByUidResponseDto> => {
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	return await GET(`${RBAC_API_URL}/adminGetUserRolesByUid?uid=${adminGetUserRolesByUidRequest.uid}`, { credentials: "include" }) as AdminGetUserRolesByUidResponseDto;
+};
+
+// /**
+//  * 删除 RBAC 角色
+//  * @param deleteRbacRoleRequest 删除 RBAC 角色的请求载荷
+//  * @returns 删除结果
+//  */
+// export const deleteRbacRole = async (deleteRbacRoleRequest: DeleteRbacRoleRequestDto): Promise<DeleteRbacRoleResponseDto> => {
+// 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+// 	return await DELETE(`${RBAC_API_URL}/deleteRbacRole`, deleteRbacRoleRequest, { credentials: "include" }) as DeleteRbacRoleResponseDto;
+// };
