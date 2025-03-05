@@ -73,7 +73,7 @@
 				pageSize: 1000,
 			},
 		};
-		const rbacApiPathResult = await getRbacApiPath(getRbacApiPathRequest);
+		const rbacApiPathResult = await getRbacApiPathController(getRbacApiPathRequest);
 		if (rbacApiPathResult.success)
 			rbacApiPath.value = rbacApiPathResult.result;
 		else
@@ -89,7 +89,7 @@
 			apiPath,
 		};
 
-		const deleteRbacApiPathResult = await deleteRbacApiPath(deleteRbacApiPathRequest);
+		const deleteRbacApiPathResult = await deleteRbacApiPathController(deleteRbacApiPathRequest);
 		if (!deleteRbacApiPathResult.success)
 			console.error("ERROR", "删除 RBAC API 路径失败。");
 

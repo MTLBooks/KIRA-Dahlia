@@ -98,7 +98,7 @@
 				pageSize: 1000,
 			},
 		};
-		const rbacRoleResult = await getRbacRole(getRbacRoleRequest);
+		const rbacRoleResult = await getRbacRoleController(getRbacRoleRequest);
 		if (rbacRoleResult.success)
 			rbacRole.value = rbacRoleResult.result;
 		else
@@ -114,7 +114,7 @@
 			roleName,
 		};
 
-		const deleteRbacApiPathResult = await deleteRbacRole(deleteRbacRoleRequest);
+		const deleteRbacApiPathResult = await deleteRbacRoleController(deleteRbacRoleRequest);
 		if (!deleteRbacApiPathResult.success)
 			console.error("ERROR", "删除 RBAC 角色失败。");
 

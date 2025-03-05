@@ -1,9 +1,10 @@
 <script setup lang="ts">
 	// import { getRbacApiPath } from "../../api/Rbac/RbacController";
-	import { AdminGetUserRolesByUidRequestDto, AdminGetUserRolesByUidResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "api/Rbac/RbacControllerDto";
+	import { AdminUpdateUserRoleRequestDto, AdminGetUserRolesByUidRequestDto, AdminGetUserRolesByUidResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "api/Rbac/RbacControllerDto";
 	import { NButton } from "naive-ui";
 
 	const isEnableEditUserRole = ref(false);
+	const isShowSubmitUserRolesModal = ref(false);
 	const inputUid = ref<number>();
 
 	type RbacRole = GetRbacRoleResponseDto["result"];
@@ -15,16 +16,22 @@
 		};
 	}));
 
-	const userRoles = ref<AdminGetUserRolesByUidResponseDto["result"]>();
+	// const userRoles = ref<AdminGetUserRolesByUidResponseDto["result"]>();
 
-	const userRolesFormModel = computed(() => {
-		return {
-			uid: userRoles.value?.uid,
-			uuid: userRoles.value?.uuid,
-			username: userRoles.value?.username,
-			userNickname: userRoles.value?.userNickname,
-			userRoles: userRoles.value?.roles.map(role => role.roleName),
-		};
+	const userRolesFormModel = ref<
+		{
+			uid: number | undefined;
+			uuid: string | undefined;
+			username: string | undefined;
+			userNickname: string | undefined;
+			userRoles: string[] | undefined;
+		}
+	>({
+		uid: undefined,
+		uuid: undefined,
+		username: undefined,
+		userNickname: undefined,
+		userRoles: undefined,
 	});
 
 	/**
@@ -36,9 +43,15 @@
 		const adminGetUserRolesByUidRequest: AdminGetUserRolesByUidRequestDto = {
 			uid: inputUid.value ?? 0,
 		};
-		const userRolesResult = await adminGetUserRoles(adminGetUserRolesByUidRequest);
+		const userRolesResult = await adminGetUserRolesController(adminGetUserRolesByUidRequest);
 		if (userRolesResult.success)
-			userRoles.value = userRolesResult.result;
+			userRolesFormModel.value = {
+				uid: userRolesResult.result?.uid,
+				uuid: userRolesResult.result?.uuid,
+				username: userRolesResult.result?.username,
+				userNickname: userRolesResult.result?.userNickname,
+				userRoles: userRolesResult.result?.roles.map(role => role.roleName),
+			};
 	}
 	
 	/**
@@ -52,11 +65,28 @@
 				pageSize: 1000,
 			},
 		};
-		const rbacRoleResult = await getRbacRole(getRbacRoleRequest);
+		const rbacRoleResult = await getRbacRoleController(getRbacRoleRequest);
 		if (rbacRoleResult.success)
 			rbacRole.value = rbacRoleResult.result;
 		else
 			console.error("ERROR", "获取 RBAC 角色失败。");
+	}
+
+	async function adminUpdateUserRoles() {
+		if (!userRolesFormModel.value.uuid || !userRolesFormModel.value.userRoles) return;
+
+		const adminUpdateUserRoleRequest: AdminUpdateUserRoleRequestDto = {
+			uuid: userRolesFormModel.value.uuid,
+			newRoles: userRolesFormModel.value.userRoles,
+		};
+
+		const adminUpdateUserRolesResult = await adminUpdateUserRoleController(adminUpdateUserRoleRequest);
+
+		if (adminUpdateUserRolesResult.success) {
+			await adminFetchUserRole();
+			isEnableEditUserRole.value = false;
+			isShowSubmitUserRolesModal.value = false;
+		}
 	}
 
 	onMounted(fetchRbacRole);
@@ -89,7 +119,7 @@
 			</n-collapse-item>
 		</n-collapse>
 		<n-space align="center">
-			<n-input-number v-model:value="inputUid" :showButton="false" />
+			<n-input-number v-model:value="inputUid" placeholder="要查询的用户的 UID" :showButton="false" />
 			<n-button @click="adminFetchUserRole">查询</n-button>
 		</n-space>
 		<br />
@@ -105,29 +135,52 @@
 			}"
 		>
 			<n-form-item label="用户 UID" path="uid">
-				<n-input-number v-model:value="userRolesFormModel.uid" :showButton="false" :disabled="true" />
+				<n-input-number v-model:value="userRolesFormModel.uid" placeholder="查询用户后显示" :showButton="false" :disabled="true" />
 			</n-form-item>
 			<n-form-item label="用户 UUID" path="uuid">
-				<n-input v-model:value="userRolesFormModel.uuid" :disabled="true" />
+				<n-input v-model:value="userRolesFormModel.uuid" placeholder="查询用户后显示" :disabled="true" />
 			</n-form-item>
 			<n-form-item label="用户名" path="username">
-				<n-input v-model:value="userRolesFormModel.username" :disabled="true" />
+				<n-input v-model:value="userRolesFormModel.username" placeholder="查询用户后显示" :disabled="true" />
 			</n-form-item>
 			<n-form-item label="用户昵称" path="userNickname">
-				<n-input v-model:value="userRolesFormModel.userNickname" :disabled="true" />
+				<n-input v-model:value="userRolesFormModel.userNickname" placeholder="查询用户后显示" :disabled="true" />
 			</n-form-item>
-			<n-form-item label="编辑用户角色">
+			<n-form-item label="启用编辑">
 				<n-switch v-model:value="isEnableEditUserRole" />
 			</n-form-item>
 			<n-form-item label="用户的角色" path="userRoles">
 				<n-transfer
-					:disabled="!isEnableEditUserRole"
+					:disabled="!isEnableEditUserRole || !userRolesFormModel.uuid"
 					v-model:value="userRolesFormModel.userRoles"
 					:options="rbacRoleOption"
 					sourceFilterable
 					targetFilterable
 				/>
 			</n-form-item>
+			<!-- TODO: 我想要 label 的占位又不想显示 label 文本，难道只能用 label=" " 这种不优雅的方式吗？ -->
+			<n-form-item label=" ">
+				<n-button :disabled="!isEnableEditUserRole || !userRolesFormModel.uuid" @click="isShowSubmitUserRolesModal = true">
+					更新用户角色
+				</n-button>
+			</n-form-item>
 		</n-form>
+
+		<n-modal
+			v-model:show="isShowSubmitUserRolesModal"
+			:maskClosable="false"
+			preset="dialog"
+			title="确认要更新用户角色吗？"
+			positiveText="确认"
+			negativeText="算了"
+			@positiveClick="adminUpdateUserRoles"
+		>
+			<n-h6>用户 UID</n-h6>
+			<n-input-number v-model:value="userRolesFormModel.uid" :showButton="false" :disabled="true" />
+			<n-h6>用户 UUID</n-h6>
+			<n-input v-model:value="userRolesFormModel.uuid" :showButton="false" :disabled="true" />
+			<n-h6>用户将会更新为以下新角色</n-h6>
+			<n-tag v-for="role in userRolesFormModel.userRoles" :key="role" class="mr-[10px]">{{ role }}</n-tag>
+		</n-modal>
 	</div>
 </template>
