@@ -1,11 +1,12 @@
 <script setup lang="ts">
 	// import { getRbacApiPath } from "../../api/Rbac/RbacController";
-	import { AdminUpdateUserRoleRequestDto, AdminGetUserRolesByUidRequestDto, AdminGetUserRolesByUidResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "api/Rbac/RbacControllerDto";
+	import { AdminUpdateUserRoleRequestDto, AdminGetUserRolesByUidRequestDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "api/Rbac/RbacControllerDto";
 	import { NButton } from "naive-ui";
 
 	const isEnableEditUserRole = ref(false);
 	const isShowSubmitUserRolesModal = ref(false);
 	const inputUid = ref<number>();
+	const isUpdatingUserRole = ref(false);
 
 	type RbacRole = GetRbacRoleResponseDto["result"];
 	const rbacRole = ref<RbacRole>([]);
@@ -15,8 +16,6 @@
 			value: role.roleName,
 		};
 	}));
-
-	// const userRoles = ref<AdminGetUserRolesByUidResponseDto["result"]>();
 
 	const userRolesFormModel = ref<
 		{
@@ -75,6 +74,8 @@
 	async function adminUpdateUserRoles() {
 		if (!userRolesFormModel.value.uuid || !userRolesFormModel.value.userRoles) return;
 
+		isUpdatingUserRole.value = true;
+
 		const adminUpdateUserRoleRequest: AdminUpdateUserRoleRequestDto = {
 			uuid: userRolesFormModel.value.uuid,
 			newRoles: userRolesFormModel.value.userRoles,
@@ -87,6 +88,8 @@
 			isEnableEditUserRole.value = false;
 			isShowSubmitUserRolesModal.value = false;
 		}
+
+		isUpdatingUserRole.value = false;
 	}
 
 	onMounted(fetchRbacRole);
@@ -170,8 +173,7 @@
 			v-model:show="isShowSubmitUserRolesModal"
 			:maskClosable="false"
 			preset="dialog"
-			title="确认要更新用户角色吗？"
-			positiveText="确认"
+			title="确认要更新用户的角色吗？"
 			negativeText="算了"
 			@positiveClick="adminUpdateUserRoles"
 		>
@@ -179,8 +181,13 @@
 			<n-input-number v-model:value="userRolesFormModel.uid" :showButton="false" :disabled="true" />
 			<n-h6>用户 UUID</n-h6>
 			<n-input v-model:value="userRolesFormModel.uuid" :showButton="false" :disabled="true" />
-			<n-h6>用户将会更新为以下新角色</n-h6>
+			<n-h6>用户的角色将会更新为下列角色</n-h6>
 			<n-tag v-for="role in userRolesFormModel.userRoles" :key="role" class="mr-[10px]">{{ role }}</n-tag>
+			
+			<template #action>
+				<n-button @click="isShowSubmitUserRolesModal = false">算了</n-button>
+				<n-button :loading="isUpdatingUserRole" type="warning" :secondary="true" @click="adminUpdateUserRoles">确认更新</n-button>
+			</template>
 		</n-modal>
 	</div>
 </template>

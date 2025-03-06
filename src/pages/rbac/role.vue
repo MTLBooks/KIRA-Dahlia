@@ -1,7 +1,60 @@
 <script setup lang="ts">
 	// import { getRbacApiPath } from "../../api/Rbac/RbacController";
-	import { DeleteRbacRoleRequestDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "api/Rbac/RbacControllerDto";
+	import { CreateRbacRoleRequestDto, DeleteRbacRoleRequestDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "api/Rbac/RbacControllerDto";
 	import { DataTableColumns, NButton, NTag } from "naive-ui";
+
+	const isShowDeleteRoleModal = ref(false);
+	const currentDeletingRole = ref("");
+	const userInputDeleteingRole = ref("");
+	const isDeletingRole = ref(false);
+
+	const isShowCreateNewRoleModal = ref(false);
+	const isCreatingRole = ref(false);
+	const createRoleFormModel = ref<CreateRbacRoleRequestDto>({
+		roleName: "",
+		roleType: "",
+		roleColor: "",
+		roleDescription: "",
+	});
+
+	function openCreateRoleModel() {
+		isShowCreateNewRoleModal.value = true;
+		createRoleFormModel.value = {
+			roleName: "",
+			roleType: "",
+			roleColor: "",
+			roleDescription: "",
+		};
+	}
+
+	function closeCreateRoleModel() {
+		isShowCreateNewRoleModal.value = false;
+		createRoleFormModel.value = {
+			roleName: "",
+			roleType: "",
+			roleColor: "",
+			roleDescription: "",
+		};
+	}
+	
+	/**
+	 * 创建 RBAC 角色
+	 */
+	async function createRole() {
+		const createRbacRoleRequest: CreateRbacRoleRequestDto = { ...createRoleFormModel.value };
+		if (!createRbacRoleRequest.roleName) {
+			console.error("ERROR", "创建角色失败，参数不合法");
+			return;
+		}
+		isCreatingRole.value = true;
+		const createRbacRoleResult = await createRbacRoleController(createRbacRoleRequest);
+		if (createRbacRoleResult.success) {
+			await fetchRbacRole();
+			closeCreateRoleModel();
+		}
+
+		isCreatingRole.value = false;
+	}
 
 	type RbacRole = GetRbacRoleResponseDto["result"];
 
@@ -71,16 +124,29 @@
 			title: "操作",
 			key: "actions",
 			render(row) {
-				return h(
-					NButton,
-					{
-						strong: true,
-						tertiary: true,
-						size: "small",
-						onClick: () => fetchDeleteRbacRole(row.roleName ?? ""),
-					},
-					{ default: () => "删除" },
-				);
+				return [
+					h(
+						NButton,
+						{
+							strong: true,
+							secondary: true,
+							size: "small",
+							class: "mr-[10px]",
+						},
+						{ default: () => "编辑" },
+					),
+					h(
+						NButton,
+						{
+							strong: true,
+							secondary: true,
+							size: "small",
+							type: "warning",
+							onClick: () => openDeleteRoleModel(row.roleName ?? ""),
+						},
+						{ default: () => "删除" },
+					),
+				];
 			},
 		},
 	];
@@ -110,6 +176,7 @@
 	 * @param roleName 要删除的 RBAC 角色的名字
 	 */
 	async function fetchDeleteRbacRole(roleName: string) {
+		isDeletingRole.value = true;
 		const deleteRbacRoleRequest: DeleteRbacRoleRequestDto = {
 			roleName,
 		};
@@ -119,6 +186,27 @@
 			console.error("ERROR", "删除 RBAC 角色失败。");
 
 		await fetchRbacRole();
+		closeDeleteRoleModel();
+		isDeletingRole.value = false;
+	}
+
+	/**
+	 * 开启删除角色的模态框
+	 * @param roleName 要删除的角色的名字
+	 */
+	function openDeleteRoleModel(roleName: string) {
+		currentDeletingRole.value = roleName;
+		userInputDeleteingRole.value = "";
+		isShowDeleteRoleModal.value = true;
+	}
+
+	/**
+	 * 关闭删除角色的模态框
+	 */
+	function closeDeleteRoleModel() {
+		currentDeletingRole.value = "";
+		userInputDeleteingRole.value = "";
+		isShowDeleteRoleModal.value = false;
 	}
 
 	onMounted(fetchRbacRole);
@@ -149,7 +237,7 @@
 			</n-collapse-item>
 		</n-collapse>
 		<n-flex class="mb-[10px]">
-			<n-button>新增</n-button>
+			<n-button @click="openCreateRoleModel">新增</n-button>
 		</n-flex>
 		<n-data-table
 			:columns="columns"
@@ -159,5 +247,42 @@
 			:resizable="true"
 			:rowKey="row => row.roleName"
 		/>
+
+		<n-modal
+			v-model:show="isShowDeleteRoleModal"
+			:maskClosable="false"
+			preset="dialog"
+			:title="`确认要删除角色 ${currentDeletingRole} 吗？`"
+		>
+			<n-h6>再次输入角色的名字来确定删除</n-h6>
+			<n-input v-model:value="userInputDeleteingRole" placeholder="角色名字" />
+			
+			<template #action>
+				<n-button @click="closeDeleteRoleModel">算了</n-button>
+				<n-button :disabled="currentDeletingRole !== userInputDeleteingRole" :loading="isDeletingRole" type="warning" :secondary="true" @click="fetchDeleteRbacRole(currentDeletingRole)">确认删除</n-button>
+			</template>
+		</n-modal>
+
+		<n-modal
+			style="width: 600px"
+			v-model:show="isShowCreateNewRoleModal"
+			:maskClosable="false"
+			preset="card"
+			title="创建新角色"
+		>
+			<n-h6>角色的名字 *</n-h6>
+			<n-input :status="!createRoleFormModel.roleName ? 'error' : 'success'" v-model:value="createRoleFormModel.roleName" placeholder="（必填）唯一且简短的角色名" />
+			<n-h6>角色的类型</n-h6>
+			<n-input v-model:value="createRoleFormModel.roleType" placeholder="用于标识角色，例如 'maintenance'" />
+			<n-h6>角色的显示颜色</n-h6>
+			填写颜色可以更方便区分不同角色
+			<n-color-picker v-model:value="createRoleFormModel.roleColor" :modes="['hex']" :showAlpha="true" />
+			<n-h6>角色的介绍</n-h6>
+			<n-input v-model:value="createRoleFormModel.roleDescription" type="textarea" :autosize="{ minRows: 3 }" placeholder="角色的详细说明" />
+			<template #footer>
+				<n-button @click="closeCreateRoleModel" class="mr-[10px]">算了</n-button>
+				<n-button :disabled="!createRoleFormModel.roleName" :loading="isCreatingRole" type="primary" :secondary="true" @click="createRole">确认创建</n-button>
+			</template>
+		</n-modal>
 	</div>
 </template>

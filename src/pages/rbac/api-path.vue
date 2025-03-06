@@ -50,7 +50,7 @@
 					NButton,
 					{
 						strong: true,
-						tertiary: true,
+						secondary: true,
 						size: "small",
 						onClick: () => deleteApiPath(row.apiPath ?? ""),
 					},

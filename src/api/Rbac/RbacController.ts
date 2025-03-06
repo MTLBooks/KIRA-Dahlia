@@ -1,4 +1,4 @@
-import { AdminGetUserRolesByUidRequestDto, AdminGetUserRolesByUidResponseDto, AdminUpdateUserRoleRequestDto, AdminUpdateUserRoleResponseDto, DeleteRbacApiPathRequestDto, DeleteRbacApiPathResponseDto, DeleteRbacRoleRequestDto, DeleteRbacRoleResponseDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "./RbacControllerDto";
+import { AdminGetUserRolesByUidRequestDto, AdminGetUserRolesByUidResponseDto, AdminUpdateUserRoleRequestDto, AdminUpdateUserRoleResponseDto, CreateRbacRoleRequestDto, CreateRbacRoleResponseDto, DeleteRbacApiPathRequestDto, DeleteRbacApiPathResponseDto, DeleteRbacRoleRequestDto, DeleteRbacRoleResponseDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "./RbacControllerDto";
 
 const BACK_END_URL = getCorrectUri();
 const RBAC_API_URL = `${BACK_END_URL}/rbac`;
@@ -41,6 +41,16 @@ export const getRbacRoleController = async (getRbacRoleRequest: GetRbacRoleReque
 export const deleteRbacRoleController = async (deleteRbacRoleRequest: DeleteRbacRoleRequestDto): Promise<DeleteRbacRoleResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	return await DELETE(`${RBAC_API_URL}/deleteRbacRole`, deleteRbacRoleRequest, { credentials: "include" }) as DeleteRbacRoleResponseDto;
+};
+
+/**
+ * 创建 RBAC 角色
+ * @param createRbacRoleRequest 创建 RBAC 角色的请求载荷
+ * @returns 创建 RBAC 角色的请求响应
+ */
+export const createRbacRoleController = async (createRbacRoleRequest: CreateRbacRoleRequestDto): Promise<CreateRbacRoleResponseDto> => {
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	return await POST(`${RBAC_API_URL}/createRbacRole`, createRbacRoleRequest, { credentials: "include" }) as CreateRbacRoleResponseDto;
 };
 
 /**
