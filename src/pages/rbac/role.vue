@@ -1,7 +1,9 @@
 <script setup lang="ts">
 	// import { getRbacApiPath } from "../../api/Rbac/RbacController";
-	import { CreateRbacRoleRequestDto, DeleteRbacRoleRequestDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "api/Rbac/RbacControllerDto";
+	import { CreateRbacRoleRequestDto, DeleteRbacRoleRequestDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto, UpdateApiPathPermissionsForRoleRequestDto } from "api/Rbac/RbacControllerDto";
 	import { DataTableColumns, NButton, NTag } from "naive-ui";
+
+	type RbacRole = GetRbacRoleResponseDto["result"];
 
 	const isShowDeleteRoleModal = ref(false);
 	const currentDeletingRole = ref("");
@@ -17,47 +19,17 @@
 		roleDescription: "",
 	});
 
-	function openCreateRoleModel() {
-		isShowCreateNewRoleModal.value = true;
-		createRoleFormModel.value = {
-			roleName: "",
-			roleType: "",
-			roleColor: "",
-			roleDescription: "",
-		};
-	}
+	type RbacApiPath = GetRbacApiPathResponseDto["result"];
+	const rbacApiPath = ref<RbacApiPath>([]);
+	const isShowEditRoleModal = ref(false);
+	const isEditingRole = ref(false);
+	const _EMPTY_ROLE_UPDATE_DATA_ = {
+		roleName: "",
+		apiPathPermissions: [],
+	};
+	const updateApiPathPermissionsForRoleFormModel = ref<UpdateApiPathPermissionsForRoleRequestDto>(_EMPTY_ROLE_UPDATE_DATA_);
 
-	function closeCreateRoleModel() {
-		isShowCreateNewRoleModal.value = false;
-		createRoleFormModel.value = {
-			roleName: "",
-			roleType: "",
-			roleColor: "",
-			roleDescription: "",
-		};
-	}
-	
-	/**
-	 * 创建 RBAC 角色
-	 */
-	async function createRole() {
-		const createRbacRoleRequest: CreateRbacRoleRequestDto = { ...createRoleFormModel.value };
-		if (!createRbacRoleRequest.roleName) {
-			console.error("ERROR", "创建角色失败，参数不合法");
-			return;
-		}
-		isCreatingRole.value = true;
-		const createRbacRoleResult = await createRbacRoleController(createRbacRoleRequest);
-		if (createRbacRoleResult.success) {
-			await fetchRbacRole();
-			closeCreateRoleModel();
-		}
-
-		isCreatingRole.value = false;
-	}
-
-	type RbacRole = GetRbacRoleResponseDto["result"];
-
+	const rbacRole = ref<RbacRole>([]);
 	const columns: DataTableColumns<NonNullable<RbacRole>[number]> = [
 		{
 			title: "角色名",
@@ -132,6 +104,7 @@
 							secondary: true,
 							size: "small",
 							class: "mr-[10px]",
+							onClick: () => openEditRoleModel(row),
 						},
 						{ default: () => "编辑" },
 					),
@@ -151,8 +124,6 @@
 		},
 	];
 
-	const rbacRole = ref<RbacRole>([]);
-
 	/**
 	 * 获取 RBAC 角色
 	 */
@@ -169,6 +140,69 @@
 			rbacRole.value = rbacRoleResult.result;
 		else
 			console.error("ERROR", "获取 RBAC 角色失败。");
+	}
+
+	/**
+	 * 清除数据并打开创建角色的模态框
+	 */
+	function openCreateRoleModel() {
+		createRoleFormModel.value = {
+			roleName: "",
+			roleType: "",
+			roleColor: "",
+			roleDescription: "",
+		};
+		isShowCreateNewRoleModal.value = true;
+	}
+
+	/**
+	 * 关闭创建角色的模态框，并清除数据
+	 */
+	function closeCreateRoleModel() {
+		isShowCreateNewRoleModal.value = false;
+		createRoleFormModel.value = {
+			roleName: "",
+			roleType: "",
+			roleColor: "",
+			roleDescription: "",
+		};
+	}
+	
+	/**
+	 * 创建 RBAC 角色
+	 */
+	async function createRole() {
+		const createRbacRoleRequest: CreateRbacRoleRequestDto = { ...createRoleFormModel.value };
+		if (!createRbacRoleRequest.roleName) {
+			console.error("ERROR", "创建角色失败，参数不合法");
+			return;
+		}
+		isCreatingRole.value = true;
+		const createRbacRoleResult = await createRbacRoleController(createRbacRoleRequest);
+		if (createRbacRoleResult.success) {
+			await fetchRbacRole();
+			closeCreateRoleModel();
+		}
+
+		isCreatingRole.value = false;
+	}
+
+	/**
+	 * 获取 RBAC API 路径
+	 */
+	async function fetchRbacApiPath() {
+		const getRbacApiPathRequest: GetRbacApiPathRequestDto = {
+			search: {},
+			pagination: {
+				page: 1,
+				pageSize: 100000,
+			},
+		};
+		const rbacApiPathResult = await getRbacApiPathController(getRbacApiPathRequest);
+		if (rbacApiPathResult.success)
+			rbacApiPath.value = rbacApiPathResult.result;
+		else
+			console.error("ERROR", "获取 RBAC API 路径失败。");
 	}
 
 	/**
@@ -209,7 +243,49 @@
 		isShowDeleteRoleModal.value = false;
 	}
 
-	onMounted(fetchRbacRole);
+	/**
+	 * 设置数据并打开编辑角色的模态框
+	 * @param roleData 正在更新的角色数据
+	 */
+	function openEditRoleModel(roleData: NonNullable<RbacRole>[number]) {
+		updateApiPathPermissionsForRoleFormModel.value = {
+			roleName: roleData.roleName,
+			apiPathPermissions: roleData.apiPathPermissions.map(apiPath => apiPath),
+		};
+		isShowEditRoleModal.value = true;
+	}
+
+	/**
+	 * 关闭编辑角色的模态框并清除数据
+	 */
+	function closeEditRoleModel() {
+		isShowEditRoleModal.value = false;
+		updateApiPathPermissionsForRoleFormModel.value = _EMPTY_ROLE_UPDATE_DATA_;
+	}
+
+	/**
+	 * 更新角色的 API 路径
+	 */
+	async function updateApiPathPermissionsForRole() {
+		isEditingRole.value = true;
+		const updateApiPathPermissionsForRoleResult = await updateApiPathPermissionsForRoleController(updateApiPathPermissionsForRoleFormModel.value);
+		if (updateApiPathPermissionsForRoleResult.success) {
+			await fetchAllDataInRolePage();
+			closeEditRoleModel();
+		} else
+			console.error("ERROR", "更新角色的 API 路径时出错");
+		isEditingRole.value = false;
+	}
+
+	/**
+	 * 获取 role.vue 页面所有初始化数据
+	 */
+	async function fetchAllDataInRolePage() {
+		await fetchRbacRole();
+		await fetchRbacApiPath();
+	}
+
+	onMounted(fetchAllDataInRolePage);
 </script>
 
 <template>
@@ -282,6 +358,35 @@
 			<template #footer>
 				<n-button @click="closeCreateRoleModel" class="mr-[10px]">算了</n-button>
 				<n-button :disabled="!createRoleFormModel.roleName" :loading="isCreatingRole" type="primary" :secondary="true" @click="createRole">确认创建</n-button>
+			</template>
+		</n-modal>
+
+		<n-modal
+			style="width: 600px"
+			v-model:show="isShowEditRoleModal"
+			:maskClosable="false"
+			preset="card"
+			title="编辑角色可以访问的 API 路径"
+		>
+			<n-h6>角色的名字</n-h6>
+			<n-input :disabled="true" v-model:value="updateApiPathPermissionsForRoleFormModel.roleName" placeholder="角色名" />
+			<n-h6>角色可以访问的 API 路径</n-h6>
+			<n-transfer
+				v-model:value="updateApiPathPermissionsForRoleFormModel.apiPathPermissions"
+				:options="
+					rbacApiPath?.map(apiPath => {
+						return {
+							label: apiPath.apiPath,
+							value: apiPath.apiPath,
+						};
+					})
+				"
+				sourceFilterable
+				targetFilterable
+			/>
+			<template #footer>
+				<n-button @click="closeEditRoleModel" class="mr-[10px]">算了</n-button>
+				<n-button :disabled="!updateApiPathPermissionsForRoleFormModel.roleName" :loading="isEditingRole" type="primary" :secondary="true" @click="updateApiPathPermissionsForRole">确认更新角色</n-button>
 			</template>
 		</n-modal>
 	</div>
