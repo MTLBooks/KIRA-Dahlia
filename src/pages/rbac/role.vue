@@ -1,7 +1,8 @@
 <script setup lang="ts">
-	// import { getRbacApiPath } from "../../api/Rbac/RbacController";
 	import { CreateRbacRoleRequestDto, DeleteRbacRoleRequestDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto, UpdateApiPathPermissionsForRoleRequestDto } from "api/Rbac/RbacControllerDto";
-	import { DataTableColumns, NButton, NTag } from "naive-ui";
+	import { DataTableColumns, NButton, NTag, useDialog } from "naive-ui";
+
+	const dialog = useDialog();
 
 	type RbacRole = GetRbacRoleResponseDto["result"];
 
@@ -12,12 +13,13 @@
 
 	const isShowCreateNewRoleModal = ref(false);
 	const isCreatingRole = ref(false);
-	const createRoleFormModel = ref<CreateRbacRoleRequestDto>({
+	const _EMPTY_ROLE_CREATE_DATA_ = {
 		roleName: "",
 		roleType: "",
 		roleColor: "",
 		roleDescription: "",
-	});
+	};
+	const createRoleFormModel = ref<CreateRbacRoleRequestDto>({ ..._EMPTY_ROLE_CREATE_DATA_ });
 
 	type RbacApiPath = GetRbacApiPathResponseDto["result"];
 	const rbacApiPath = ref<RbacApiPath>([]);
@@ -29,7 +31,6 @@
 	};
 	const updateApiPathPermissionsForRoleFormModel = ref<UpdateApiPathPermissionsForRoleRequestDto>(_EMPTY_ROLE_UPDATE_DATA_);
 
-	const rbacRole = ref<RbacRole>([]);
 	const columns: DataTableColumns<NonNullable<RbacRole>[number]> = [
 		{
 			title: "角色名",
@@ -124,6 +125,25 @@
 		},
 	];
 
+	const rbacRole = ref<RbacRole>([]);
+	const rbacRoleCount = ref(0);
+	const pagination = reactive({
+		page: 1,
+		pageSize: 50,
+		showSizePicker: true,
+		pageSizes: [5, 10, 20, 50, 100, 200],
+		onChange: async (page: number) => {
+			pagination.page = page;
+			await fetchRbacRole();
+		},
+		onUpdatePageSize: async (pageSize: number) => {
+			pagination.pageSize = pageSize;
+			pagination.page = 1;
+			await fetchRbacRole();
+		},
+	});
+	const rbacRolePageCount = computed(() => getPageCountByDataCount(rbacRoleCount.value, pagination.pageSize));
+
 	/**
 	 * 获取 RBAC 角色
 	 */
@@ -131,14 +151,15 @@
 		const getRbacRoleRequest: GetRbacRoleRequestDto = {
 			search: {},
 			pagination: {
-				page: 1,
-				pageSize: 1000,
+				page: pagination.page,
+				pageSize: pagination.pageSize,
 			},
 		};
 		const rbacRoleResult = await getRbacRoleController(getRbacRoleRequest);
-		if (rbacRoleResult.success)
+		if (rbacRoleResult.success) {
 			rbacRole.value = rbacRoleResult.result;
-		else
+			rbacRoleCount.value = rbacRoleResult.count ?? 0;
+		} else
 			console.error("ERROR", "获取 RBAC 角色失败。");
 	}
 
@@ -146,12 +167,7 @@
 	 * 清除数据并打开创建角色的模态框
 	 */
 	function openCreateRoleModel() {
-		createRoleFormModel.value = {
-			roleName: "",
-			roleType: "",
-			roleColor: "",
-			roleDescription: "",
-		};
+		createRoleFormModel.value = { ..._EMPTY_ROLE_CREATE_DATA_ };
 		isShowCreateNewRoleModal.value = true;
 	}
 
@@ -160,12 +176,7 @@
 	 */
 	function closeCreateRoleModel() {
 		isShowCreateNewRoleModal.value = false;
-		createRoleFormModel.value = {
-			roleName: "",
-			roleType: "",
-			roleColor: "",
-			roleDescription: "",
-		};
+		createRoleFormModel.value = { ..._EMPTY_ROLE_CREATE_DATA_ };
 	}
 	
 	/**
@@ -217,7 +228,11 @@
 
 		const deleteRbacApiPathResult = await deleteRbacRoleController(deleteRbacRoleRequest);
 		if (!deleteRbacApiPathResult.success)
-			console.error("ERROR", "删除 RBAC 角色失败。");
+			dialog.error({
+				title: "删除 RBAC 角色失败",
+				content: deleteRbacApiPathResult.message,
+				positiveText: "知道了",
+			});
 
 		await fetchRbacRole();
 		closeDeleteRoleModel();
@@ -273,7 +288,11 @@
 			await fetchAllDataInRolePage();
 			closeEditRoleModel();
 		} else
-			console.error("ERROR", "更新角色的 API 路径时出错");
+			dialog.error({
+				title: "更新角色的 API 路径时出错",
+				content: updateApiPathPermissionsForRoleResult.message,
+				positiveText: "知道了",
+			});
 		isEditingRole.value = false;
 	}
 
@@ -290,8 +309,8 @@
 
 <template>
 	<div class="container">
-		<n-collapse class="mb-[20px]">
-			<n-collapse-item title="使用说明" name="1">
+		<NCollapse class="mb-[20px]">
+			<NCollapseItem title="使用说明" name="1">
 				<p>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</p>
 				<ul>
 					<li class="ml-[20px] mt-[5px]">一个用户可以拥有多个角色</li>
@@ -309,13 +328,13 @@
 					<li class="ml-[20px]">user - 普通用户</li>
 					<li class="ml-[20px]">blocked - 已封禁的用户</li>
 				</ul>
-				<n-divider />
-			</n-collapse-item>
-		</n-collapse>
-		<n-flex class="mb-[10px]">
-			<n-button @click="openCreateRoleModel">新增</n-button>
-		</n-flex>
-		<n-data-table
+				<NDivider />
+			</NCollapseItem>
+		</NCollapse>
+		<NFlex class="mb-[10px]">
+			<NButton @click="openCreateRoleModel">新增</NButton>
+		</NFlex>
+		<NDataTable
 			:columns="columns"
 			:data="rbacRole"
 			:pagination="false"
@@ -323,71 +342,88 @@
 			:resizable="true"
 			:rowKey="row => row.roleName"
 		/>
-
-		<n-modal
-			v-model:show="isShowDeleteRoleModal"
-			:maskClosable="false"
-			preset="dialog"
-			:title="`确认要删除角色 ${currentDeletingRole} 吗？`"
-		>
-			<n-h6>再次输入角色的名字来确定删除</n-h6>
-			<n-input v-model:value="userInputDeleteingRole" placeholder="角色名字" />
-			
-			<template #action>
-				<n-button @click="closeDeleteRoleModel">算了</n-button>
-				<n-button :disabled="currentDeletingRole !== userInputDeleteingRole" :loading="isDeletingRole" type="warning" :secondary="true" @click="fetchDeleteRbacRole(currentDeletingRole)">确认删除</n-button>
-			</template>
-		</n-modal>
-
-		<n-modal
-			style="width: 600px"
-			v-model:show="isShowCreateNewRoleModal"
-			:maskClosable="false"
-			preset="card"
-			title="创建新角色"
-		>
-			<n-h6>角色的名字 *</n-h6>
-			<n-input :status="!createRoleFormModel.roleName ? 'error' : 'success'" v-model:value="createRoleFormModel.roleName" placeholder="（必填）唯一且简短的角色名" />
-			<n-h6>角色的类型</n-h6>
-			<n-input v-model:value="createRoleFormModel.roleType" placeholder="用于标识角色，例如 'maintenance'" />
-			<n-h6>角色的显示颜色</n-h6>
-			填写颜色可以更方便区分不同角色
-			<n-color-picker v-model:value="createRoleFormModel.roleColor" :modes="['hex']" :showAlpha="true" />
-			<n-h6>角色的介绍</n-h6>
-			<n-input v-model:value="createRoleFormModel.roleDescription" type="textarea" :autosize="{ minRows: 3 }" placeholder="角色的详细说明" />
-			<template #footer>
-				<n-button @click="closeCreateRoleModel" class="mr-[10px]">算了</n-button>
-				<n-button :disabled="!createRoleFormModel.roleName" :loading="isCreatingRole" type="primary" :secondary="true" @click="createRole">确认创建</n-button>
-			</template>
-		</n-modal>
-
-		<n-modal
-			style="width: 600px"
-			v-model:show="isShowEditRoleModal"
-			:maskClosable="false"
-			preset="card"
-			title="编辑角色可以访问的 API 路径"
-		>
-			<n-h6>角色的名字</n-h6>
-			<n-input :disabled="true" v-model:value="updateApiPathPermissionsForRoleFormModel.roleName" placeholder="角色名" />
-			<n-h6>角色可以访问的 API 路径</n-h6>
-			<n-transfer
-				v-model:value="updateApiPathPermissionsForRoleFormModel.apiPathPermissions"
-				:options="
-					rbacApiPath?.map(apiPath => {
-						return {
-							label: apiPath.apiPath,
-							value: apiPath.apiPath,
-						};
-					})
-				"
-				sourceFilterable
-				targetFilterable
-			/>
-			<template #footer>
-				<n-button @click="closeEditRoleModel" class="mr-[10px]">算了</n-button>
-				<n-button :disabled="!updateApiPathPermissionsForRoleFormModel.roleName" :loading="isEditingRole" type="primary" :secondary="true" @click="updateApiPathPermissionsForRole">确认更新角色</n-button>
-			</template>
-		</n-modal>
+		<NFlex justify="end" class="mt-[20px]">
+			<NPagination
+				:displayOrder="['quick-jumper', 'pages', 'size-picker']"
+				:pageCount="rbacRolePageCount"
+				:page="pagination.page"
+				:pageSize="pagination.pageSize"
+				:pageSizes="pagination.pageSizes"
+				:onUpdate:page="pagination.onChange"
+				:onUpdate:pageSize="pagination.onUpdatePageSize"
+				showQuickJumper
+				showSizePicker
+			>
+				<template #goto>
+					跳转至
+				</template>
+			</NPagination>
+		</NFlex>
 	</div>
+	
+	<NModal
+		v-model:show="isShowDeleteRoleModal"
+		:maskClosable="false"
+		preset="dialog"
+		:title="`确认要删除角色 ${currentDeletingRole} 吗？`"
+	>
+		<NH6>再次输入角色的名字来确定删除</NH6>
+		<NInput v-model:value="userInputDeleteingRole" placeholder="角色名字" />
+			
+		<template #action>
+			<NButton @click="closeDeleteRoleModel">算了</NButton>
+			<NButton :disabled="currentDeletingRole !== userInputDeleteingRole" :loading="isDeletingRole" type="warning" :secondary="true" @click="fetchDeleteRbacRole(currentDeletingRole)">确认删除</NButton>
+		</template>
+	</NModal>
+
+	<NModal
+		style="width: 600px"
+		v-model:show="isShowCreateNewRoleModal"
+		:maskClosable="false"
+		preset="card"
+		title="创建新角色"
+	>
+		<NH6>角色的名字 *</NH6>
+		<NInput :status="!createRoleFormModel.roleName ? 'error' : 'success'" v-model:value="createRoleFormModel.roleName" placeholder="（必填）唯一且简短的角色名" />
+		<NH6>角色的类型</NH6>
+		<NInput v-model:value="createRoleFormModel.roleType" placeholder="用于标识角色，例如 'maintenance'" />
+		<NH6>角色的显示颜色</NH6>
+		填写颜色可以更方便区分不同角色
+		<NColorPicker v-model:value="createRoleFormModel.roleColor" :modes="['hex']" :showAlpha="true" />
+		<NH6>角色的介绍</NH6>
+		<NInput v-model:value="createRoleFormModel.roleDescription" type="textarea" :autosize="{ minRows: 3 }" placeholder="角色的详细说明" />
+		<template #footer>
+			<NButton @click="closeCreateRoleModel" class="mr-[10px]">算了</NButton>
+			<NButton :disabled="!createRoleFormModel.roleName" :loading="isCreatingRole" type="primary" :secondary="true" @click="createRole">确认创建</NButton>
+		</template>
+	</NModal>
+
+	<NModal
+		style="width: 600px"
+		v-model:show="isShowEditRoleModal"
+		:maskClosable="false"
+		preset="card"
+		title="编辑角色可以访问的 API 路径"
+	>
+		<NH6>角色的名字</NH6>
+		<NInput :disabled="true" v-model:value="updateApiPathPermissionsForRoleFormModel.roleName" placeholder="角色名" />
+		<NH6>角色可以访问的 API 路径</NH6>
+		<NTransfer
+			v-model:value="updateApiPathPermissionsForRoleFormModel.apiPathPermissions"
+			:options="
+				rbacApiPath?.map(apiPath => {
+					return {
+						label: apiPath.apiPath,
+						value: apiPath.apiPath,
+					};
+				})
+			"
+			sourceFilterable
+			targetFilterable
+		/>
+		<template #footer>
+			<NButton @click="closeEditRoleModel" class="mr-[10px]">算了</NButton>
+			<NButton :disabled="!updateApiPathPermissionsForRoleFormModel.roleName" :loading="isEditingRole" type="primary" :secondary="true" @click="updateApiPathPermissionsForRole">确认更新角色</NButton>
+		</template>
+	</NModal>
 </template>

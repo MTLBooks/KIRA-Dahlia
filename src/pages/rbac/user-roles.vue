@@ -1,7 +1,8 @@
 <script setup lang="ts">
-	// import { getRbacApiPath } from "../../api/Rbac/RbacController";
 	import { AdminUpdateUserRoleRequestDto, AdminGetUserRolesByUidRequestDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "api/Rbac/RbacControllerDto";
-	import { NButton } from "naive-ui";
+	import { NButton, useDialog } from "naive-ui";
+
+	const dialog = useDialog();
 
 	const isEnableEditUserRole = ref(false);
 	const isShowSubmitUserRolesModal = ref(false);
@@ -71,6 +72,9 @@
 			console.error("ERROR", "获取 RBAC 角色失败。");
 	}
 
+	/**
+	 * 管理员更新用户的角色
+	 */
 	async function adminUpdateUserRoles() {
 		if (!userRolesFormModel.value.uuid || !userRolesFormModel.value.userRoles) return;
 
@@ -87,7 +91,12 @@
 			await adminFetchUserRole();
 			isEnableEditUserRole.value = false;
 			isShowSubmitUserRolesModal.value = false;
-		}
+		} else
+			dialog.error({
+				title: "管理员更新用户的角色失败",
+				content: adminUpdateUserRolesResult.message,
+				positiveText: "知道了",
+			});
 
 		isUpdatingUserRole.value = false;
 	}
@@ -97,8 +106,8 @@
 
 <template>
 	<div class="container">
-		<n-collapse class="mb-[20px]">
-			<n-collapse-item title="使用说明" name="1">
+		<NCollapse class="mb-[20px]">
+			<NCollapseItem title="使用说明" name="1">
 				<p>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</p>
 				<ul>
 					<li class="ml-[20px] mt-[5px]">一个用户可以拥有多个角色</li>
@@ -118,17 +127,17 @@
 				</ul>
 				<br />
 				<p>注意: blocked 角色与其他角色互斥</p>
-				<n-divider />
-			</n-collapse-item>
-		</n-collapse>
-		<n-space align="center">
-			<n-input-number v-model:value="inputUid" placeholder="要查询的用户的 UID" :showButton="false" />
-			<n-button @click="adminFetchUserRole">查询</n-button>
-		</n-space>
+				<NDivider />
+			</NCollapseItem>
+		</NCollapse>
+		<NSpace align="center">
+			<NInputNumber v-model:value="inputUid" placeholder="要查询的用户的 UID" :showButton="false" />
+			<NButton @click="adminFetchUserRole">查询</NButton>
+		</NSpace>
 		<br />
-		<n-divider />
+		<NDivider />
 		<br />
-		<n-form
+		<NForm
 			ref="formRef"
 			:model="userRolesFormModel"
 			labelPlacement="left"
@@ -137,39 +146,39 @@
 				maxWidth: '640px',
 			}"
 		>
-			<n-form-item label="用户 UID" path="uid">
-				<n-input-number v-model:value="userRolesFormModel.uid" placeholder="查询用户后显示" :showButton="false" :disabled="true" />
-			</n-form-item>
-			<n-form-item label="用户 UUID" path="uuid">
-				<n-input v-model:value="userRolesFormModel.uuid" placeholder="查询用户后显示" :disabled="true" />
-			</n-form-item>
-			<n-form-item label="用户名" path="username">
-				<n-input v-model:value="userRolesFormModel.username" placeholder="查询用户后显示" :disabled="true" />
-			</n-form-item>
-			<n-form-item label="用户昵称" path="userNickname">
-				<n-input v-model:value="userRolesFormModel.userNickname" placeholder="查询用户后显示" :disabled="true" />
-			</n-form-item>
-			<n-form-item label="启用编辑">
-				<n-switch v-model:value="isEnableEditUserRole" />
-			</n-form-item>
-			<n-form-item label="用户的角色" path="userRoles">
-				<n-transfer
+			<NFormItem label="用户 UID" path="uid">
+				<NInputNumber v-model:value="userRolesFormModel.uid" placeholder="查询用户后显示" :showButton="false" :disabled="true" />
+			</NFormItem>
+			<NFormItem label="用户 UUID" path="uuid">
+				<NInput v-model:value="userRolesFormModel.uuid" placeholder="查询用户后显示" :disabled="true" />
+			</NFormItem>
+			<NFormItem label="用户名" path="username">
+				<NInput v-model:value="userRolesFormModel.username" placeholder="查询用户后显示" :disabled="true" />
+			</NFormItem>
+			<NFormItem label="用户昵称" path="userNickname">
+				<NInput v-model:value="userRolesFormModel.userNickname" placeholder="查询用户后显示" :disabled="true" />
+			</NFormItem>
+			<NFormItem label="启用编辑">
+				<NSwitch v-model:value="isEnableEditUserRole" />
+			</NFormItem>
+			<NFormItem label="用户的角色" path="userRoles">
+				<NTransfer
 					:disabled="!isEnableEditUserRole || !userRolesFormModel.uuid"
 					v-model:value="userRolesFormModel.userRoles"
 					:options="rbacRoleOption"
 					sourceFilterable
 					targetFilterable
 				/>
-			</n-form-item>
+			</NFormItem>
 			<!-- TODO: 我想要 label 的占位又不想显示 label 文本，难道只能用 label=" " 这种不优雅的方式吗？ -->
-			<n-form-item label=" ">
-				<n-button :disabled="!isEnableEditUserRole || !userRolesFormModel.uuid" @click="isShowSubmitUserRolesModal = true">
+			<NFormItem label=" ">
+				<NButton :disabled="!isEnableEditUserRole || !userRolesFormModel.uuid" @click="isShowSubmitUserRolesModal = true">
 					更新用户角色
-				</n-button>
-			</n-form-item>
-		</n-form>
+				</NButton>
+			</NFormItem>
+		</NForm>
 
-		<n-modal
+		<NModal
 			v-model:show="isShowSubmitUserRolesModal"
 			:maskClosable="false"
 			preset="dialog"
@@ -177,17 +186,17 @@
 			negativeText="算了"
 			@positiveClick="adminUpdateUserRoles"
 		>
-			<n-h6>用户 UID</n-h6>
-			<n-input-number v-model:value="userRolesFormModel.uid" :showButton="false" :disabled="true" />
-			<n-h6>用户 UUID</n-h6>
-			<n-input v-model:value="userRolesFormModel.uuid" :showButton="false" :disabled="true" />
-			<n-h6>用户的角色将会更新为下列角色</n-h6>
-			<n-tag v-for="role in userRolesFormModel.userRoles" :key="role" class="mr-[10px]">{{ role }}</n-tag>
+			<NH6>用户 UID</NH6>
+			<NInputNumber v-model:value="userRolesFormModel.uid" :showButton="false" :disabled="true" />
+			<NH6>用户 UUID</NH6>
+			<NInput v-model:value="userRolesFormModel.uuid" :showButton="false" :disabled="true" />
+			<NH6>用户的角色将会更新为下列角色</NH6>
+			<NTag v-for="role in userRolesFormModel.userRoles" :key="role" class="mr-[10px]">{{ role }}</NTag>
 			
 			<template #action>
-				<n-button @click="isShowSubmitUserRolesModal = false">算了</n-button>
-				<n-button :loading="isUpdatingUserRole" type="warning" :secondary="true" @click="adminUpdateUserRoles">确认更新</n-button>
+				<NButton @click="isShowSubmitUserRolesModal = false">算了</NButton>
+				<NButton :loading="isUpdatingUserRole" type="warning" :secondary="true" @click="adminUpdateUserRoles">确认更新</NButton>
 			</template>
-		</n-modal>
+		</NModal>
 	</div>
 </template>

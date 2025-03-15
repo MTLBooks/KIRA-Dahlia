@@ -6,6 +6,7 @@ interface MenuItem {
 	to?: string;
 	key: string;
 	icon: MaterialIcon.Names;
+	show?: boolean;
 	children?: MenuItem[];
 }
 
@@ -76,6 +77,7 @@ const menu: MenuItem[] = [
 		label: "RBAC 管理",
 		key: "rbac",
 		icon: "shield",
+		show: await checkUserRole(["root", "developer"]),
 		children: [
 			{
 				label: "API 路径",
@@ -102,13 +104,14 @@ const menu: MenuItem[] = [
 ];
 
 const menuOptions = (() => {
-	function getMenuOptions({ label, to, key, icon, children }: MenuItem, parentKeys: string[] = []): MenuOption {
+	function getMenuOptions({ label, to, key, icon, show, children }: MenuItem, parentKeys: string[] = []): MenuOption {
 		const keys = [...parentKeys, key], keysRoute = "/" + keys.join("/");
 		if (!children) to ??= keysRoute;
 		const menuOption: MenuOption = {
 			label: () => to != null ? <RouterLink to={to}>{label}</RouterLink> : label,
 			key: keysRoute,
 			icon: () => <Icon name={icon} />,
+			show,
 			children: children ? children.map(item => getMenuOptions(item, keys)) : undefined,
 		};
 		return menuOption;

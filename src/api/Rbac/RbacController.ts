@@ -1,4 +1,4 @@
-import { AdminGetUserRolesByUidRequestDto, AdminGetUserRolesByUidResponseDto, AdminUpdateUserRoleRequestDto, AdminUpdateUserRoleResponseDto, CreateRbacRoleRequestDto, CreateRbacRoleResponseDto, DeleteRbacApiPathRequestDto, DeleteRbacApiPathResponseDto, DeleteRbacRoleRequestDto, DeleteRbacRoleResponseDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto, UpdateApiPathPermissionsForRoleRequestDto, UpdateApiPathPermissionsForRoleResponseDto } from "./RbacControllerDto";
+import { AdminGetUserRolesByUidRequestDto, AdminGetUserRolesByUidResponseDto, AdminUpdateUserRoleRequestDto, AdminUpdateUserRoleResponseDto, CreateRbacApiPathRequestDto, CreateRbacApiPathResponseDto, CreateRbacRoleRequestDto, CreateRbacRoleResponseDto, DeleteRbacApiPathRequestDto, DeleteRbacApiPathResponseDto, DeleteRbacRoleRequestDto, DeleteRbacRoleResponseDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto, UpdateApiPathPermissionsForRoleRequestDto, UpdateApiPathPermissionsForRoleResponseDto } from "./RbacControllerDto";
 
 const BACK_END_URL = getCorrectUri();
 const RBAC_API_URL = `${BACK_END_URL}/rbac`;
@@ -21,6 +21,16 @@ export const getRbacApiPathController = async (getRbacApiPathRequest: GetRbacApi
 export const deleteRbacApiPathController = async (deleteRbacApiPathRequest: DeleteRbacApiPathRequestDto): Promise<DeleteRbacApiPathResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	return await DELETE(`${RBAC_API_URL}/deleteRbacApiPath`, deleteRbacApiPathRequest, { credentials: "include" }) as DeleteRbacApiPathResponseDto;
+};
+
+/**
+ * 创建 RBAC API 路径
+ * @param createRbacApiPathRequest 创建 RBAC API 路径的请求载荷
+ * @returns 创建 RBAC API 路径的请求响应
+ */
+export const createRbacApiPathController = async (createRbacApiPathRequest: CreateRbacApiPathRequestDto): Promise<CreateRbacApiPathResponseDto> => {
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	return await POST(`${RBAC_API_URL}/createRbacApiPath`, createRbacApiPathRequest, { credentials: "include" }) as CreateRbacApiPathResponseDto;
 };
 
 /**
