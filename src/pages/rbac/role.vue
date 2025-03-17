@@ -74,7 +74,7 @@
 						NTag,
 						{
 							color: { color: apiPath.apiPathColor },
-							class: "mr-[10px]",
+							class: "mr-[10px] mb-[5px]",
 						},
 						{ default: () => apiPath.apiPath },
 					)),
@@ -309,6 +309,7 @@
 
 <template>
 	<div class="container">
+		<NH2>KIRAKIRA RBAC 角色管理</NH2>
 		<NCollapse class="mb-[20px]">
 			<NCollapseItem title="使用说明" name="1">
 				<p>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</p>

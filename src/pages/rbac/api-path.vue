@@ -199,6 +199,7 @@
 
 <template>
 	<div class="container">
+		<NH2>KIRAKIRA RBAC API 路径管理</NH2>
 		<NCollapse class="mb-[20px]">
 			<NCollapseItem title="使用说明" name="1">
 				<p>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</p>

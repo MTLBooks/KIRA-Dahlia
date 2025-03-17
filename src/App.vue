@@ -11,51 +11,53 @@
 </script>
 
 <template>
-	<NDialogProvider>
-		<NConfigProvider :theme :themeOverrides>
-			<NThemeEditor>
-				<NFlex vertical class="gap-0 h-dvh">
-					<NLayoutHeader class="px-6 h-16 flex items-center justify-between" bordered>
-						<Logo />
-						<NFlex class="items-center">
-							<NFlex class="items-center gap-1.5">
-								<!-- TODO: 头像的链接计算... 要根据生产环境还是测试环境计算吗？ -->
-								<NAvatar round :size="20" />
-								<span>{{ selfUserInfoStore.userNickname }}</span>
-								<span class="text-slate-500">@{{ selfUserInfoStore.username }}</span>
+	<NMessageProvider>
+		<NDialogProvider>
+			<NConfigProvider :theme :themeOverrides>
+				<NThemeEditor>
+					<NFlex vertical class="gap-0 h-dvh">
+						<NLayoutHeader class="px-6 h-16 flex items-center justify-between" bordered>
+							<Logo />
+							<NFlex class="items-center">
+								<NFlex class="items-center gap-1.5">
+									<!-- TODO: 头像的链接计算... 要根据生产环境还是测试环境计算吗？ -->
+									<NAvatar round :size="20" />
+									<span>{{ selfUserInfoStore.userNickname }}</span>
+									<span class="text-slate-500">@{{ selfUserInfoStore.username }}</span>
+								</NFlex>
+								<NButton quaternary circle>
+									<template #icon>
+										<Icon name="logOut" />
+									</template>
+								</NButton>
 							</NFlex>
-							<NButton quaternary circle>
-								<template #icon>
-									<Icon name="logOut" />
-								</template>
-							</NButton>
-						</NFlex>
-					</NLayoutHeader>
-					<NLayout hasSider>
-						<NLayoutSider
-							bordered
-							collapseMode="width"
-							:collapsedWidth="64"
-							:width="240"
-							showTrigger="bar"
-						>
-							<NMenu
+						</NLayoutHeader>
+						<NLayout hasSider>
+							<NLayoutSider
+								bordered
+								collapseMode="width"
 								:collapsedWidth="64"
-								:collapsedIconSize="22"
-								:options="menuOptions"
-								:defaultExpandedKeys
-								:value="$route.path"
-							/>
-						</NLayoutSider>
-						<NLayoutContent>
-							<NBackTop :right="100" />
-							<RouterView />
-						</NLayoutContent>
-					</NLayout>
-				</NFlex>
-			</NThemeEditor>
-		</NConfigProvider>
-	</NDialogProvider>
+								:width="240"
+								showTrigger="bar"
+							>
+								<NMenu
+									:collapsedWidth="64"
+									:collapsedIconSize="22"
+									:options="menuOptions"
+									:defaultExpandedKeys
+									:value="$route.path"
+								/>
+							</NLayoutSider>
+							<NLayoutContent>
+								<NBackTop :right="100" />
+								<RouterView />
+							</NLayoutContent>
+						</NLayout>
+					</NFlex>
+				</NThemeEditor>
+			</NConfigProvider>
+		</NDialogProvider>
+	</NMessageProvider>
 </template>
 
 <style>

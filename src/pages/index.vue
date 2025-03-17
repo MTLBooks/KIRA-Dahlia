@@ -31,6 +31,7 @@
 	 */
 	async function logout() {
 		await userLogout();
+		location.reload(); // 尝试刷新页面...
 	}
 </script>
 

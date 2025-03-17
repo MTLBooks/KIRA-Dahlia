@@ -10,6 +10,8 @@ interface MenuItem {
 	children?: MenuItem[];
 }
 
+const selfUserInfo = await getSelfUserInfo(undefined, false); // 仅获取数据，不修改 pinia
+
 const menu: MenuItem[] = [
 	{
 		label: "仪表盘",
@@ -77,7 +79,7 @@ const menu: MenuItem[] = [
 		label: "RBAC 管理",
 		key: "rbac",
 		icon: "shield",
-		show: await checkUserRole(["root", "developer"]),
+		show: checkUserRole(["root", "developer"], selfUserInfo),
 		children: [
 			{
 				label: "API 路径",
@@ -100,6 +102,7 @@ const menu: MenuItem[] = [
 		label: "预生产环境密钥",
 		key: "stg-secret",
 		icon: "key",
+		show: checkUserRole(["root", "developer"], selfUserInfo),
 	},
 ];
 
