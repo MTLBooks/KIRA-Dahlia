@@ -6,7 +6,7 @@ import stylistic from "@stylistic/eslint-plugin";
 import tseslint from "typescript-eslint";
 import pluginVue from "eslint-plugin-vue";
 
-/** @type {import("eslint").Linter.FlatConfig[]} */
+/** @type {import("eslint").Linter.Config[]} */
 export default [
 	eslint.configs.recommended,
 	...tseslint.configs.recommended,
@@ -135,12 +135,6 @@ export default [
 			"no-use-before-define": "off",
 			"accessor-pairs": "off",
 			"no-empty-function": "off",
-			"require-jsdoc": "off",
-			"valid-jsdoc": ["error", {
-				requireReturn: false,
-				requireParamType: false, // TypeScript 不需要 JSDoc 的 type。
-				requireReturnType: false,
-			}],
 			"no-inner-declarations": "warn",
 			"no-unmodified-loop-condition": "off",
 			"no-return-assign": "off",
@@ -193,7 +187,6 @@ export default [
 					requireLast: false,
 				},
 			}],
-			"@typescript-eslint/semi": ["error", "always"],
 			"@typescript-eslint/no-explicit-any": "error",
 			"@typescript-eslint/no-use-before-define": ["warn", {
 				functions: false,

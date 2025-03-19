@@ -70,7 +70,8 @@ export async function POST(url: string, body: unknown, requestOptions: RequestOb
 		return response.json();
 	} catch (error) {
 		console.error("ERROR", `something wrong in 'POST', URL: ${url}`, error); // TODO: Remove Console Output?
-		throw error;
+		if (import.meta.env.PROD)
+			throw error;
 	}
 }
 
