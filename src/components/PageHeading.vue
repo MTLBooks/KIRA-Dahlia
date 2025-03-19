@@ -16,19 +16,17 @@
 				transition: all cubic-bezier(0, 0, 0, 1) 400ms 125ms !important;
 			}
 		}
-
-		.n-text {
-			transition-delay: 200ms !important;
-		}
 	}
 
 	@starting-style {
 		.page-heading .n-text {
-			translate: calc(-100% - var(--n-prefix-width));
+			translate: var(--n-prefix-width);
+			opacity: 0;
 		}
 
 		.page-heading::before {
-			scale: 1 0;
+			scale: 1 0.5;
+			opacity: 0;
 		}
 	}
 </style>
