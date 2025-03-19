@@ -3,7 +3,7 @@
 	import { useMessage } from "naive-ui";
 
 	const message = useMessage();
-	
+
 	const secretType = ref<"hidden" | "windows" | "bash">("hidden");
 
 	type StgEnvBackEndSecret = GetStgEnvBackEndSecretResponse["result"];
@@ -50,8 +50,8 @@
 <template>
 	<div class="container">
 		<NH2>KIRAKIRA 预生产环境 环境变量</NH2>
-		<NTag type="error">密钥严禁公开</NTag><NTag class="ml-[10px]">请先阅读使用说明</NTag>
-		<NCollapse class="mt-[20px] mb-[20px]">
+		<NFlex size="small"><NTag type="error">密钥严禁公开</NTag><NTag>请先阅读使用说明</NTag></NFlex>
+		<NCollapse class="mt-4 mb-4">
 			<NCollapseItem title="使用说明" name="1">
 				<p>点击下方按钮后，将会显示 KIRAKIRA 预生产环境的环境变量。</p>
 				<br />
@@ -61,28 +61,28 @@
 				<p>最佳实践：随用随取，请不要保存这些密钥至本地。仅在程序启动前复制并粘贴一次，然后清空剪贴板。</p>
 				<br />
 				<p>请允许我引用某些 linux 发行版中的安全格言：</p>
-				<p class="ml-[10px] mt-[10px]">We trust you have received the usual lecture from the local System</p>
-				<p class="ml-[10px]">Administrator. It usually boils down to these three things:</p>
-				<ul class="ml-[10px]">
-					<li class="ml-[20px] mt-[5px]">#1) Respect the privacy of others.</li>
-					<li class="ml-[20px]">#2) Think before you type.</li>
-					<li class="ml-[20px]">#3) With great power comes great responsibility.</li>
+				<p class="ml-2 mt-2">We trust you have received the usual lecture from the local System</p>
+				<p class="ml-2">Administrator. It usually boils down to these three things:</p>
+				<ul class="ml-2">
+					<li class="ml-4 mt-1">#1) Respect the privacy of others.</li>
+					<li class="ml-4">#2) Think before you type.</li>
+					<li class="ml-4">#3) With great power comes great responsibility.</li>
 				</ul>
 				<br />
-				<p class="ml-[10px]">我们信任您已经从系统管理员那里了解了日常注意事项。</p>
-				<p class="ml-[10px]">总结起来无外乎这三点：</p>
-				<ul class="ml-[10px]">
-					<li class="ml-[20px] mt-[5px]">#1) 尊重别人的隐私。</li>
-					<li class="ml-[20px]">#2) 输入前要先考虑（后果和风险）。</li>
-					<li class="ml-[20px]">#3) 权力越大，责任越大。</li>
+				<p class="ml-2">我们信任您已经从系统管理员那里了解了日常注意事项。</p>
+				<p class="ml-2">总结起来无外乎这三点：</p>
+				<ul class="ml-2">
+					<li class="ml-4 mt-1">#1) 尊重别人的隐私。</li>
+					<li class="ml-4">#2) 输入前要先考虑（后果和风险）。</li>
+					<li class="ml-4">#3) 权力越大，责任越大。</li>
 				</ul>
 				<NDivider />
 			</NCollapseItem>
 		</NCollapse>
-		<NButton :disabled="secretType === 'windows'" strong secondary type="warning" class="mr-[10px] mb-[10px]" @click="secretType = 'windows'">展示 Windows PowerShell 格式的环境变量</NButton>
-		<NButton :disabled="secretType === 'bash'" strong secondary type="warning" class="mr-[10px] mb-[10px]" @click="secretType = 'bash'">展示 Bash (macOS / Linux) 格式的环境变量</NButton>
-		<NButton :disabled="secretType === 'hidden'" strong secondary class="mr-[10px] mb-[10px]" @click="secretType = 'hidden'">隐藏</NButton>
-		<NButton :disabled="secretType === 'hidden'" strong secondary class="mr-[10px] mb-[10px]" @click="copySecret">复制</NButton>
+		<NButton :disabled="secretType === 'windows'" strong secondary type="warning" class="mr-2 mb-2" @click="secretType = 'windows'">展示 Windows PowerShell 格式的环境变量</NButton>
+		<NButton :disabled="secretType === 'bash'" strong secondary type="warning" class="mr-2 mb-2" @click="secretType = 'bash'">展示 Bash (macOS / Linux) 格式的环境变量</NButton>
+		<NButton :disabled="secretType === 'hidden'" strong secondary class="mr-2 mb-2" @click="secretType = 'hidden'">隐藏</NButton>
+		<NButton :disabled="secretType === 'hidden'" strong secondary class="mr-2 mb-2" @click="copySecret">复制</NButton>
 
 		<pre v-if="secretType === 'windows'" class="code-space"><code>{{ computedWindwowsStgEnvBackEndSecretData }}</code></pre>
 		<pre v-else-if="secretType === 'bash'" class="code-space"><code>{{ computedBashStgEnvBackEndSecretData }}</code></pre>

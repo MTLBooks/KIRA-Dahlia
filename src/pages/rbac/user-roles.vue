@@ -39,7 +39,7 @@
 	 */
 	async function adminFetchUserRole() {
 		if (inputUid.value === undefined || inputUid.value === null) return;
-		
+
 		const adminGetUserRolesByUidRequest: AdminGetUserRolesByUidRequestDto = {
 			uid: inputUid.value ?? 0,
 		};
@@ -53,7 +53,7 @@
 				userRoles: userRolesResult.result?.roles.map(role => role.roleName),
 			};
 	}
-	
+
 	/**
 	 * 获取 RBAC 角色
 	 */
@@ -107,24 +107,24 @@
 <template>
 	<div class="container">
 		<NH2>KIRAKIRA RBAC 用户角色管理</NH2>
-		<NCollapse class="mb-[20px]">
+		<NCollapse class="mb-4">
 			<NCollapseItem title="使用说明" name="1">
 				<p>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</p>
 				<ul>
-					<li class="ml-[20px] mt-[5px]">一个用户可以拥有多个角色</li>
-					<li class="ml-[20px]">一个角色可以对应多位用户</li>
-					<li class="ml-[20px]">一个角色可以拥有对多个 API 的访问权限</li>
-					<li class="ml-[20px]">一个 API 可以对应多个角色</li>
+					<li class="ml-4 mt-1">一个用户可以拥有多个角色</li>
+					<li class="ml-4">一个角色可以对应多位用户</li>
+					<li class="ml-4">一个角色可以拥有对多个 API 的访问权限</li>
+					<li class="ml-4">一个 API 可以对应多个角色</li>
 				</ul>
 				<br />
 				<p>你可以查询一个用户的角色,或为其绑定或解除绑定角色。</p>
 				<p>拥有以下特殊名称的角色具有特殊效果，在绑定或解除绑定时请多加注意：</p>
 				<ul>
-					<li class="ml-[20px] mt-[5px]">root - 拥有 RBAC 的管理权限</li>
-					<li class="ml-[20px]">adminsitrator - 拥有对内容管理权限</li>
-					<li class="ml-[20px]">developer - 拥有某些开发资源的访问权限</li>
-					<li class="ml-[20px]">user - 普通用户</li>
-					<li class="ml-[20px]">blocked - 已封禁的用户</li>
+					<li class="ml-4 mt-1">root - 拥有 RBAC 的管理权限</li>
+					<li class="ml-4">adminsitrator - 拥有对内容管理权限</li>
+					<li class="ml-4">developer - 拥有某些开发资源的访问权限</li>
+					<li class="ml-4">user - 普通用户</li>
+					<li class="ml-4">blocked - 已封禁的用户</li>
 				</ul>
 				<br />
 				<p>注意: blocked 角色与其他角色互斥</p>
@@ -192,8 +192,8 @@
 			<NH6>用户 UUID</NH6>
 			<NInput v-model:value="userRolesFormModel.uuid" :showButton="false" :disabled="true" />
 			<NH6>用户的角色将会更新为下列角色</NH6>
-			<NTag v-for="role in userRolesFormModel.userRoles" :key="role" class="mr-[10px]">{{ role }}</NTag>
-			
+			<NTag v-for="role in userRolesFormModel.userRoles" :key="role" class="mr-2">{{ role }}</NTag>
+
 			<template #action>
 				<NButton @click="isShowSubmitUserRolesModal = false">算了</NButton>
 				<NButton :loading="isUpdatingUserRole" type="warning" :secondary="true" @click="adminUpdateUserRoles">确认更新</NButton>

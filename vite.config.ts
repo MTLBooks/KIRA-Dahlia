@@ -4,7 +4,7 @@ import components from "unplugin-vue-components/vite";
 import vueRouter from "unplugin-vue-router/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import tailwindcss from "tailwindcss";
+import tailwindcss from "@tailwindcss/vite";
 import autoprefixer from "autoprefixer";
 import fs from "fs";
 
@@ -37,11 +37,11 @@ export default defineConfig(({ mode }) => {
 			components({
 				dts: "./src/types/auto-components.d.ts",
 			}),
+			tailwindcss(),
 		],
 		css: {
 			postcss: {
 				plugins: [
-					tailwindcss,
 					autoprefixer,
 				],
 			},

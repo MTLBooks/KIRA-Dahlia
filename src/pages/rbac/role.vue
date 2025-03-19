@@ -53,7 +53,7 @@
 			render(row) {
 				return row.apiPathPermissions.map(apiPath => h(
 					NTag,
-					{ class: "mr-[10px]" },
+					{ class: "mr-2" },
 					{ default: () => apiPath },
 				));
 			},
@@ -66,7 +66,7 @@
 						"div",
 						{
 							id: `${rowData.roleName}-expand-title`,
-							class: "mb-[10px]",
+							class: "mb-2",
 						},
 						{ default: () => `角色 ${rowData.roleName} 有以下 API 路径的访问权限` },
 					),
@@ -74,7 +74,7 @@
 						NTag,
 						{
 							color: { color: apiPath.apiPathColor },
-							class: "mr-[10px] mb-[5px]",
+							class: "mr-2 mb-1",
 						},
 						{ default: () => apiPath.apiPath },
 					)),
@@ -104,7 +104,7 @@
 							strong: true,
 							secondary: true,
 							size: "small",
-							class: "mr-[10px]",
+							class: "mr-2",
 							onClick: () => openEditRoleModel(row),
 						},
 						{ default: () => "编辑" },
@@ -178,7 +178,7 @@
 		isShowCreateNewRoleModal.value = false;
 		createRoleFormModel.value = { ..._EMPTY_ROLE_CREATE_DATA_ };
 	}
-	
+
 	/**
 	 * 创建 RBAC 角色
 	 */
@@ -310,29 +310,29 @@
 <template>
 	<div class="container">
 		<NH2>KIRAKIRA RBAC 角色管理</NH2>
-		<NCollapse class="mb-[20px]">
+		<NCollapse class="mb-4">
 			<NCollapseItem title="使用说明" name="1">
 				<p>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</p>
 				<ul>
-					<li class="ml-[20px] mt-[5px]">一个用户可以拥有多个角色</li>
-					<li class="ml-[20px]">一个角色可以对应多位用户</li>
-					<li class="ml-[20px]">一个角色可以拥有对多个 API 的访问权限</li>
-					<li class="ml-[20px]">一个 API 可以对应多个角色</li>
+					<li class="ml-4 mt-1">一个用户可以拥有多个角色</li>
+					<li class="ml-4">一个角色可以对应多位用户</li>
+					<li class="ml-4">一个角色可以拥有对多个 API 的访问权限</li>
+					<li class="ml-4">一个 API 可以对应多个角色</li>
 				</ul>
 				<br />
 				<p>你可以添加或删除角色。</p>
 				<p>拥有以下特殊名称的角色具有特殊效果，在创建、分配（绑定/解除绑定）和删除时请多加注意：</p>
 				<ul>
-					<li class="ml-[20px] mt-[5px]">root - 拥有 RBAC 的管理权限</li>
-					<li class="ml-[20px]">adminsitrator - 拥有对内容管理权限</li>
-					<li class="ml-[20px]">developer - 拥有某些开发资源的访问权限</li>
-					<li class="ml-[20px]">user - 普通用户</li>
-					<li class="ml-[20px]">blocked - 已封禁的用户</li>
+					<li class="ml-4 mt-1">root - 拥有 RBAC 的管理权限</li>
+					<li class="ml-4">adminsitrator - 拥有对内容管理权限</li>
+					<li class="ml-4">developer - 拥有某些开发资源的访问权限</li>
+					<li class="ml-4">user - 普通用户</li>
+					<li class="ml-4">blocked - 已封禁的用户</li>
 				</ul>
 				<NDivider />
 			</NCollapseItem>
 		</NCollapse>
-		<NFlex class="mb-[10px]">
+		<NFlex class="mb-2">
 			<NButton @click="openCreateRoleModel">新增</NButton>
 		</NFlex>
 		<NDataTable
@@ -343,7 +343,7 @@
 			:resizable="true"
 			:rowKey="row => row.roleName"
 		/>
-		<NFlex justify="end" class="mt-[20px]">
+		<NFlex justify="end" class="mt-4">
 			<NPagination
 				:displayOrder="['quick-jumper', 'pages', 'size-picker']"
 				:pageCount="rbacRolePageCount"
@@ -361,7 +361,7 @@
 			</NPagination>
 		</NFlex>
 	</div>
-	
+
 	<NModal
 		v-model:show="isShowDeleteRoleModal"
 		:maskClosable="false"
@@ -370,7 +370,7 @@
 	>
 		<NH6>再次输入角色的名字来确定删除</NH6>
 		<NInput v-model:value="userInputDeleteingRole" placeholder="角色名字" />
-			
+
 		<template #action>
 			<NButton @click="closeDeleteRoleModel">算了</NButton>
 			<NButton :disabled="currentDeletingRole !== userInputDeleteingRole" :loading="isDeletingRole" type="warning" :secondary="true" @click="fetchDeleteRbacRole(currentDeletingRole)">确认删除</NButton>
@@ -394,7 +394,7 @@
 		<NH6>角色的介绍</NH6>
 		<NInput v-model:value="createRoleFormModel.roleDescription" type="textarea" :autosize="{ minRows: 3 }" placeholder="角色的详细说明" />
 		<template #footer>
-			<NButton @click="closeCreateRoleModel" class="mr-[10px]">算了</NButton>
+			<NButton @click="closeCreateRoleModel" class="mr-2">算了</NButton>
 			<NButton :disabled="!createRoleFormModel.roleName" :loading="isCreatingRole" type="primary" :secondary="true" @click="createRole">确认创建</NButton>
 		</template>
 	</NModal>
@@ -423,7 +423,7 @@
 			targetFilterable
 		/>
 		<template #footer>
-			<NButton @click="closeEditRoleModel" class="mr-[10px]">算了</NButton>
+			<NButton @click="closeEditRoleModel" class="mr-2">算了</NButton>
 			<NButton :disabled="!updateApiPathPermissionsForRoleFormModel.roleName" :loading="isEditingRole" type="primary" :secondary="true" @click="updateApiPathPermissionsForRole">确认更新角色</NButton>
 		</template>
 	</NModal>

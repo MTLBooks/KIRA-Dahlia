@@ -181,7 +181,7 @@
 		}
 		isCreatingApiPath.value = true;
 		const createRbacApiPathResult = await createRbacApiPathController(createNewApiPathModal.value);
-		
+
 		await fetchRbacApiPath();
 		if (createRbacApiPathResult.success)
 			closeCreateApiPathModel();
@@ -200,14 +200,14 @@
 <template>
 	<div class="container">
 		<NH2>KIRAKIRA RBAC API 路径管理</NH2>
-		<NCollapse class="mb-[20px]">
+		<NCollapse class="mb-4">
 			<NCollapseItem title="使用说明" name="1">
 				<p>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</p>
 				<ul>
-					<li class="ml-[20px] mt-[5px]">一个用户可以拥有多个角色</li>
-					<li class="ml-[20px]">一个角色可以对应多位用户</li>
-					<li class="ml-[20px]">一个角色可以拥有对多个 API 的访问权限</li>
-					<li class="ml-[20px]">一个 API 可以对应多个角色</li>
+					<li class="ml-4 mt-1">一个用户可以拥有多个角色</li>
+					<li class="ml-4">一个角色可以对应多位用户</li>
+					<li class="ml-4">一个角色可以拥有对多个 API 的访问权限</li>
+					<li class="ml-4">一个 API 可以对应多个角色</li>
 				</ul>
 				<br />
 				<p>你可以添加新的 API 路径，前提是后端中该 API 的 Controller 层受 RBAC 管制，否则添加 API 路径无效。</p>
@@ -217,7 +217,7 @@
 				<NDivider />
 			</NCollapseItem>
 		</NCollapse>
-		<NFlex class="mb-[10px]">
+		<NFlex class="mb-2">
 			<NButton @click="openCreateApiPathModel">新增</NButton>
 		</NFlex>
 		<NDataTable
@@ -227,7 +227,7 @@
 			:bordered="false"
 			:rowKey="row => row.apiPath"
 		/>
-		<NFlex justify="end" class="mt-[20px]">
+		<NFlex justify="end" class="mt-4">
 			<NPagination
 				:displayOrder="['quick-jumper', 'pages', 'size-picker']"
 				:pageCount="rbacApiPathPageCount"
@@ -263,7 +263,7 @@
 		<NH6>API 路径的介绍</NH6>
 		<NInput v-model:value="createNewApiPathModal.apiPathDescription" type="textarea" :autosize="{ minRows: 3 }" placeholder="API 路径的详细说明" />
 		<template #footer>
-			<NButton @click="closeCreateApiPathModel" class="mr-[10px]">算了</NButton>
+			<NButton @click="closeCreateApiPathModel" class="mr-2">算了</NButton>
 			<NButton :disabled="!createNewApiPathModal.apiPath" :loading="isCreatingApiPath" type="primary" :secondary="true" @click="createApiPath">确认创建</NButton>
 		</template>
 	</NModal>
@@ -276,7 +276,7 @@
 	>
 		<NH6>再次输入角色的名字来确定删除</NH6>
 		<NInput v-model:value="userInputDeleteingApiPath" placeholder="角色名字" />
-		
+
 		<template #action>
 			<NButton @click="closeDeleteApiPathModel">算了</NButton>
 			<NButton :disabled="currentDeletingApiPath !== userInputDeleteingApiPath" :loading="isDeletingApiPath" type="warning" :secondary="true" @click="deleteApiPath(currentDeletingApiPath)">确认删除</NButton>
