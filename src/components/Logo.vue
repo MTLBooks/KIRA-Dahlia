@@ -4,7 +4,7 @@
 </script>
 
 <template>
-	<svg width="247" height="17" viewBox="0 0 247 17" :fill="themeVars.primaryColor" xmlns="http://www.w3.org/2000/svg">
+	<svg class="shrink-0" width="247" height="17" viewBox="0 0 247 17" :fill="themeVars.primaryColor" xmlns="http://www.w3.org/2000/svg">
 		<path
 			d="M5.27406 10.2214L2.84599 12.7773L2.84599 16.7937H0L0 1.09033L2.84427 1.09033L2.84427 9.14546L10.4114 1.09033L13.6059 1.09033L7.17645 8.11241L14.0012 16.7937H10.6762L5.27406 10.2214Z"
 		/>

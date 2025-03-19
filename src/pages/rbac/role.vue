@@ -41,7 +41,7 @@
 			title: "可以访问以下 API 路径",
 			key: "apiPathPermissions",
 			ellipsis: true,
-			width: "400px",
+			width: "min(400px, 40dvw)",
 			render: row => row.apiPathPermissions.map(apiPath => <NTag class="mie-2">{apiPath}</NTag>),
 		},
 		{

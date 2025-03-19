@@ -81,13 +81,16 @@
 				</NBlockquote>
 			</NCollapseItem>
 		</NCollapse>
-		<NFlex class="mbe-4" :wrap="false">
-			<NButton :secondary="secretType !== 'windows'" strong type="warning" @click="secretType = secretType !== 'windows' ? 'windows' : 'hidden'">{{ getShownText(secretType !== "windows") }} Windows PowerShell 格式的环境变量</NButton>
-			<NButton :secondary="secretType !== 'bash'" strong type="warning" @click="secretType = secretType !== 'bash' ? 'bash' : 'hidden'">{{ getShownText(secretType !== "bash") }} Bash (macOS / Linux) 格式的环境变量</NButton>
-			<div class="is-full"></div>
-			<NButton :disabled="secretType === 'hidden'" strong secondary @click="copySecret"><template #icon>
-				<Icon name="contentCopy" />
-			</template>复制</NButton>
+		<NFlex class="mbe-4 justify-between">
+			<NFlex>
+				<NButton :secondary="secretType !== 'windows'" strong type="warning" @click="secretType = secretType !== 'windows' ? 'windows' : 'hidden'">{{ getShownText(secretType !== "windows") }} Windows PowerShell 格式的环境变量</NButton>
+				<NButton :secondary="secretType !== 'bash'" strong type="warning" @click="secretType = secretType !== 'bash' ? 'bash' : 'hidden'">{{ getShownText(secretType !== "bash") }} Bash (macOS / Linux) 格式的环境变量</NButton>
+			</NFlex>
+			<NFlex>
+				<NButton :disabled="secretType === 'hidden'" strong secondary @click="copySecret"><template #icon>
+					<Icon name="contentCopy" />
+				</template>复制</NButton>
+			</NFlex>
 		</NFlex>
 
 		<NCollapseTransition :show="secretType !== 'hidden'">

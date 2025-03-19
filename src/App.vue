@@ -11,10 +11,16 @@
 
 	const defaultExpandedKeys = menuOptions.map(option => option.key);
 	const { theme, themeOverrides } = useOsTheme();
+	const isNarrow = ref(false);
 
 	const selfUserInfoStore = useSelfUserInfoStore();
-
 	if (!noBackend) getSelfUserInfo();
+
+	onMounted(() => {
+		const media = window.matchMedia("(width < 900px)");
+		isNarrow.value = media.matches;
+		media.onchange = ({ matches }) => isNarrow.value = matches;
+	});
 </script>
 
 <template>
@@ -29,9 +35,16 @@
 			>
 				<NThemeEditor>
 					<NFlex vertical class="gap-0 h-dvh">
-						<NLayoutHeader class="pli-6 bs-16 flex items-center justify-between shrink-0" bordered>
+						<NLayoutHeader class="gap-2 pli-6 bs-16 flex items-center justify-between shrink-0" bordered>
 							<Logo />
-							<NFlex class="items-center">
+							<NMenu
+								mode="horizontal"
+								:options="menuOptions"
+								:value="$route.path"
+								responsive
+								v-if="isNarrow"
+							/>
+							<NFlex class="items-center shrink-0">
 								<NFlex class="items-center gap-1.5">
 									<!-- TODO: 头像的链接计算... 要根据生产环境还是测试环境计算吗？ -->
 									<NAvatar round :size="20" />
@@ -52,6 +65,7 @@
 								:collapsedWidth="64"
 								:width="240"
 								showTrigger="bar"
+								v-if="!isNarrow"
 							>
 								<NMenu
 									:collapsedWidth="64"

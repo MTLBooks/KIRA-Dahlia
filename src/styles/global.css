@@ -30,6 +30,10 @@
 	}
 }
 
+@utility container {
+	max-width: unset;
+}
+
 .container {
 	@apply py-8 px-14;
 }
