@@ -10,7 +10,7 @@ interface MenuItem {
 	children?: MenuItem[];
 }
 
-const selfUserInfo = await getSelfUserInfo(undefined, false); // 仅获取数据，不修改 pinia
+const selfUserInfo = noBackend ? null! : await getSelfUserInfo(undefined, false); // 仅获取数据，不修改 pinia
 
 const menu: MenuItem[] = [
 	{

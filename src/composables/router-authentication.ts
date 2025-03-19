@@ -20,6 +20,7 @@ export async function getUserInfoAndCheckRole(roles: string[]) {
  * @returns 检查结果
  */
 export function checkUserRole(roles: string[], selfUserInfo: GetSelfUserInfoResponseDto): boolean {
+	if (noBackend) return true;
 	if (selfUserInfo.success && roles.some(role => !!selfUserInfo.result?.roles?.includes(role)))
 		return true;
 	else

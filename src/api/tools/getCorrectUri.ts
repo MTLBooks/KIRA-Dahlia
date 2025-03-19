@@ -14,8 +14,13 @@ export default function getCorrectUri() {
 	const LOCAL_BACKEND_URI = "https://localhost:9999";
 	const PROD_BACKEND_URI = "https://rosales.kirakira.moe";
 
-	const BACK_END_PROVIDER = import.meta.env.VITE_BACK_END_PROVIDER;
-	const backendUrl = BACK_END_PROVIDER === "local" ? LOCAL_BACKEND_URI : PROD_BACKEND_URI; // 如果环境变量 BACK_END_PROVIDER 的值为 local，则使用本地 API。
+	const BACKEND_PROVIDER = import.meta.env.VITE_BACKEND_PROVIDER;
+	const backendUrl =
+		BACKEND_PROVIDER === "no" ? "" :
+		BACKEND_PROVIDER === "local" ? LOCAL_BACKEND_URI : // 如果环境变量 BACKEND_PROVIDER 的值为 local，则使用本地 API。
+		PROD_BACKEND_URI;
 
 	return backendUrl;
 }
+
+export const noBackend = !getCorrectUri();

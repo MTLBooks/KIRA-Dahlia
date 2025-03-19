@@ -8,6 +8,7 @@ import "styles/global.css";
 
 const router = createRouter({ history: createWebHistory(), routes });
 router.beforeEach(async to => {
+	if (noBackend) return true;
 	if (to.path === "/user/manage") return await getUserInfoAndCheckRole(["administrator"]); // TODO
 	if (to.path === "/stg-secret") return await getUserInfoAndCheckRole(["developer"]);
 	if (to.path === "/rbac/api-path") return await getUserInfoAndCheckRole(["root", "developer"]);

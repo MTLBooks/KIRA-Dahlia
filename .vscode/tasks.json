@@ -16,6 +16,14 @@
 			"problemMatcher": [],
 			"label": "npm: dev-local",
 			"detail": "vite"
-		}
+		},
+		{
+			"type": "npm",
+			"script": "dev-nobackend",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: dev-nobackend",
+			"detail": "vite"
+		},
 	]
 }
