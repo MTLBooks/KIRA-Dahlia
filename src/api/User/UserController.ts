@@ -24,8 +24,8 @@ export const userLogin = async (userLoginRequest: UserLoginRequestDto): Promise<
 export const getSelfUserInfo = async (getSelfUserInfoRequest?: GetSelfUserInfoRequestDto, usePinia: boolean = true): Promise<GetSelfUserInfoResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	const selfUserInfo = await POST(`${USER_API_URL}/self`, getSelfUserInfoRequest, { credentials: "include" }) as GetSelfUserInfoResponseDto;
-	const selfUserInfoResult = selfUserInfo?.result;
-	if (selfUserInfo?.success && selfUserInfoResult) {
+	const selfUserInfoResult = selfUserInfo.result;
+	if (selfUserInfo.success && selfUserInfoResult) {
 		if (usePinia) {
 			const selfUserInfoStore = useSelfUserInfoStore();
 			selfUserInfoStore.isLogined = true;
@@ -62,7 +62,7 @@ export const checkUserToken = async (): Promise<CheckUserTokenResponseDto> => {
 export async function userLogout(usePinia: boolean = true): Promise<UserLogoutResponseDto> {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	const logoutResult = await GET(`${USER_API_URL}/logout`, { credentials: "include" }) as UserLogoutResponseDto;
-	if (logoutResult?.success) {
+	if (logoutResult.success) {
 		if (usePinia) {
 			const selfUserInfoStore = useSelfUserInfoStore();
 			selfUserInfoStore.isLogined = false;

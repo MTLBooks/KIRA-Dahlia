@@ -43,8 +43,7 @@ export async function GET(url: string, requestOptions: RequestObject = {}, heade
 		return response.json();
 	} catch (error) {
 		console.error("ERROR", `something wrong in 'GET', URL: ${url}`, error); // TODO: Remove Console Output?
-		if (import.meta.env.PROD)
-			throw error;
+		throw error;
 	}
 }
 
@@ -99,7 +98,6 @@ export async function DELETE(url: string, body: unknown, requestOptions: Request
 		return response.json();
 	} catch (error) {
 		console.error("ERROR", `something wrong in 'DELETE', URL: ${url}`, error); // TODO: Remove Console Output?
-		if (import.meta.env.PROD)
-			throw error;
+		throw error;
 	}
 }
