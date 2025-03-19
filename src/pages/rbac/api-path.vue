@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 	import { CreateRbacApiPathRequestDto, DeleteRbacApiPathRequestDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto } from "api/Rbac/RbacControllerDto";
-	import { DataTableColumns, NButton, NTag, useDialog } from "naive-ui";
+	import { useDialog } from "naive-ui";
 
 	const dialog = useDialog();
 
@@ -8,13 +8,13 @@
 
 	const isShowCreateNewApiPathModal = ref(false);
 	const isCreatingApiPath = ref(false);
-	const _EMPTY_API_PATH_DATA_ = {
+	const EMPTY_API_PATH_DATA = {
 		apiPath: "",
 		apiPathType: "",
 		apiPathColor: "",
 		apiPathDescription: "",
 	};
-	const createNewApiPathModal = ref<CreateRbacApiPathRequestDto>({ ..._EMPTY_API_PATH_DATA_ });
+	const createNewApiPathModal = ref<CreateRbacApiPathRequestDto>({ ...EMPTY_API_PATH_DATA });
 
 	const isShowDeleteApiPathModal = ref(false);
 	const isDeletingApiPath = ref(false);
@@ -25,26 +25,12 @@
 		{
 			title: "API 路径",
 			key: "apiPath",
-			render(row) {
-				return h(
-					NTag,
-					{
-						color: { color: row.isAssignedOnce ? row.apiPathColor : "#EEEEEEFF" },
-					},
-					{ default: () => row.apiPath },
-				);
-			},
+			render: row => <NTag color={{ color: row.isAssignedOnce ? row.apiPathColor : "#EEEEEEFF" }}>{row.apiPath}</NTag>,
 		},
 		{
 			title: "是否至少绑定到一个角色",
 			key: "isAssignedOnce",
-			render(row) {
-				return h(
-					"div",
-					{ id: `${row.apiPath}-isAssignedOnce-col` },
-					{ default: () => row.isAssignedOnce },
-				);
-			},
+			render: row => <div id={`${row.apiPath}-isAssignedOnce-col`}>{row.isAssignedOnce}</div>,
 		},
 		{
 			title: "类型",
@@ -61,18 +47,7 @@
 		{
 			title: "操作",
 			key: "actions",
-			render(row) {
-				return h(
-					NButton,
-					{
-						strong: true,
-						secondary: true,
-						size: "small",
-						onClick: () => openDeleteApiPathModel(row.apiPath ?? ""),
-					},
-					{ default: () => "删除" },
-				);
-			},
+			render: row => <NButton strong secondary size="small" onClick={() => openDeleteApiPathModel(row.apiPath ?? "")}>删除</NButton>,
 		},
 	];
 
@@ -159,7 +134,7 @@
 	 * 清空表单数据并开启创建 API 路径的模态框
 	 */
 	function openCreateApiPathModel() {
-		createNewApiPathModal.value = { ..._EMPTY_API_PATH_DATA_ };
+		createNewApiPathModal.value = { ...EMPTY_API_PATH_DATA };
 		isShowCreateNewApiPathModal.value = true;
 	}
 
@@ -168,7 +143,7 @@
 	 */
 	function closeCreateApiPathModel() {
 		isShowCreateNewApiPathModal.value = false;
-		createNewApiPathModal.value = { ..._EMPTY_API_PATH_DATA_ };
+		createNewApiPathModal.value = { ...EMPTY_API_PATH_DATA };
 	}
 
 	/**
@@ -199,26 +174,25 @@
 
 <template>
 	<div class="container">
-		<NH2>KIRAKIRA RBAC API 路径管理</NH2>
-		<NCollapse class="mb-4">
-			<NCollapseItem title="使用说明" name="1">
-				<p>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</p>
-				<ul>
-					<li class="ml-4 mt-1">一个用户可以拥有多个角色</li>
-					<li class="ml-4">一个角色可以对应多位用户</li>
-					<li class="ml-4">一个角色可以拥有对多个 API 的访问权限</li>
-					<li class="ml-4">一个 API 可以对应多个角色</li>
-				</ul>
-				<br />
-				<p>你可以添加新的 API 路径，前提是后端中该 API 的 Controller 层受 RBAC 管制，否则添加 API 路径无效。</p>
-				<p>你也可以删除 API 路径，前提是该 API 路径没有绑定到任何角色。</p>
-				<br />
-				<p>没有绑定到角色的 API 路径会显示为灰色，已经绑定到角色的 API 路径会显示用户设置的颜色。</p>
-				<NDivider />
+		<PageHeading>KIRAKIRA RBAC API 路径管理</PageHeading>
+		<NCollapse class="mlb-4">
+			<NCollapseItem title="使用说明">
+				<NP>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</NP>
+				<NUl>
+					<NLi>一个用户可以拥有多个角色</NLi>
+					<NLi>一个角色可以对应多位用户</NLi>
+					<NLi>一个角色可以拥有对多个 API 的访问权限</NLi>
+					<NLi>一个 API 可以对应多个角色</NLi>
+				</NUl>
+				<NP>
+					你可以添加新的 API 路径，前提是后端中该 API 的 Controller 层受 RBAC 管制，否则添加 API 路径无效。<br />
+					你也可以删除 API 路径，前提是该 API 路径没有绑定到任何角色。
+				</NP>
+				<NP>没有绑定到角色的 API 路径会显示为灰色，已经绑定到角色的 API 路径会显示用户设置的颜色。</NP>
 			</NCollapseItem>
 		</NCollapse>
-		<NFlex class="mb-2">
-			<NButton @click="openCreateApiPathModel">新增</NButton>
+		<NFlex class="mlb-2">
+			<NButton @click="openCreateApiPathModel"><template #icon><Icon name="add" /></template>新增</NButton>
 		</NFlex>
 		<NDataTable
 			:columns="columns"
@@ -227,7 +201,7 @@
 			:bordered="false"
 			:rowKey="row => row.apiPath"
 		/>
-		<NFlex justify="end" class="mt-4">
+		<NFlex justify="end" class="mbs-4">
 			<NPagination
 				:displayOrder="['quick-jumper', 'pages', 'size-picker']"
 				:pageCount="rbacApiPathPageCount"
@@ -238,48 +212,55 @@
 				:onUpdate:pageSize="pagination.onUpdatePageSize"
 				showQuickJumper
 				showSizePicker
-			>
-				<template #goto>
-					跳转至
-				</template>
-			</NPagination>
+			/>
 		</NFlex>
+
+		<NModal
+			class="is-[600px]"
+			v-model:show="isShowCreateNewApiPathModal"
+			:maskClosable="false"
+			preset="card"
+			title="创建新 API 路径"
+		>
+			<NForm>
+				<NFormItem label="API 路径的名字" :rule="{ required: true }">
+					<NInput :status="!createNewApiPathModal.apiPath ? 'error' : 'success'" v-model:value="createNewApiPathModal.apiPath" placeholder="（必填）唯一且简短的 API 路径名，例：/02/koa/hello" />
+				</NFormItem>
+				<NFormItem label="API 路径的类型">
+					<NInput v-model:value="createNewApiPathModal.apiPathType" placeholder='用于标识 API 路径，例如 "video"' />
+				</NFormItem>
+				<NFormItem label="API 路径的显示颜色">
+					<NFlex vertical :size="0" class="is-full">
+						<small class="n-form-item-label text-xs min-bs-0">填写颜色可以更方便区分不同 API 路径</small>
+						<NColorPicker v-model:value="createNewApiPathModal.apiPathColor" :modes="['hex']" :showAlpha="true" />
+					</NFlex>
+				</NFormItem>
+				<NFormItem label="API 路径的介绍">
+					<NInput v-model:value="createNewApiPathModal.apiPathDescription" type="textarea" :autosize="{ minRows: 3 }" placeholder="API 路径的详细说明" />
+				</NFormItem>
+			</NForm>
+			<template #footer>
+				<NFlex class="justify-end">
+					<NButton @click="closeCreateApiPathModel">算了</NButton>
+					<NButton :disabled="!createNewApiPathModal.apiPath" :loading="isCreatingApiPath" type="primary" :secondary="true" @click="createApiPath">确认创建</NButton>
+				</NFlex>
+			</template>
+		</NModal>
+
+		<NModal
+			v-model:show="isShowDeleteApiPathModal"
+			:maskClosable="false"
+			preset="dialog"
+			:title="`确认要删除角色 ${currentDeletingApiPath} 吗？`"
+		>
+			<NFormItem label="再次输入角色的名字来确定删除">
+				<NInput v-model:value="userInputDeleteingApiPath" placeholder="角色名字" />
+			</NFormItem>
+
+			<template #action>
+				<NButton @click="closeDeleteApiPathModel">算了</NButton>
+				<NButton :disabled="currentDeletingApiPath !== userInputDeleteingApiPath" :loading="isDeletingApiPath" type="warning" :secondary="true" @click="deleteApiPath(currentDeletingApiPath)">确认删除</NButton>
+			</template>
+		</NModal>
 	</div>
-
-	<NModal
-		style="width: 600px"
-		v-model:show="isShowCreateNewApiPathModal"
-		:maskClosable="false"
-		preset="card"
-		title="创建新 API 路径"
-	>
-		<NH6>API 路径的名字 *</NH6>
-		<NInput :status="!createNewApiPathModal.apiPath ? 'error' : 'success'" v-model:value="createNewApiPathModal.apiPath" placeholder="（必填）唯一且简短的 API 路径名，例：/02/koa/hello" />
-		<NH6>API 路径的类型</NH6>
-		<NInput v-model:value="createNewApiPathModal.apiPathType" placeholder="用于标识API 路径，例如 'video'" />
-		<NH6>API 路径的显示颜色</NH6>
-		填写颜色可以更方便区分不同 API 路径
-		<NColorPicker v-model:value="createNewApiPathModal.apiPathColor" :modes="['hex']" :showAlpha="true" />
-		<NH6>API 路径的介绍</NH6>
-		<NInput v-model:value="createNewApiPathModal.apiPathDescription" type="textarea" :autosize="{ minRows: 3 }" placeholder="API 路径的详细说明" />
-		<template #footer>
-			<NButton @click="closeCreateApiPathModel" class="mr-2">算了</NButton>
-			<NButton :disabled="!createNewApiPathModal.apiPath" :loading="isCreatingApiPath" type="primary" :secondary="true" @click="createApiPath">确认创建</NButton>
-		</template>
-	</NModal>
-
-	<NModal
-		v-model:show="isShowDeleteApiPathModal"
-		:maskClosable="false"
-		preset="dialog"
-		:title="`确认要删除角色 ${currentDeletingApiPath} 吗？`"
-	>
-		<NH6>再次输入角色的名字来确定删除</NH6>
-		<NInput v-model:value="userInputDeleteingApiPath" placeholder="角色名字" />
-
-		<template #action>
-			<NButton @click="closeDeleteApiPathModel">算了</NButton>
-			<NButton :disabled="currentDeletingApiPath !== userInputDeleteingApiPath" :loading="isDeletingApiPath" type="warning" :secondary="true" @click="deleteApiPath(currentDeletingApiPath)">确认删除</NButton>
-		</template>
-	</NModal>
 </template>

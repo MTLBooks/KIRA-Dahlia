@@ -3,8 +3,8 @@
 	import { useMessage } from "naive-ui";
 
 	const message = useMessage();
-
 	const secretType = ref<"hidden" | "windows" | "bash">("hidden");
+	const getShownText = (shown: boolean) => shown ? "展示" : "隐藏";
 
 	type StgEnvBackEndSecret = GetStgEnvBackEndSecretResponse["result"];
 	const stgEnvBackEndSecretData = ref<StgEnvBackEndSecret["envs"]>(); // 环境变量数据（对象格式）
@@ -49,51 +49,50 @@
 
 <template>
 	<div class="container">
-		<NH2>KIRAKIRA 预生产环境 环境变量</NH2>
-		<NFlex size="small"><NTag type="error">密钥严禁公开</NTag><NTag>请先阅读使用说明</NTag></NFlex>
-		<NCollapse class="mt-4 mb-4">
-			<NCollapseItem title="使用说明" name="1">
-				<p>点击下方按钮后，将会显示 KIRAKIRA 预生产环境的环境变量。</p>
-				<br />
-				<p>这些环境变量包括了后端程序端口、Cloudflare 密钥、数据库密钥、搜索引擎密钥、邮件服务密钥和获取以下密钥使用的密钥。</p>
-				<p><b>任何对密钥的公开披露或滥用行为将会导致严重的隐私泄露事故，并涉嫌违法！</b></p>
-				<br />
-				<p>最佳实践：随用随取，请不要保存这些密钥至本地。仅在程序启动前复制并粘贴一次，然后清空剪贴板。</p>
-				<br />
-				<p>请允许我引用某些 linux 发行版中的安全格言：</p>
-				<p class="ml-2 mt-2">We trust you have received the usual lecture from the local System</p>
-				<p class="ml-2">Administrator. It usually boils down to these three things:</p>
-				<ul class="ml-2">
-					<li class="ml-4 mt-1">#1) Respect the privacy of others.</li>
-					<li class="ml-4">#2) Think before you type.</li>
-					<li class="ml-4">#3) With great power comes great responsibility.</li>
-				</ul>
-				<br />
-				<p class="ml-2">我们信任您已经从系统管理员那里了解了日常注意事项。</p>
-				<p class="ml-2">总结起来无外乎这三点：</p>
-				<ul class="ml-2">
-					<li class="ml-4 mt-1">#1) 尊重别人的隐私。</li>
-					<li class="ml-4">#2) 输入前要先考虑（后果和风险）。</li>
-					<li class="ml-4">#3) 权力越大，责任越大。</li>
-				</ul>
-				<NDivider />
+		<PageHeading>KIRAKIRA 预生产环境 环境变量</PageHeading>
+		<NFlex size="small">
+			<NTag type="error">密钥严禁公开</NTag>
+			<NTag>请先阅读使用说明</NTag>
+		</NFlex>
+		<NCollapse class="mlb-4">
+			<NCollapseItem title="使用说明">
+				<NP>点击下方按钮后，将会显示 KIRAKIRA 预生产环境的环境变量。</NP>
+				<NP>
+					这些环境变量包括了后端程序端口、Cloudflare 密钥、数据库密钥、搜索引擎密钥、邮件服务密钥和获取以下密钥使用的密钥。<br />
+					<b>任何对密钥的公开披露或滥用行为将会导致严重的隐私泄露事故，并涉嫌违法！</b>
+				</NP>
+				<NP>最佳实践：随用随取，请不要保存这些密钥至本地。仅在程序启动前复制并粘贴一次，然后清空剪贴板。</NP>
+				<NP>请允许我引用某些 linux 发行版中的安全格言：</NP>
+				<NBlockquote>
+					<NP>We trust you have received the usual lecture from the local System Administrator. It usually boils down to these three things:</NP>
+					<NOl>
+						<NLi>Respect the privacy of others.</NLi>
+						<NLi>Think before you type.</NLi>
+						<NLi>With great power comes great responsibility.</NLi>
+					</NOl>
+				</NBlockquote>
+				<NBlockquote>
+					<NP>我们信任您已经从系统管理员那里了解了日常注意事项。总结起来无外乎这三点：</NP>
+					<NOl>
+						<NLi>尊重别人的隐私。</NLi>
+						<NLi>输入前要先考虑（后果和风险）。</NLi>
+						<NLi>权力越大，责任越大。</NLi>
+					</NOl>
+				</NBlockquote>
 			</NCollapseItem>
 		</NCollapse>
-		<NButton :disabled="secretType === 'windows'" strong secondary type="warning" class="mr-2 mb-2" @click="secretType = 'windows'">展示 Windows PowerShell 格式的环境变量</NButton>
-		<NButton :disabled="secretType === 'bash'" strong secondary type="warning" class="mr-2 mb-2" @click="secretType = 'bash'">展示 Bash (macOS / Linux) 格式的环境变量</NButton>
-		<NButton :disabled="secretType === 'hidden'" strong secondary class="mr-2 mb-2" @click="secretType = 'hidden'">隐藏</NButton>
-		<NButton :disabled="secretType === 'hidden'" strong secondary class="mr-2 mb-2" @click="copySecret">复制</NButton>
+		<NFlex class="mbe-4" :wrap="false">
+			<NButton :secondary="secretType !== 'windows'" strong type="warning" @click="secretType = secretType !== 'windows' ? 'windows' : 'hidden'">{{ getShownText(secretType !== "windows") }} Windows PowerShell 格式的环境变量</NButton>
+			<NButton :secondary="secretType !== 'bash'" strong type="warning" @click="secretType = secretType !== 'bash' ? 'bash' : 'hidden'">{{ getShownText(secretType !== "bash") }} Bash (macOS / Linux) 格式的环境变量</NButton>
+			<div class="is-full"></div>
+			<NButton :disabled="secretType === 'hidden'" strong secondary @click="copySecret"><template #icon>
+				<Icon name="contentCopy" />
+			</template>复制</NButton>
+		</NFlex>
 
-		<pre v-if="secretType === 'windows'" class="code-space"><code>{{ computedWindwowsStgEnvBackEndSecretData }}</code></pre>
-		<pre v-else-if="secretType === 'bash'" class="code-space"><code>{{ computedBashStgEnvBackEndSecretData }}</code></pre>
+		<NCollapseTransition :show="secretType !== 'hidden'">
+			<NCode v-if="secretType === 'windows'" :code="computedWindwowsStgEnvBackEndSecretData" showLineNumbers language="powershell" />
+			<NCode v-else-if="secretType === 'bash'" :code="computedBashStgEnvBackEndSecretData" showLineNumbers language="bash" />
+		</NCollapseTransition>
 	</div>
 </template>
-
-<style lang="css" scoped>
-	.code-space {
-		background-color: #EEEEEEFF;
-    border: 1px solid #AAAAAAFF;
-    border-radius: 5px 5px;
-    padding: 10px;
-	}
-</style>

@@ -36,6 +36,10 @@ export default defineConfig(({ mode }) => {
 			}),
 			components({
 				dts: "./src/types/auto-components.d.ts",
+				dirs: [
+					"./src/components/**",
+				],
+				extensions: ["vue", "tsx", "jsx"],
 			}),
 			tailwindcss(),
 		],

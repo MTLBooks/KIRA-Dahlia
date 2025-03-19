@@ -22,11 +22,9 @@ export default [
 		},
 		languageOptions: {
 			parserOptions: {
-				parser: {
-					ts: tseslint.parser,
-				},
-				sourceType: "module",
-				ecmaVersion: "latest",
+				parser: tseslint.parser,
+				jsx: true,
+				extraFileExtensions: [".vue"],
 			},
 			ecmaVersion: "latest",
 			sourceType: "module",

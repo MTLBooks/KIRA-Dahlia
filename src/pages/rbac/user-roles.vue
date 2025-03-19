@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	import { AdminUpdateUserRoleRequestDto, AdminGetUserRolesByUidRequestDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "api/Rbac/RbacControllerDto";
-	import { NButton, useDialog } from "naive-ui";
+	import { useDialog } from "naive-ui";
 
 	const dialog = useDialog();
 
@@ -18,15 +18,13 @@
 		};
 	}));
 
-	const userRolesFormModel = ref<
-		{
-			uid: number | undefined;
-			uuid: string | undefined;
-			username: string | undefined;
-			userNickname: string | undefined;
-			userRoles: string[] | undefined;
-		}
-	>({
+	const userRolesFormModel = ref<{
+		uid: number | undefined;
+		uuid: string | undefined;
+		username: string | undefined;
+		userNickname: string | undefined;
+		userRoles: string[] | undefined;
+	}>({
 		uid: undefined,
 		uuid: undefined,
 		username: undefined,
@@ -106,46 +104,41 @@
 
 <template>
 	<div class="container">
-		<NH2>KIRAKIRA RBAC 用户角色管理</NH2>
-		<NCollapse class="mb-4">
-			<NCollapseItem title="使用说明" name="1">
-				<p>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</p>
-				<ul>
-					<li class="ml-4 mt-1">一个用户可以拥有多个角色</li>
-					<li class="ml-4">一个角色可以对应多位用户</li>
-					<li class="ml-4">一个角色可以拥有对多个 API 的访问权限</li>
-					<li class="ml-4">一个 API 可以对应多个角色</li>
-				</ul>
-				<br />
-				<p>你可以查询一个用户的角色,或为其绑定或解除绑定角色。</p>
-				<p>拥有以下特殊名称的角色具有特殊效果，在绑定或解除绑定时请多加注意：</p>
-				<ul>
-					<li class="ml-4 mt-1">root - 拥有 RBAC 的管理权限</li>
-					<li class="ml-4">adminsitrator - 拥有对内容管理权限</li>
-					<li class="ml-4">developer - 拥有某些开发资源的访问权限</li>
-					<li class="ml-4">user - 普通用户</li>
-					<li class="ml-4">blocked - 已封禁的用户</li>
-				</ul>
-				<br />
-				<p>注意: blocked 角色与其他角色互斥</p>
-				<NDivider />
+		<PageHeading>KIRAKIRA RBAC 用户角色管理</PageHeading>
+		<NCollapse class="mlb-4">
+			<NCollapseItem title="使用说明">
+				<NP>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</NP>
+				<NUl>
+					<NLi>一个用户可以拥有多个角色</NLi>
+					<NLi>一个角色可以对应多位用户</NLi>
+					<NLi>一个角色可以拥有对多个 API 的访问权限</NLi>
+					<NLi>一个 API 可以对应多个角色</NLi>
+				</NUl>
+				<NP>
+					你可以查询一个用户的角色，或为其绑定或解除绑定角色。<br />
+					拥有以下特殊名称的角色具有特殊效果，在绑定或解除绑定时请多加注意：
+				</NP>
+				<NUl>
+					<NLi><b>root</b> - 拥有 RBAC 的管理权限</NLi>
+					<NLi><b>adminsitrator</b> - 拥有对内容管理权限</NLi>
+					<NLi><b>developer</b> - 拥有某些开发资源的访问权限</NLi>
+					<NLi><b>user</b> - 普通用户</NLi>
+					<NLi><b>blocked</b> - 已封禁的用户</NLi>
+				</NUl>
+				<NP>注意: blocked 角色与其他角色互斥</NP>
 			</NCollapseItem>
 		</NCollapse>
-		<NSpace align="center">
+		<NFlex justify="center">
 			<NInputNumber v-model:value="inputUid" placeholder="要查询的用户的 UID" :showButton="false" />
-			<NButton @click="adminFetchUserRole">查询</NButton>
-		</NSpace>
-		<br />
+			<NButton @click="adminFetchUserRole"><template #icon><Icon name="search" /></template>查询</NButton>
+		</NFlex>
 		<NDivider />
-		<br />
 		<NForm
 			ref="formRef"
 			:model="userRolesFormModel"
 			labelPlacement="left"
 			:labelWidth="160"
-			:style="{
-				maxWidth: '640px',
-			}"
+			class="max-is-[640px]"
 		>
 			<NFormItem label="用户 UID" path="uid">
 				<NInputNumber v-model:value="userRolesFormModel.uid" placeholder="查询用户后显示" :showButton="false" :disabled="true" />
@@ -187,13 +180,19 @@
 			negativeText="算了"
 			@positiveClick="adminUpdateUserRoles"
 		>
-			<NH6>用户 UID</NH6>
-			<NInputNumber v-model:value="userRolesFormModel.uid" :showButton="false" :disabled="true" />
-			<NH6>用户 UUID</NH6>
-			<NInput v-model:value="userRolesFormModel.uuid" :showButton="false" :disabled="true" />
-			<NH6>用户的角色将会更新为下列角色</NH6>
-			<NTag v-for="role in userRolesFormModel.userRoles" :key="role" class="mr-2">{{ role }}</NTag>
-
+			<NForm>
+				<NFormItem label="用户 UID">
+					<NInputNumber v-model:value="userRolesFormModel.uid" :showButton="false" :disabled="true" class="is-full" />
+				</NFormItem>
+				<NFormItem label="用户 UUID">
+					<NInput v-model:value="userRolesFormModel.uuid" :showButton="false" :disabled="true" />
+				</NFormItem>
+				<NFormItem label="用户的角色将会更新为下列角色">
+					<NFlex>
+						<NTag v-for="role in userRolesFormModel.userRoles" :key="role">{{ role }}</NTag>
+					</NFlex>
+				</NFormItem>
+			</NForm>
 			<template #action>
 				<NButton @click="isShowSubmitUserRolesModal = false">算了</NButton>
 				<NButton :loading="isUpdatingUserRole" type="warning" :secondary="true" @click="adminUpdateUserRoles">确认更新</NButton>

@@ -1,7 +1,15 @@
 <script setup lang="ts">
 	import { NThemeEditor } from "naive-ui";
+	import { zhCN, dateZhCN } from "naive-ui";
 	import menuOptions from "./menu";
-	const defaultExpandedKeys = menuOptions.map(option => option.key!);
+	import hljs from "highlight.js/lib/core";
+	import powershell from "highlight.js/lib/languages/powershell";
+	import bash from "highlight.js/lib/languages/bash";
+
+	hljs.registerLanguage("powershell", powershell);
+	hljs.registerLanguage("bash", bash);
+
+	const defaultExpandedKeys = menuOptions.map(option => option.key);
 	const { theme, themeOverrides } = useOsTheme();
 
 	const selfUserInfoStore = useSelfUserInfoStore();
@@ -12,10 +20,16 @@
 <template>
 	<NMessageProvider>
 		<NDialogProvider>
-			<NConfigProvider :theme :themeOverrides>
+			<NConfigProvider
+				:theme
+				:themeOverrides
+				:hljs="hljs"
+				:locale="zhCN"
+				:dateLocale="dateZhCN"
+			>
 				<NThemeEditor>
 					<NFlex vertical class="gap-0 h-dvh">
-						<NLayoutHeader class="px-6 h-16 flex items-center justify-between" bordered>
+						<NLayoutHeader class="pli-6 bs-16 flex items-center justify-between shrink-0" bordered>
 							<Logo />
 							<NFlex class="items-center">
 								<NFlex class="items-center gap-1.5">
@@ -49,7 +63,11 @@
 							</NLayoutSider>
 							<NLayoutContent>
 								<NBackTop :right="100" />
-								<RouterView />
+								<RouterView v-slot="{ Component, route }">
+									<Transition name="page-jump" mode="out-in">
+										<component :is="Component" :key="route.path" />
+									</Transition>
+								</RouterView>
 							</NLayoutContent>
 						</NLayout>
 					</NFlex>
@@ -60,7 +78,19 @@
 </template>
 
 <style>
-	@tailwind base;
-	@tailwind components;
-	@tailwind utilities;
+	.page-jump-leave-active {
+		transition: all 100ms cubic-bezier(0.95, 0.05, 0.795, 0.035);
+	}
+
+	.page-jump-enter-active {
+		transition: all 600ms cubic-bezier(0.1, 0.9, 0.2, 1);
+	}
+
+	.page-jump-enter-from {
+		@apply translate-y-[8rem] opacity-0;
+	}
+
+	.page-jump-leave-to {
+		@apply translate-y-[-2rem] opacity-0;
+	}
 </style>
