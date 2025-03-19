@@ -1,7 +1,18 @@
 {
 	"name": "kirakira-lycoris",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"type": "module",
+	"author": "KIRAKIRA Project Team",
+	"license": "BSD-3-Clause",
+	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-Lycoris.git"
+	},
+	"bugs": {
+		"url": "https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-Lycoris/issues"
+	},
+	"homepage": "https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-Lycoris#readme",
 	"scripts": {
 		"dev-local": "cross-env VITE_BACK_END_PROVIDER=local vite",
 		"build": "vue-tsc -b && vite build",
