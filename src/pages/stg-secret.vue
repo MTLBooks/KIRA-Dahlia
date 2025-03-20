@@ -65,7 +65,7 @@
 				<NP>请允许我引用某些 linux 发行版中的安全格言：</NP>
 				<NBlockquote>
 					<NP>We trust you have received the usual lecture from the local System Administrator. It usually boils down to these three things:</NP>
-					<NOl>
+					<NOl class="paren-after">
 						<NLi>Respect the privacy of others.</NLi>
 						<NLi>Think before you type.</NLi>
 						<NLi>With great power comes great responsibility.</NLi>
@@ -73,7 +73,7 @@
 				</NBlockquote>
 				<NBlockquote>
 					<NP>我们信任您已经从系统管理员那里了解了日常注意事项。总结起来无外乎这三点：</NP>
-					<NOl>
+					<NOl class="paren-after">
 						<NLi>尊重别人的隐私。</NLi>
 						<NLi>输入前要先考虑（后果和风险）。</NLi>
 						<NLi>权力越大，责任越大。</NLi>

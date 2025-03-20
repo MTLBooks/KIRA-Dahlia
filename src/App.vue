@@ -1,16 +1,24 @@
 <script setup lang="ts">
-	import { NThemeEditor } from "naive-ui";
-	import { zhCN, dateZhCN } from "naive-ui";
+	import { NThemeEditor, zhCN, dateZhCN, type GlobalThemeOverrides } from "naive-ui";
 	import menuOptions from "./menu";
 	import hljs from "highlight.js/lib/core";
 	import powershell from "highlight.js/lib/languages/powershell";
 	import bash from "highlight.js/lib/languages/bash";
+	import { merge } from "lodash-es";
 
 	hljs.registerLanguage("powershell", powershell);
 	hljs.registerLanguage("bash", bash);
 
 	const defaultExpandedKeys = menuOptions.map(option => option.key);
-	const { theme, themeOverrides } = useOsTheme();
+	const { theme, themeOverrides: themeColorOverrides } = useOsTheme();
+	const themeOverrides = computed<GlobalThemeOverrides>(() => merge(
+		themeColorOverrides.value,
+		{
+			common: {
+				fontFamilyMono: 'v-mono, "Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace', // Naive UI default: v-mono, SFMono-Regular, Menlo, Consolas, Courier, monospace
+			},
+		},
+	));
 	const isNarrow = ref(false);
 
 	const selfUserInfoStore = useSelfUserInfoStore();
