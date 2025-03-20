@@ -32,15 +32,15 @@
 </script>
 
 <template>
-	<NMessageProvider>
-		<NDialogProvider>
-			<NConfigProvider
-				:theme
-				:themeOverrides
-				:hljs="hljs"
-				:locale="zhCN"
-				:dateLocale="dateZhCN"
-			>
+	<NConfigProvider
+		:theme
+		:themeOverrides
+		:hljs="hljs"
+		:locale="zhCN"
+		:dateLocale="dateZhCN"
+	>
+		<NMessageProvider>
+			<NDialogProvider>
 				<NThemeEditor>
 					<NFlex vertical class="gap-0 h-dvh">
 						<NLayoutHeader class="gap-2 pli-6 bs-16 flex items-center justify-between shrink-0" bordered>
@@ -94,9 +94,9 @@
 						</NLayout>
 					</NFlex>
 				</NThemeEditor>
-			</NConfigProvider>
-		</NDialogProvider>
-	</NMessageProvider>
+			</NDialogProvider>
+		</NMessageProvider>
+	</NConfigProvider>
 </template>
 
 <style>
