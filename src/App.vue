@@ -21,15 +21,6 @@
 	));
 	const isNarrow = ref(false);
 
-	const verticalMenu = useTemplateRef("verticalMenu");
-	async function scrollIntoView() {
-		await delay(100);
-		const verticalMenuEl = verticalMenu.value?.$el;
-		const activeLink = verticalMenuEl?.querySelector(".n-menu-item-content--selected");
-		if (activeLink?.scrollIntoViewIfNeeded) activeLink?.scrollIntoViewIfNeeded();
-		else activeLink?.scrollIntoView();
-	}
-
 	const selfUserInfoStore = useSelfUserInfoStore();
 	if (!noBackend) getSelfUserInfo();
 
@@ -85,13 +76,11 @@
 								v-if="!isNarrow"
 							>
 								<NMenu
-									ref="verticalMenu"
 									:collapsedWidth="64"
 									:collapsedIconSize="22"
 									:options="menuOptions"
 									:defaultExpandedKeys
 									:value="$route.path"
-									@update:value="scrollIntoView"
 								/>
 							</NLayoutSider>
 							<NLayoutContent>

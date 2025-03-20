@@ -17,6 +17,12 @@ router.beforeEach(async to => {
 	console.log("to", to.path);
 	return true;
 });
+router.afterEach(async () => {
+	await delay(100);
+	const activeLink = document.querySelector<HTMLElement>(".n-menu-item-content--selected");
+	if (activeLink?.scrollIntoViewIfNeeded) activeLink?.scrollIntoViewIfNeeded();
+	else activeLink?.scrollIntoView();
+});
 
 const pinia = createPinia();
 const app = createApp(App);
