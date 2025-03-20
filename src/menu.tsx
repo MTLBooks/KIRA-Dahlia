@@ -104,6 +104,11 @@ const menu: MenuItem[] = [
 		icon: "key",
 		shown: checkUserRole(["root", "developer"], selfUserInfo),
 	},
+	{
+		label: "关于",
+		key: "about",
+		icon: "info",
+	},
 ];
 
 const menuOptions = (() => {
