@@ -21,6 +21,9 @@ export default defineConfig(({ mode }) => {
 			autoImport({
 				imports: [
 					"vue",
+					{
+						vue: ["useTemplateRef"],
+					},
 				],
 				dirs: [
 					"./src/components/**",

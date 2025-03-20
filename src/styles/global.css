@@ -46,3 +46,9 @@
 @utility paren-after {
 	list-style: paren-after;
 }
+
+*,
+::before,
+::after {
+	scroll-behavior: smooth;
+}
