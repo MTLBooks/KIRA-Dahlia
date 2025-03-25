@@ -55,6 +55,6 @@
 		"vite-tsconfig-paths": "^5.1.4",
 		"vue-eslint-parser": "^10.1.1",
 		"vue-router": "^4.5.0",
-		"vue-tsc": "^2.0.29"
+		"vue-tsc": "^2.2.8"
 	}
 }

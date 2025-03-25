@@ -1,4 +1,3 @@
-import naive from "naive-ui";
 import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 import { routes } from "vue-router/auto-routes";
@@ -26,7 +25,6 @@ router.afterEach(async () => {
 
 const pinia = createPinia();
 const app = createApp(App);
-app.use(naive);
 app.use(router);
 app.use(pinia);
 app.mount("#app");
