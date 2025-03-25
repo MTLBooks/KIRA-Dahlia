@@ -14,8 +14,10 @@
 	},
 	"homepage": "https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-Lycoris#readme",
 	"scripts": {
-		"dev-nobackend": "cross-env VITE_BACKEND_PROVIDER=no vite",
-		"dev-local": "cross-env VITE_BACKEND_PROVIDER=local vite",
+		"dev-nobackend": "cross-env VITE_BACKEND_URI=none vite",
+		"dev-local": "cross-env VITE_BACKEND_URI=https://localhost:9999 vite",
+		"dev-stg-demo": "cross-env VITE_BACKEND_URI=https://rosales.kirafile.com vite",
+		"dev-prod-demo": "cross-env VITE_BACKEND_URI=https://rosales.kirakira.moe vite",
 		"build": "vue-tsc -b && vite build",
 		"preview": "vite preview"
 	},

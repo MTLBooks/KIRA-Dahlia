@@ -1,26 +1,31 @@
 /**
- * 根据当前环境（开发或生产）返回正确的后端地址
+ * 根据当前环境返回正确的后端地址
  * @returns 正确的后端地址。
  */
-export default function getCorrectUri() {
+export default function getCorrectUri(): string {
 	/**
-	 * URI 必须包含协议头，不建议在结尾添加斜线 '/'
-	 * eg. https://localhost:9999
-	 *
-	 * 请特别注意下方多个 if 判断中，变量 backendUrl 的值被改变的顺序。
-	 * 例如，当 staging 或 production 为真时，即使 localBackend 为真，也不会使用本地后端。
+	 * 读取环境变量中 VITE_BACKEND_URI 的值，作为后端 API 的 URI
+	 * 如果 VITE_BACKEND_URI 的值为 none，则返回空字符串，KIRAKRIA-Lycoris 将会以无后端模式启动
 	 */
 
-	const LOCAL_BACKEND_URI = "https://localhost:9999";
-	const PROD_BACKEND_URI = "https://rosales.kirakira.moe";
-
-	const BACKEND_PROVIDER = import.meta.env.VITE_BACKEND_PROVIDER;
-	const backendUrl =
-		BACKEND_PROVIDER === "no" ? "" :
-		BACKEND_PROVIDER === "local" ? LOCAL_BACKEND_URI : // 如果环境变量 BACKEND_PROVIDER 的值为 local，则使用本地 API。
-		PROD_BACKEND_URI;
-
-	return backendUrl;
+	try {
+		const backendUriInput = import.meta.env.VITE_BACKEND_URI;
+		if (!backendUriInput) {
+			console.error("ERROR", "Server startup failed,  the value of the environment variable VITE_BACKEND_URI was not specified.");
+			return "";
+		}
+		const backendUri = new URL(backendUriInput.trim());
+		const backendUriHref = backendUri.href;
+		if (!backendUriHref) {
+			console.error("ERROR", "System startup failed, the parsed result of the environment variable VITE_BACKEND_URI is empty.");
+			return "";
+		}
+		return backendUriHref;
+	} catch (error) {
+		console.error("ERROR", "System startup failed, environment variable VITE_BACKEND_URI parsing failed: ", error);
+		return "";
+	}
 }
 
-export const noBackend = !getCorrectUri();
+export const backendUri = getCorrectUri(); // 后端 API URI
+export const noBackend = !backendUri; // 是否为无后端模式

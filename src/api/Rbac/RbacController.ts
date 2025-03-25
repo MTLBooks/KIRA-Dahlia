@@ -1,7 +1,6 @@
 import { AdminGetUserRolesByUidRequestDto, AdminGetUserRolesByUidResponseDto, AdminUpdateUserRoleRequestDto, AdminUpdateUserRoleResponseDto, CreateRbacApiPathRequestDto, CreateRbacApiPathResponseDto, CreateRbacRoleRequestDto, CreateRbacRoleResponseDto, DeleteRbacApiPathRequestDto, DeleteRbacApiPathResponseDto, DeleteRbacRoleRequestDto, DeleteRbacRoleResponseDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto, UpdateApiPathPermissionsForRoleRequestDto, UpdateApiPathPermissionsForRoleResponseDto } from "./RbacControllerDto";
 
-const BACK_END_URL = getCorrectUri();
-const RBAC_API_URL = `${BACK_END_URL}/rbac`;
+const RBAC_API_URI = `${backendUri}rbac`;
 
 /**
  * 获取 RBAC API 路径
@@ -10,7 +9,7 @@ const RBAC_API_URL = `${BACK_END_URL}/rbac`;
  */
 export const getRbacApiPathController = async (getRbacApiPathRequest: GetRbacApiPathRequestDto): Promise<GetRbacApiPathResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await GET(`${RBAC_API_URL}/getRbacApiPath${getUrlQuery({ ...getRbacApiPathRequest.search, ...getRbacApiPathRequest.pagination })}`, { credentials: "include" }) as GetRbacApiPathResponseDto;
+	return await GET(`${RBAC_API_URI}/getRbacApiPath${getUrlQuery({ ...getRbacApiPathRequest.search, ...getRbacApiPathRequest.pagination })}`, { credentials: "include" }) as GetRbacApiPathResponseDto;
 };
 
 /**
@@ -20,7 +19,7 @@ export const getRbacApiPathController = async (getRbacApiPathRequest: GetRbacApi
  */
 export const deleteRbacApiPathController = async (deleteRbacApiPathRequest: DeleteRbacApiPathRequestDto): Promise<DeleteRbacApiPathResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await DELETE(`${RBAC_API_URL}/deleteRbacApiPath`, deleteRbacApiPathRequest, { credentials: "include" }) as DeleteRbacApiPathResponseDto;
+	return await DELETE(`${RBAC_API_URI}/deleteRbacApiPath`, deleteRbacApiPathRequest, { credentials: "include" }) as DeleteRbacApiPathResponseDto;
 };
 
 /**
@@ -30,7 +29,7 @@ export const deleteRbacApiPathController = async (deleteRbacApiPathRequest: Dele
  */
 export const createRbacApiPathController = async (createRbacApiPathRequest: CreateRbacApiPathRequestDto): Promise<CreateRbacApiPathResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await POST(`${RBAC_API_URL}/createRbacApiPath`, createRbacApiPathRequest, { credentials: "include" }) as CreateRbacApiPathResponseDto;
+	return await POST(`${RBAC_API_URI}/createRbacApiPath`, createRbacApiPathRequest, { credentials: "include" }) as CreateRbacApiPathResponseDto;
 };
 
 /**
@@ -40,7 +39,7 @@ export const createRbacApiPathController = async (createRbacApiPathRequest: Crea
  */
 export const getRbacRoleController = async (getRbacRoleRequest: GetRbacRoleRequestDto): Promise<GetRbacRoleResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await GET(`${RBAC_API_URL}/getRbacRole${getUrlQuery({ ...getRbacRoleRequest.search, ...getRbacRoleRequest.pagination })}`, { credentials: "include" }) as GetRbacRoleResponseDto;
+	return await GET(`${RBAC_API_URI}/getRbacRole${getUrlQuery({ ...getRbacRoleRequest.search, ...getRbacRoleRequest.pagination })}`, { credentials: "include" }) as GetRbacRoleResponseDto;
 };
 
 /**
@@ -50,7 +49,7 @@ export const getRbacRoleController = async (getRbacRoleRequest: GetRbacRoleReque
  */
 export const deleteRbacRoleController = async (deleteRbacRoleRequest: DeleteRbacRoleRequestDto): Promise<DeleteRbacRoleResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await DELETE(`${RBAC_API_URL}/deleteRbacRole`, deleteRbacRoleRequest, { credentials: "include" }) as DeleteRbacRoleResponseDto;
+	return await DELETE(`${RBAC_API_URI}/deleteRbacRole`, deleteRbacRoleRequest, { credentials: "include" }) as DeleteRbacRoleResponseDto;
 };
 
 /**
@@ -60,7 +59,7 @@ export const deleteRbacRoleController = async (deleteRbacRoleRequest: DeleteRbac
  */
 export const createRbacRoleController = async (createRbacRoleRequest: CreateRbacRoleRequestDto): Promise<CreateRbacRoleResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await POST(`${RBAC_API_URL}/createRbacRole`, createRbacRoleRequest, { credentials: "include" }) as CreateRbacRoleResponseDto;
+	return await POST(`${RBAC_API_URI}/createRbacRole`, createRbacRoleRequest, { credentials: "include" }) as CreateRbacRoleResponseDto;
 };
 
 /**
@@ -70,7 +69,7 @@ export const createRbacRoleController = async (createRbacRoleRequest: CreateRbac
  */
 export const updateApiPathPermissionsForRoleController = async (updateApiPathPermissionsForRoleRequest: UpdateApiPathPermissionsForRoleRequestDto): Promise<UpdateApiPathPermissionsForRoleResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await POST(`${RBAC_API_URL}/updateApiPathPermissionsForRole`, updateApiPathPermissionsForRoleRequest, { credentials: "include" }) as UpdateApiPathPermissionsForRoleResponseDto;
+	return await POST(`${RBAC_API_URI}/updateApiPathPermissionsForRole`, updateApiPathPermissionsForRoleRequest, { credentials: "include" }) as UpdateApiPathPermissionsForRoleResponseDto;
 };
 
 /**
@@ -80,7 +79,7 @@ export const updateApiPathPermissionsForRoleController = async (updateApiPathPer
  */
 export const adminGetUserRolesController = async (adminGetUserRolesByUidRequest: AdminGetUserRolesByUidRequestDto): Promise<AdminGetUserRolesByUidResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await GET(`${RBAC_API_URL}/adminGetUserRolesByUid?uid=${adminGetUserRolesByUidRequest.uid}`, { credentials: "include" }) as AdminGetUserRolesByUidResponseDto;
+	return await GET(`${RBAC_API_URI}/adminGetUserRolesByUid?uid=${adminGetUserRolesByUidRequest.uid}`, { credentials: "include" }) as AdminGetUserRolesByUidResponseDto;
 };
 
 /**
@@ -90,5 +89,5 @@ export const adminGetUserRolesController = async (adminGetUserRolesByUidRequest:
  */
 export const adminUpdateUserRoleController = async (adminUpdateUserRoleRequest: AdminUpdateUserRoleRequestDto): Promise<AdminUpdateUserRoleResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await POST(`${RBAC_API_URL}/adminUpdateUserRole`, adminUpdateUserRoleRequest, { credentials: "include" }) as AdminUpdateUserRoleResponseDto;
+	return await POST(`${RBAC_API_URI}/adminUpdateUserRole`, adminUpdateUserRoleRequest, { credentials: "include" }) as AdminUpdateUserRoleResponseDto;
 };

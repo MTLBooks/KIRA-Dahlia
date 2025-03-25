@@ -1,9 +1,7 @@
 import { GET, POST } from "api/tools/fetch";
-import getCorrectUri from "api/tools/getCorrectUri";
 import { GetSelfUserInfoRequestDto, GetSelfUserInfoResponseDto, CheckUserTokenResponseDto, UserLogoutResponseDto, UserLoginRequestDto, UserLoginResponseDto } from "./UserControllerDto";
 
-const BACK_END_URL = getCorrectUri();
-const USER_API_URL = `${BACK_END_URL}/user`;
+const USER_API_URI = `${backendUri}user`;
 
 /**
  * 用户登录
@@ -12,7 +10,7 @@ const USER_API_URL = `${BACK_END_URL}/user`;
  */
 export const userLogin = async (userLoginRequest: UserLoginRequestDto): Promise<UserLoginResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await POST(`${USER_API_URL}/login`, userLoginRequest, { credentials: "include" }) as UserLoginResponseDto;
+	return await POST(`${USER_API_URI}/login`, userLoginRequest, { credentials: "include" }) as UserLoginResponseDto;
 };
 
 /**
@@ -23,7 +21,7 @@ export const userLogin = async (userLoginRequest: UserLoginRequestDto): Promise<
  */
 export const getSelfUserInfo = async (getSelfUserInfoRequest?: GetSelfUserInfoRequestDto, usePinia: boolean = true): Promise<GetSelfUserInfoResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	const selfUserInfo = await POST(`${USER_API_URL}/self`, getSelfUserInfoRequest, { credentials: "include" }) as GetSelfUserInfoResponseDto;
+	const selfUserInfo = await POST(`${USER_API_URI}/self`, getSelfUserInfoRequest, { credentials: "include" }) as GetSelfUserInfoResponseDto;
 	const selfUserInfoResult = selfUserInfo.result;
 	if (selfUserInfo.success && selfUserInfoResult) {
 		if (usePinia) {
@@ -51,7 +49,7 @@ export const getSelfUserInfo = async (getSelfUserInfoRequest?: GetSelfUserInfoRe
  */
 export const checkUserToken = async (): Promise<CheckUserTokenResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await GET(`${USER_API_URL}/check`, { credentials: "include" }) as CheckUserTokenResponseDto;
+	return await GET(`${USER_API_URI}/check`, { credentials: "include" }) as CheckUserTokenResponseDto;
 };
 
 /**
@@ -61,7 +59,7 @@ export const checkUserToken = async (): Promise<CheckUserTokenResponseDto> => {
  */
 export async function userLogout(usePinia: boolean = true): Promise<UserLogoutResponseDto> {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	const logoutResult = await GET(`${USER_API_URL}/logout`, { credentials: "include" }) as UserLogoutResponseDto;
+	const logoutResult = await GET(`${USER_API_URI}/logout`, { credentials: "include" }) as UserLogoutResponseDto;
 	if (logoutResult.success) {
 		if (usePinia) {
 			const selfUserInfoStore = useSelfUserInfoStore();
