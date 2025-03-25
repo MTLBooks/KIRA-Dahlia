@@ -1,5 +1,3 @@
-import { defineStore } from "pinia";
-
 export const useSelfUserInfoStore = defineStore("user-info", {
 	state: () => ({
 		/**

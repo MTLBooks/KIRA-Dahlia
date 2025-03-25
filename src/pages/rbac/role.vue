@@ -1,7 +1,4 @@
 <script setup lang="tsx">
-	import { CreateRbacRoleRequestDto, DeleteRbacRoleRequestDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto, UpdateApiPathPermissionsForRoleRequestDto } from "api/Rbac/RbacControllerDto";
-	import { useDialog } from "naive-ui";
-
 	const dialog = useDialog();
 
 	type RbacRole = GetRbacRoleResponseDto["result"];
@@ -19,7 +16,7 @@
 		roleColor: "",
 		roleDescription: "",
 	};
-	const createRoleFormModel = ref<CreateRbacRoleRequestDto>({ ...EMPTY_ROLE_CREATE_DATA });
+	const createRoleFormModal = ref<CreateRbacRoleRequestDto>({ ...EMPTY_ROLE_CREATE_DATA });
 
 	type RbacApiPath = GetRbacApiPathResponseDto["result"];
 	const rbacApiPath = ref<RbacApiPath>([]);
@@ -117,7 +114,7 @@
 	 * 清除数据并打开创建角色的模态框
 	 */
 	function openCreateRoleModel() {
-		createRoleFormModel.value = { ...EMPTY_ROLE_CREATE_DATA };
+		createRoleFormModal.value = { ...EMPTY_ROLE_CREATE_DATA };
 		isShowCreateNewRoleModal.value = true;
 	}
 
@@ -126,14 +123,14 @@
 	 */
 	function closeCreateRoleModel() {
 		isShowCreateNewRoleModal.value = false;
-		createRoleFormModel.value = { ...EMPTY_ROLE_CREATE_DATA };
+		createRoleFormModal.value = { ...EMPTY_ROLE_CREATE_DATA };
 	}
 
 	/**
 	 * 创建 RBAC 角色
 	 */
 	async function createRole() {
-		const createRbacRoleRequest: CreateRbacRoleRequestDto = { ...createRoleFormModel.value };
+		const createRbacRoleRequest: CreateRbacRoleRequestDto = { ...createRoleFormModal.value };
 		if (!createRbacRoleRequest.roleName) {
 			console.error("ERROR", "创建角色失败，参数不合法");
 			return;
@@ -332,25 +329,25 @@
 		>
 			<NForm>
 				<NFormItem label="角色的名字" :rule="{ required: true }">
-					<NInput :status="!createRoleFormModel.roleName ? 'error' : 'success'" v-model:value="createRoleFormModel.roleName" placeholder="（必填）唯一且简短的角色名" />
+					<NInput :status="!createRoleFormModal.roleName ? 'error' : 'success'" v-model:value="createRoleFormModal.roleName" placeholder="（必填）唯一且简短的角色名" />
 				</NFormItem>
 				<NFormItem label="角色的类型">
-					<NInput v-model:value="createRoleFormModel.roleType" placeholder='用于标识角色，例如 "maintenance"' />
+					<NInput v-model:value="createRoleFormModal.roleType" placeholder='用于标识角色，例如 "maintenance"' />
 				</NFormItem>
 				<NFormItem label="角色的显示颜色">
 					<NFlex vertical :size="0" class="is-full">
 						<small class="n-form-item-label text-xs min-bs-0">填写颜色可以更方便区分不同角色</small>
-						<NColorPicker v-model:value="createRoleFormModel.roleColor" :modes="['hex']" :showAlpha="true" />
+						<NColorPicker v-model:value="createRoleFormModal.roleColor" :modes="['hex']" :showAlpha="true" />
 					</NFlex>
 				</NFormItem>
 				<NFormItem label="角色的介绍">
-					<NInput v-model:value="createRoleFormModel.roleDescription" type="textarea" :autosize="{ minRows: 3 }" placeholder="角色的详细说明" />
+					<NInput v-model:value="createRoleFormModal.roleDescription" type="textarea" :autosize="{ minRows: 3 }" placeholder="角色的详细说明" />
 				</NFormItem>
 			</NForm>
 			<template #footer>
 				<NFlex class="justify-end">
 					<NButton @click="closeCreateRoleModel">算了</NButton>
-					<NButton :disabled="!createRoleFormModal?.apiPath" :loading="isCreatingRole" type="primary" :secondary="true" @click="createRole">确认创建</NButton>
+					<NButton :disabled="!createRoleFormModal?.roleName" :loading="isCreatingRole" type="primary" :secondary="true" @click="createRole">确认创建</NButton>
 				</NFlex>
 			</template>
 		</NModal>

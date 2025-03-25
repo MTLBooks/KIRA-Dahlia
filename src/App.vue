@@ -9,7 +9,7 @@
 	hljs.registerLanguage("powershell", powershell);
 	hljs.registerLanguage("bash", bash);
 
-	const defaultExpandedKeys = menuOptions.map(option => option.key);
+	const defaultExpandedKeys = menuOptions.map(option => option.key!);
 	const { theme, themeOverrides: themeColorOverrides } = useOsTheme();
 	const themeOverrides = computed<GlobalThemeOverrides>(() => merge(
 		themeColorOverrides.value,

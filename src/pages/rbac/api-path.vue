@@ -1,7 +1,4 @@
 <script setup lang="tsx">
-	import { CreateRbacApiPathRequestDto, DeleteRbacApiPathRequestDto, GetRbacApiPathRequestDto, GetRbacApiPathResponseDto } from "api/Rbac/RbacControllerDto";
-	import { useDialog } from "naive-ui";
-
 	const dialog = useDialog();
 
 	type RbacApiPath = GetRbacApiPathResponseDto["result"];

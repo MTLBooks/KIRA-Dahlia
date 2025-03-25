@@ -1,12 +1,15 @@
 import vue from "@vitejs/plugin-vue";
 import autoImport from "unplugin-auto-import/vite";
 import components from "unplugin-vue-components/vite";
+import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import vueRouter from "unplugin-vue-router/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
 import autoprefixer from "autoprefixer";
 import fs from "fs";
+import naiveUIJson from "naive-ui/web-types.json" with { type: "json" };
+const naiveUIComponents = naiveUIJson.contributions.html["vue-components"].map(component => component.name);
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -23,6 +26,24 @@ export default defineConfig(({ mode }) => {
 					"vue",
 					{
 						vue: ["useTemplateRef"],
+						"naive-ui": [
+							"useDialog",
+							"useMessage",
+							"useNotification",
+							"useLoadingBar",
+							...naiveUIComponents,
+						],
+						pinia: ["defineStore"],
+						"vue-router": ["RouterLink"],
+					},
+					{
+						from: "naive-ui",
+						imports: [
+							"DataTableColumns",
+							"FormItemRule",
+							"MenuOption",
+						],
+						type: true,
 					},
 				],
 				dirs: [
@@ -43,13 +64,14 @@ export default defineConfig(({ mode }) => {
 					"./src/components/**",
 				],
 				extensions: ["vue", "tsx", "jsx"],
+				resolvers: [NaiveUiResolver()],
 			}),
 			tailwindcss(),
 		],
 		css: {
 			postcss: {
 				plugins: [
-					autoprefixer,
+					autoprefixer as never,
 				],
 			},
 			modules: {
@@ -70,10 +92,6 @@ export default defineConfig(({ mode }) => {
 			jsxFactory: "h",
 			jsxFragment: "Fragment",
 		},
-		assetsInclude: [
-			"**/*.cur",
-			"**/*.ani",
-		],
 		server: {
 			https: isDevelopment ? {
 				cert: fs.readFileSync("./ssl/cert.pem"),

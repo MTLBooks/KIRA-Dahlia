@@ -1,7 +1,4 @@
 <script setup lang="ts">
-	import { AdminUpdateUserRoleRequestDto, AdminGetUserRolesByUidRequestDto, GetRbacRoleRequestDto, GetRbacRoleResponseDto } from "api/Rbac/RbacControllerDto";
-	import { useDialog } from "naive-ui";
-
 	const dialog = useDialog();
 
 	const isEnableEditUserRole = ref(false);

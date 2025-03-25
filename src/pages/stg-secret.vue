@@ -1,7 +1,4 @@
 <script setup lang="ts">
-	import { GetStgEnvBackEndSecretResponse } from "api/Secret/ConsoleSecretControllerDto";
-	import { useMessage } from "naive-ui";
-
 	const message = useMessage();
 	const secretType = ref<"hidden" | "windows" | "bash">("hidden");
 	const getShownText = (shown: boolean) => shown ? "展示" : "隐藏";

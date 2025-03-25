@@ -1,6 +1,3 @@
-import type { MenuOption } from "naive-ui";
-import { RouterLink } from "vue-router";
-
 interface MenuItem {
 	label: string;
 	to?: string;
