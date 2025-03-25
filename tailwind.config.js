@@ -5,5 +5,8 @@ export default {
 		extend: {},
 	},
 	plugins: [],
-	important: true,
+	important: false,
+	corePlugins: {
+		container: false,
+	},
 };
