@@ -359,7 +359,7 @@
 			preset="card"
 			title="编辑角色可以访问的 API 路径"
 		>
-			<NFrom>
+			<NForm>
 				<NFormItem label="角色的名字">
 					<NInput :disabled="true" v-model:value="updateApiPathPermissionsForRoleFormModel.roleName" placeholder="角色名" />
 				</NFormItem>
@@ -374,7 +374,7 @@
 						targetFilterable
 					/>
 				</NFormItem>
-			</NFrom>
+			</NForm>
 			<template #footer>
 				<NFlex class="justify-end">
 					<NButton @click="closeEditRoleModel">算了</NButton>
