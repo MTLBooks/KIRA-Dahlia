@@ -44,7 +44,7 @@
 		{
 			title: "操作",
 			key: "actions",
-			render: row => <NButton strong secondary size="small" onClick={() => openDeleteApiPathModel(row.apiPath ?? "")}>删除</NButton>,
+			render: row => <NButton strong secondary size="small" onClick={() => openDeleteApiPathModal(row.apiPath ?? "")}>删除</NButton>,
 		},
 	];
 
@@ -90,7 +90,7 @@
 	 * 更新正在删除的 API 路径名，并打开删除 API 路径的表单
 	 * @param apiPahtName 正在删除的 API 路径名
 	 */
-	function openDeleteApiPathModel(apiPahtName: string) {
+	function openDeleteApiPathModal(apiPahtName: string) {
 		currentDeletingApiPath.value = apiPahtName;
 		isShowDeleteApiPathModal.value = true;
 	}
@@ -98,7 +98,7 @@
 	/**
 	 * 打开删除 API 路径的表单，并清除正在删除的 API 路径名
 	 */
-	function closeDeleteApiPathModel() {
+	function closeDeleteApiPathModal() {
 		isShowDeleteApiPathModal.value = false;
 		currentDeletingApiPath.value = "";
 	}
@@ -121,7 +121,7 @@
 				positiveText: "知道了",
 			});
 		else
-			closeDeleteApiPathModel();
+			closeDeleteApiPathModal();
 
 		await fetchRbacApiPath();
 		isDeletingApiPath.value = false;
@@ -130,7 +130,7 @@
 	/**
 	 * 清空表单数据并开启创建 API 路径的模态框
 	 */
-	function openCreateApiPathModel() {
+	function openCreateApiPathModal() {
 		createNewApiPathModal.value = { ...EMPTY_API_PATH_DATA };
 		isShowCreateNewApiPathModal.value = true;
 	}
@@ -138,7 +138,7 @@
 	/**
 	 * 关闭创建 API 路径的模态框并清空表单数据
 	 */
-	function closeCreateApiPathModel() {
+	function closeCreateApiPathModal() {
 		isShowCreateNewApiPathModal.value = false;
 		createNewApiPathModal.value = { ...EMPTY_API_PATH_DATA };
 	}
@@ -156,7 +156,7 @@
 
 		await fetchRbacApiPath();
 		if (createRbacApiPathResult.success)
-			closeCreateApiPathModel();
+			closeCreateApiPathModal();
 		else
 			dialog.error({
 				title: "创建新的 API 路径失败",
@@ -189,7 +189,7 @@
 			</NCollapseItem>
 		</NCollapse>
 		<NFlex class="mlb-2">
-			<NButton @click="openCreateApiPathModel"><template #icon><Icon name="add" /></template>新增</NButton>
+			<NButton @click="openCreateApiPathModal"><template #icon><Icon name="add" /></template>新增</NButton>
 		</NFlex>
 		<NDataTable
 			:columns="columns"
@@ -238,7 +238,7 @@
 			</NForm>
 			<template #footer>
 				<NFlex class="justify-end">
-					<NButton @click="closeCreateApiPathModel">算了</NButton>
+					<NButton @click="closeCreateApiPathModal">算了</NButton>
 					<NButton :disabled="!createNewApiPathModal.apiPath" :loading="isCreatingApiPath" type="primary" :secondary="true" @click="createApiPath">确认创建</NButton>
 				</NFlex>
 			</template>
@@ -255,7 +255,7 @@
 			</NFormItem>
 
 			<template #action>
-				<NButton @click="closeDeleteApiPathModel">算了</NButton>
+				<NButton @click="closeDeleteApiPathModal">算了</NButton>
 				<NButton :disabled="currentDeletingApiPath !== userInputDeleteingApiPath" :loading="isDeletingApiPath" type="warning" :secondary="true" @click="deleteApiPath(currentDeletingApiPath)">确认删除</NButton>
 			</template>
 		</NModal>

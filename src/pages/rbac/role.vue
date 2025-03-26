@@ -26,7 +26,7 @@
 		roleName: "",
 		apiPathPermissions: [],
 	};
-	const updateApiPathPermissionsForRoleFormModel = ref<UpdateApiPathPermissionsForRoleRequestDto>(EMPTY_ROLE_UPDATE_DATA);
+	const updateApiPathPermissionsForRoleFormModal = ref<UpdateApiPathPermissionsForRoleRequestDto>(EMPTY_ROLE_UPDATE_DATA);
 
 	const columns: DataTableColumns<NonNullable<RbacRole>[number]> = [
 		{
@@ -65,8 +65,8 @@
 			key: "actions",
 			render: row => (
 				<>
-					<NButton strong secondary size="small" class="mie-2" onClick={() => openEditRoleModel(row)}>编辑</NButton>
-					<NButton strong secondary size="small" type="warning" onClick={() => openDeleteRoleModel(row.roleName ?? "")}>删除</NButton>
+					<NButton strong secondary size="small" class="mie-2" onClick={() => openEditRoleModal(row)}>编辑</NButton>
+					<NButton strong secondary size="small" type="warning" onClick={() => openDeleteRoleModal(row.roleName ?? "")}>删除</NButton>
 				</>
 			),
 		},
@@ -113,7 +113,7 @@
 	/**
 	 * 清除数据并打开创建角色的模态框
 	 */
-	function openCreateRoleModel() {
+	function openCreateRoleModal() {
 		createRoleFormModal.value = { ...EMPTY_ROLE_CREATE_DATA };
 		isShowCreateNewRoleModal.value = true;
 	}
@@ -121,7 +121,7 @@
 	/**
 	 * 关闭创建角色的模态框，并清除数据
 	 */
-	function closeCreateRoleModel() {
+	function closeCreateRoleModal() {
 		isShowCreateNewRoleModal.value = false;
 		createRoleFormModal.value = { ...EMPTY_ROLE_CREATE_DATA };
 	}
@@ -139,7 +139,7 @@
 		const createRbacRoleResult = await createRbacRoleController(createRbacRoleRequest);
 		if (createRbacRoleResult.success) {
 			await fetchRbacRole();
-			closeCreateRoleModel();
+			closeCreateRoleModal();
 		}
 
 		isCreatingRole.value = false;
@@ -182,7 +182,7 @@
 			});
 
 		await fetchRbacRole();
-		closeDeleteRoleModel();
+		closeDeleteRoleModal();
 		isDeletingRole.value = false;
 	}
 
@@ -190,7 +190,7 @@
 	 * 开启删除角色的模态框
 	 * @param roleName 要删除的角色的名字
 	 */
-	function openDeleteRoleModel(roleName: string) {
+	function openDeleteRoleModal(roleName: string) {
 		currentDeletingRole.value = roleName;
 		userInputDeleteingRole.value = "";
 		isShowDeleteRoleModal.value = true;
@@ -199,7 +199,7 @@
 	/**
 	 * 关闭删除角色的模态框
 	 */
-	function closeDeleteRoleModel() {
+	function closeDeleteRoleModal() {
 		currentDeletingRole.value = "";
 		userInputDeleteingRole.value = "";
 		isShowDeleteRoleModal.value = false;
@@ -209,8 +209,8 @@
 	 * 设置数据并打开编辑角色的模态框
 	 * @param roleData 正在更新的角色数据
 	 */
-	function openEditRoleModel(roleData: NonNullable<RbacRole>[number]) {
-		updateApiPathPermissionsForRoleFormModel.value = {
+	function openEditRoleModal(roleData: NonNullable<RbacRole>[number]) {
+		updateApiPathPermissionsForRoleFormModal.value = {
 			roleName: roleData.roleName,
 			apiPathPermissions: roleData.apiPathPermissions.map(apiPath => apiPath),
 		};
@@ -220,9 +220,9 @@
 	/**
 	 * 关闭编辑角色的模态框并清除数据
 	 */
-	function closeEditRoleModel() {
+	function closeEditRoleModal() {
 		isShowEditRoleModal.value = false;
-		updateApiPathPermissionsForRoleFormModel.value = EMPTY_ROLE_UPDATE_DATA;
+		updateApiPathPermissionsForRoleFormModal.value = EMPTY_ROLE_UPDATE_DATA;
 	}
 
 	/**
@@ -230,10 +230,10 @@
 	 */
 	async function updateApiPathPermissionsForRole() {
 		isEditingRole.value = true;
-		const updateApiPathPermissionsForRoleResult = await updateApiPathPermissionsForRoleController(updateApiPathPermissionsForRoleFormModel.value);
+		const updateApiPathPermissionsForRoleResult = await updateApiPathPermissionsForRoleController(updateApiPathPermissionsForRoleFormModal.value);
 		if (updateApiPathPermissionsForRoleResult.success) {
 			await fetchAllDataInRolePage();
-			closeEditRoleModel();
+			closeEditRoleModal();
 		} else
 			dialog.error({
 				title: "更新角色的 API 路径时出错",
@@ -280,7 +280,7 @@
 			</NCollapseItem>
 		</NCollapse>
 		<NFlex class="mlb-2">
-			<NButton @click="openCreateRoleModel"><template #icon><Icon name="add" /></template>新增</NButton>
+			<NButton @click="openCreateRoleModal"><template #icon><Icon name="add" /></template>新增</NButton>
 		</NFlex>
 		<NDataTable
 			:columns="columns"
@@ -315,7 +315,7 @@
 			</NFormItem>
 
 			<template #action>
-				<NButton @click="closeDeleteRoleModel">算了</NButton>
+				<NButton @click="closeDeleteRoleModal">算了</NButton>
 				<NButton :disabled="currentDeletingRole !== userInputDeleteingRole" :loading="isDeletingRole" type="warning" :secondary="true" @click="fetchDeleteRbacRole(currentDeletingRole)">确认删除</NButton>
 			</template>
 		</NModal>
@@ -346,7 +346,7 @@
 			</NForm>
 			<template #footer>
 				<NFlex class="justify-end">
-					<NButton @click="closeCreateRoleModel">算了</NButton>
+					<NButton @click="closeCreateRoleModal">算了</NButton>
 					<NButton :disabled="!createRoleFormModal?.roleName" :loading="isCreatingRole" type="primary" :secondary="true" @click="createRole">确认创建</NButton>
 				</NFlex>
 			</template>
@@ -361,11 +361,11 @@
 		>
 			<NForm>
 				<NFormItem label="角色的名字">
-					<NInput :disabled="true" v-model:value="updateApiPathPermissionsForRoleFormModel.roleName" placeholder="角色名" />
+					<NInput :disabled="true" v-model:value="updateApiPathPermissionsForRoleFormModal.roleName" placeholder="角色名" />
 				</NFormItem>
 				<NFormItem label="角色可以访问的 API 路径">
 					<NTransfer
-						v-model:value="updateApiPathPermissionsForRoleFormModel.apiPathPermissions"
+						v-model:value="updateApiPathPermissionsForRoleFormModal.apiPathPermissions"
 						:options="rbacApiPath?.map(apiPath => ({
 							label: apiPath.apiPath,
 							value: apiPath.apiPath,
@@ -377,8 +377,8 @@
 			</NForm>
 			<template #footer>
 				<NFlex class="justify-end">
-					<NButton @click="closeEditRoleModel">算了</NButton>
-					<NButton :disabled="!updateApiPathPermissionsForRoleFormModel.roleName" :loading="isEditingRole" type="primary" :secondary="true" @click="updateApiPathPermissionsForRole">确认更新角色</NButton>
+					<NButton @click="closeEditRoleModal">算了</NButton>
+					<NButton :disabled="!updateApiPathPermissionsForRoleFormModal.roleName" :loading="isEditingRole" type="primary" :secondary="true" @click="updateApiPathPermissionsForRole">确认更新角色</NButton>
 				</NFlex>
 			</template>
 		</NModal>

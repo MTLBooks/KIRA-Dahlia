@@ -8,6 +8,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
 import autoprefixer from "autoprefixer";
 import fs from "fs";
+import htmlMinifier from "vite-plugin-html-minifier";
 import naiveUIJson from "naive-ui/web-types.json" with { type: "json" };
 const naiveUIComponents = naiveUIJson.contributions.html["vue-components"].map(component => component.name);
 
@@ -67,6 +68,21 @@ export default defineConfig(({ mode }) => {
 				resolvers: [NaiveUiResolver()],
 			}),
 			tailwindcss(),
+			htmlMinifier({
+				minify: {
+					collapseWhitespace: true,
+					keepClosingSlash: false,
+					removeComments: true,
+					removeRedundantAttributes: true,
+					removeScriptTypeAttributes: true,
+					removeStyleLinkTypeAttributes: true,
+					removeEmptyAttributes: true,
+					useShortDoctype: true,
+					minifyCSS: true,
+					minifyJS: true,
+					minifyURLs: true,
+				},
+			}),
 		],
 		css: {
 			postcss: {
@@ -85,6 +101,13 @@ export default defineConfig(({ mode }) => {
 			minify: "terser", // When enabled, smaller but slower.
 			terserOptions: {
 				keep_classnames: true,
+			},
+			rollupOptions: {
+				output: {
+					entryFileNames: "[name].js",
+					chunkFileNames: "chunks/[name].js",
+					assetFileNames: "assets/[name].[hash].[ext]",
+				},
 			},
 		},
 		esbuild: {
