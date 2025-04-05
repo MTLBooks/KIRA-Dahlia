@@ -21,12 +21,8 @@
 		border-color: var(--color-gray-200, currentColor);
 	}
 
-	ol {
-		@apply list-decimal;
-	}
-
-	ul {
-		@apply list-disc;
+	ul, ol {
+		list-style: revert;
 	}
 }
 
@@ -51,4 +47,8 @@
 ::before,
 ::after {
 	scroll-behavior: smooth;
+}
+
+@theme {
+	--font-mono: v-mono, "Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
 }

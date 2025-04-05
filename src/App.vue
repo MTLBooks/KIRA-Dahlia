@@ -15,7 +15,7 @@
 		themeColorOverrides.value,
 		{
 			common: {
-				fontFamilyMono: 'v-mono, "Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace', // Naive UI default: v-mono, SFMono-Regular, Menlo, Consolas, Courier, monospace
+				fontFamilyMono: 'var(--font-mono)', // Naive UI default: v-mono, SFMono-Regular, Menlo, Consolas, Courier, monospace
 			},
 		},
 	));
