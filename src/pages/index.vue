@@ -1,12 +1,17 @@
 <script setup lang="ts">
 	const selfUserInfoStore = useSelfUserInfoStore();
 
+	const rbacColor: Record<string, string> = {
+	"administrator": "#e4f0fd",
+	"root": "#faeaed"
+	};
+
 	const email = ref("");
 	const password = ref("");
 	const clientOtp = ref(""); // TOTP 验证码
 
 	/**
-	 * 登入。
+	 * 登入
 	 */
 	async function requestLogin() {
 		if (!email && !password) {
@@ -71,7 +76,11 @@
 		</div>
 		<div v-else>
 			<p>你已登入</p>
-			<p>你的角色是：{{ selfUserInfoStore.roles }}</p>
+			<n-space>
+				<p>你所拥有的角色：</p>
+				<!-- TODO: 颜色需要和数据库同步 但是用 fetchRbacRole 的话太重了 -->
+				<n-tag :color="{ color: rbacColor[role] || '#9FCEFF' }" size="small" v-for="(role) in selfUserInfoStore.roles" :key="role">{{ role }}</n-tag>
+			</n-space>
 			<NButton type="primary" round attrType="button" @click="logout">登出</NButton>
 		</div>
 	</div>

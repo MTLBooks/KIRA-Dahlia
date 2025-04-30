@@ -79,3 +79,14 @@ export async function userLogout(usePinia: boolean = true): Promise<UserLogoutRe
 		console.error("ERROR", "用户登出失败"); // TODO: 使用多语言
 	return logoutResult;
 }
+
+/**
+ * 管理员获取用户信息
+ * @param isOnlyShowUserInfoUpdatedAfterReview 是否只展示在上一次审核通过后修改了用户信息的用户
+ * @param page 当前在第几页
+ * @param pageSize 每页显示多少项目
+ * @returns 管理员获取用户信息的请求响应
+ */
+export const adminGetUserInfo = async (isOnlyShowUserInfoUpdatedAfterReview: boolean, page: number, pageSize: number): Promise<AdminGetUserInfoResponseDto> => {
+	return await GET(`${USER_API_URI}/adminGetUserInfo?isOnlyShowUserInfoUpdatedAfterReview=${isOnlyShowUserInfoUpdatedAfterReview}&page=${page}&pageSize=${pageSize}`, { credentials: "include" }) as AdminGetUserInfoResponseDto
+};
