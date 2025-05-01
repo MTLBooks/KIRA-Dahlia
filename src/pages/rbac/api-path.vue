@@ -248,11 +248,11 @@
 			v-model:show="isShowDeleteApiPathModal"
 			:maskClosable="false"
 			preset="dialog"
-			:title="`确认要删除角色 ${currentDeletingApiPath} 吗？`"
+			:title="`确认要删除API 路径 ${currentDeletingApiPath} 吗？`"
 		>
 
-			<NFormItem label="再次输入角色的名字来确定删除">
-				<NInput v-model:value="userInputDeleteingApiPath" placeholder="角色名字" />
+			<NFormItem label="再次输入API 路径的名字来确定删除">
+				<NInput v-model:value="userInputDeleteingApiPath" placeholder="API 路径名字" />
 			</NFormItem>
 
 			<template #action>
