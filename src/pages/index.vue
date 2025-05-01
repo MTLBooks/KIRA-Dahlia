@@ -2,8 +2,8 @@
 	const selfUserInfoStore = useSelfUserInfoStore();
 
 	const rbacColor: Record<string, string> = {
-	"administrator": "#e4f0fd",
-	"root": "#faeaed"
+		administrator: "#e4f0fd",
+		root: "#faeaed",
 	};
 
 	const email = ref("");

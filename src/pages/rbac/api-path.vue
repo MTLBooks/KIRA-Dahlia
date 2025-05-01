@@ -250,7 +250,7 @@
 			preset="dialog"
 			:title="`确认要删除角色 ${currentDeletingApiPath} 吗？`"
 		>
-			<br>
+
 			<NFormItem label="再次输入角色的名字来确定删除">
 				<NInput v-model:value="userInputDeleteingApiPath" placeholder="角色名字" />
 			</NFormItem>

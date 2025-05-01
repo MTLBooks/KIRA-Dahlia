@@ -87,6 +87,6 @@ export async function userLogout(usePinia: boolean = true): Promise<UserLogoutRe
  * @param pageSize 每页显示多少项目
  * @returns 管理员获取用户信息的请求响应
  */
-export const adminGetUserInfo = async (isOnlyShowUserInfoUpdatedAfterReview: boolean, page: number, pageSize: number): Promise<AdminGetUserInfoResponseDto> => {
-	return await GET(`${USER_API_URI}/adminGetUserInfo?isOnlyShowUserInfoUpdatedAfterReview=${isOnlyShowUserInfoUpdatedAfterReview}&page=${page}&pageSize=${pageSize}`, { credentials: "include" }) as AdminGetUserInfoResponseDto
+export const adminGetUserInfo = async (AdminGetUserInfoRequest: AdminGetUserInfoRequestDto): Promise<AdminGetUserInfoResponseDto> => {
+	return await GET(`${USER_API_URI}/adminGetUserInfo?isOnlyShowUserInfoUpdatedAfterReview=${AdminGetUserInfoRequest.isOnlyShowUserInfoUpdatedAfterReview}&page=${AdminGetUserInfoRequest.pagination.page}&pageSize=${AdminGetUserInfoRequest.pagination.pageSize}`, { credentials: "include" }) as AdminGetUserInfoResponseDto;
 };
