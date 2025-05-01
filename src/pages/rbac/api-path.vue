@@ -88,7 +88,7 @@
 
 	/**
 	 * 更新正在删除的 API 路径名，并打开删除 API 路径的表单
-	 * @param apiPahtName 正在删除的 API 路径名
+	 * @param apiPathName 正在删除的 API 路径名
 	 */
 	function openDeleteApiPathModal(apiPahtName: string) {
 		currentDeletingApiPath.value = apiPahtName;
