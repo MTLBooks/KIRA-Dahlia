@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 	type UserList = AdminGetUserInfoResponseDto["result"];
 	const message = useMessage();
 
@@ -7,6 +7,40 @@
 	const currentClearingUserInfo = ref("");
 	const userInputClearingUserInfo = ref("");
 	const currentClearingUserInfoByUid = ref(0);
+
+	const options = [
+		{
+			label: "编辑",
+			key: "editProfile",
+			icon: () => <Icon name="edit" />,
+		},
+		{
+			label: "封禁",
+			key: "ban",
+			icon: () => <Icon name="block" />,
+		},
+		{
+			label: "用户资料",
+			key: "profile",
+			icon: () => <Icon name="badge" />,
+		},
+	];
+	const handleSelect = (key: string) => {
+		switch (key) {
+			case "editProfile":
+				message.info("编辑用户资料");
+				break;
+			case "ban":
+				message.info("封禁用户");
+				break;
+			case "profile":
+				message.info("查看用户资料");
+				break;
+			default:
+				break;
+		}
+	};
+
 	const columns: DataTableColumns<NonNullable<UserList>[number]> = [
 		{
 			title: "UID",
@@ -47,9 +81,15 @@
 		{
 			title: "操作",
 			key: "actions",
-			render(row) {
-				return h(NButton, { strong: true, type: "error", size: "small", onClick: () => openClearUserInfoModal(row.UUID, row.uid) }, { default: () => "删除" });
-			} },
+			render: row => (
+				<NSpace>
+					<NDropdown options={options} trigger="click" placement="bottom-end" onSelect={handleSelect}>
+						<NButton strong secondary size="small" class="mie-2">更多</NButton>
+					</NDropdown>
+					<NButton type="error" strong secondary size="small" class="mie-2" onClick={() => openClearUserInfoModal(row.UUID ?? "", row.uid ?? 0)}>清空</NButton>
+				</NSpace>
+			),
+		},
 	];
 
 	const userList = ref<UserList>([]);
@@ -180,7 +220,7 @@
 			</NFormItem>
 
 			<template #action>
-				<NButton @click="closeClearUserInfoModal">算了</NButton>rU
+				<NButton @click="closeClearUserInfoModal">算了</NButton>
 				<NButton :disabled="currentClearingUserInfo !== userInputClearingUserInfo" :loading="isClearingUserInfo" type="warning" :secondary="true" @click="clearUserInfo()">确认删除</NButton>
 			</template>
 		</NModal>
