@@ -4,6 +4,7 @@
 
 	const isShowClearUserInfoModal = ref(false);
 	const isShowEditUserInfoModal = ref(false);
+
 	const isClearingUserInfo = ref(false);
 	const currentClearingUserInfo = ref("");
 	const userInputClearingUserInfo = ref("");
@@ -26,6 +27,7 @@
 	const handleSelect = (key: string) => {
 		switch (key) {
 			case "editProfile":
+				isShowEditUserInfoModal.value = true;
 				message.info("编辑用户资料");
 				break;
 			case "ban":
@@ -121,7 +123,6 @@
 	/**
 	 * 获取用户列表
 	 */
-
 	async function getUserInfo() {
 		let apiSortBy: string | undefined = undefined;
 		let apiSortOrder: "ascend" | "descend" | undefined = undefined;
@@ -208,11 +209,18 @@
 	}
 
 	/**
-	 * 打开删除用户信息的表单，并清除正在删除的用户信息
+	 * 关闭删除用户信息的表单，并清除正在删除的用户信息
 	 */
 	function closeClearUserInfoModal() {
 		isShowClearUserInfoModal.value = false;
 		currentClearingUserInfo.value = "";
+	}
+
+	/**
+	 * 关闭编辑用户信息的表单，并清除正在编辑的用户信息
+	 */
+	function closeEditUserInfoModal() {
+		isShowEditUserInfoModal.value = false;
 	}
 
 	onMounted(() => { getUserInfo(); });
@@ -264,11 +272,71 @@
 			:maskClosable="false"
 			preset="dialog"
 			title="用户信息"
+			:style="{ width: '800px' }"
 		>
-
+			<br />
+			<NAlert type="warning" title="注意"><div>修改请慎重！</div></NAlert>
+			<br />
+			<NForm
+				labelPlacement="left"
+				labelWidth="auto"
+				requireMarkPlacement="right-hanging"
+			>
+				<NRow :gutter="24">
+					<!-- 左列 -->
+					<NCol :span="10">
+						<NFormItem label="UID：">
+							<NInput placeholder="UID" :disabled="true" />
+						</NFormItem>
+						<NFormItem label="邮箱：">
+							<NInput placeholder="邮箱" :disabled="false" />
+						</NFormItem>
+						<NFormItem label="昵称：">
+							<NInput placeholder="昵称" :disabled="false" />
+						</NFormItem>
+						<NFormItem label="生日日期：">
+							<NDatePicker type="date" style="width: 100%" />
+						</NFormItem>
+					</NCol>
+					<!-- 右列 -->
+					<NCol :span="14">
+						<NFormItem label="UUID：">
+							<NInput placeholder="UUID" :disabled="true" />
+						</NFormItem>
+						<NFormItem label="名称：">
+							<NInput placeholder="名称" :disabled="false" />
+						</NFormItem>
+						<NFormItem label="简介：">
+							<NInput
+								type="textarea"
+								:autosize="{ minRows: 2, maxRows: 5 }"
+								placeholder="简介"
+								:disabled="false"
+							/>
+						</NFormItem>
+						<NFormItem label="性别：">
+							<NRadioGroup name="gender">
+								<NSpace> <!-- 添加间距 -->
+									<NRadio value="man">男</NRadio>
+									<NRadio value="woman">女</NRadio>
+									<NRadio value="other">其他</NRadio>
+								</NSpace>
+							</NRadioGroup>
+						</NFormItem>
+					</NCol>
+				</NRow>
+			</NForm>
 			<template #action>
-				<NButton @click="closeClearUserInfoModal">放弃更改</NButton>
-				<NButton :disabled="currentClearingUserInfo !== userInputClearingUserInfo" :loading="isClearingUserInfo" type="warning" :secondary="true" @click="clearUserInfo()">保存</NButton>
+				<NButton @click="closeEditUserInfoModal">放弃更改</NButton>
+				<NButton
+					:disabled="currentClearingUserInfo !== userInputClearingUserInfo"
+					:loading="isClearingUserInfo"
+					type="warning"
+					:secondary="true"
+					@click="message.info('保存')"
+				>
+					保存
+				</NButton>
 			</template>
 		</NModal>
 
@@ -278,6 +346,7 @@
 			preset="dialog"
 			:title="`确认要删除该用户信息吗？`"
 		>
+			<br />
 			<NFormItem :label="`请输入用户的UUID来确定删除 ${currentClearingUserInfo}`">
 				<NInput v-model:value="userInputClearingUserInfo" placeholder="用户 UUID" />
 			</NFormItem>
