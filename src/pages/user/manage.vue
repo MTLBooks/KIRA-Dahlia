@@ -3,10 +3,13 @@
 	const message = useMessage();
 
 	const isShowClearUserInfoModal = ref(false);
+	const isShowEditUserInfoModal = ref(false);
 	const isClearingUserInfo = ref(false);
 	const currentClearingUserInfo = ref("");
 	const userInputClearingUserInfo = ref("");
 	const currentClearingUserInfoByUid = ref(0);
+	const currentSortKey = ref<string | null>("uid");
+	const currentSortOrder = ref<"ascend" | "descend" | false>("ascend");
 
 	const options = [
 		{
@@ -18,13 +21,8 @@
 			label: "封禁",
 			key: "ban",
 			icon: () => <Icon name="block" />,
-		},
-		{
-			label: "用户资料",
-			key: "profile",
-			icon: () => <Icon name="badge" />,
-		},
-	];
+		}];
+
 	const handleSelect = (key: string) => {
 		switch (key) {
 			case "editProfile":
@@ -33,18 +31,18 @@
 			case "ban":
 				message.info("封禁用户");
 				break;
-			case "profile":
-				message.info("查看用户资料");
-				break;
+
 			default:
 				break;
 		}
 	};
 
-	const columns: DataTableColumns<NonNullable<UserList>[number]> = [
+	const columns = computed<DataTableColumns<NonNullable<UserList>[number]>>(() => [
 		{
 			title: "UID",
 			key: "uid",
+			sorter: "default",
+			sortOrder: currentSortKey.value === "uid" ? currentSortOrder.value : false,
 		},
 		{
 			title: "UUID",
@@ -53,24 +51,33 @@
 		{
 			title: "昵称",
 			key: "userNickname",
+			sorter: "default",
+			sortOrder: currentSortKey.value === "userNickname" ? currentSortOrder.value : false,
 		},
 		{
 			title: "用户名",
 			key: "username",
 		},
 		{
+			title: "邮箱",
+			key: "email",
+		},
+		{
 			title: "角色",
 			key: "roles",
 			render(row) {
-				if (!row.roles?.length) return h(NTag, { style: { marginRight: "6px" }, type: "info", bordered: false }, "user"); // 无角色时显示 user
+				if (!row.roles?.length) return h(NTag, { style: { marginRight: "6px" }, type: "info", bordered: false }, { default: () => "user" });
 				const roles = row.roles.map(roleKey => {
 					return h(NTag, { style: { marginRight: "6px" }, type: "info", bordered: false }, { default: () => roleKey });
 				});
 				return roles;
-			} },
+			},
+		},
 		{
 			title: "注册时间",
 			key: "userCreateDateTime",
+			sorter: "default",
+			sortOrder: currentSortKey.value === "userCreateDateTime" ? currentSortOrder.value : false,
 			render(row) {
 				if (row.userCreateDateTime === undefined) return h(NText, { depth: 3 }, () => "未记录");
 				const result = formatDateTime(row.userCreateDateTime);
@@ -90,7 +97,7 @@
 				</NSpace>
 			),
 		},
-	];
+	]);
 
 	const userList = ref<UserList>([]);
 	const userListCount = ref(0);
@@ -114,20 +121,60 @@
 	/**
 	 * 获取用户列表
 	 */
+
 	async function getUserInfo() {
+		let apiSortBy: string | undefined = undefined;
+		let apiSortOrder: "ascend" | "descend" | undefined = undefined;
+		if (currentSortKey.value && currentSortOrder.value) {
+			switch (currentSortKey.value) {
+				case "uid":
+					apiSortBy = "uid";
+					break;
+				case "userNickname":
+					apiSortBy = "usernickname";
+					break;
+				case "userCreateDateTime":
+					apiSortBy = "createDateTime";
+					break;
+				default:
+					apiSortBy = "uid";
+					break;
+			}
+			apiSortOrder = currentSortOrder.value;
+		} else {
+			apiSortBy = undefined;
+			apiSortOrder = undefined;
+		}
 		const getUserListRequest: AdminGetUserInfoRequestDto = {
 			isOnlyShowUserInfoUpdatedAfterReview: false,
+			sortBy: apiSortBy ?? "uid",
+			sortOrder: apiSortOrder ?? "ascend",
 			pagination: {
 				page: pagination.page,
 				pageSize: pagination.pageSize,
 			},
 		};
-		const getUserInfoResult = await adminGetUserInfo(getUserListRequest);
-		if (getUserInfoResult.success) {
-			userList.value = getUserInfoResult.result;
-			userListCount.value = getUserInfoResult.totalCount ?? 0;
-		} else
-			message.error("获取用户列表失败。");
+		try {
+			const getUserInfoResult = await adminGetUserInfo(getUserListRequest);
+			if (getUserInfoResult.success) {
+				userList.value = getUserInfoResult.result;
+				userListCount.value = getUserInfoResult.totalCount ?? 0;
+			} else
+				console.error("ERROR", "获取用户列表失败。");
+		} catch (error) {
+			console.error("ERROR", "请求用户列表时出错:", error);
+		}
+	}
+
+	/**
+	 * 处理排序变化
+	 * @param options 排序选项
+	 */
+	async function handleSorterChange(options: { columnKey: string | number | null; sorter: string; order: "ascend" | "descend" | false }) {
+		currentSortKey.value = options.columnKey as string | null;
+		currentSortOrder.value = options.order;
+		pagination.page = 1;
+		await getUserInfo();
 	}
 
 	/**
@@ -195,6 +242,8 @@
 			:pagination="false"
 			:bordered="false"
 			:rowKey="row => row.uid"
+			:remote="true"
+			@update:sorter="handleSorterChange"
 		/>
 		<NFlex justify="end" class="mbs-4">
 			<NPagination
@@ -209,6 +258,20 @@
 				showSizePicker
 			/>
 		</NFlex>
+
+		<NModal
+			v-model:show="isShowEditUserInfoModal"
+			:maskClosable="false"
+			preset="dialog"
+			title="用户信息"
+		>
+
+			<template #action>
+				<NButton @click="closeClearUserInfoModal">放弃更改</NButton>
+				<NButton :disabled="currentClearingUserInfo !== userInputClearingUserInfo" :loading="isClearingUserInfo" type="warning" :secondary="true" @click="clearUserInfo()">保存</NButton>
+			</template>
+		</NModal>
+
 		<NModal
 			v-model:show="isShowClearUserInfoModal"
 			:maskClosable="false"
