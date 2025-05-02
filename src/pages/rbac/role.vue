@@ -4,6 +4,7 @@
 	type RbacRole = GetRbacRoleResponseDto["result"];
 
 	const isShowDeleteRoleModal = ref(false);
+	const unableToEditRole = ref(true);
 	const currentDeletingRole = ref("");
 	const userInputDeleteingRole = ref("");
 	const isDeletingRole = ref(false);
@@ -158,6 +159,7 @@
 		};
 		const rbacApiPathResult = await getRbacApiPathController(getRbacApiPathRequest);
 		if (rbacApiPathResult.success)
+
 			rbacApiPath.value = rbacApiPathResult.result;
 		else
 			console.error("ERROR", "获取 RBAC API 路径失败。");
@@ -209,18 +211,22 @@
 	 * 设置数据并打开编辑角色的模态框
 	 * @param roleData 正在更新的角色数据
 	 */
-	function openEditRoleModal(roleData: NonNullable<RbacRole>[number]) {
+	async function openEditRoleModal(roleData: NonNullable<RbacRole>[number]) {
+		unableToEditRole.value = true;
 		updateApiPathPermissionsForRoleFormModal.value = {
 			roleName: roleData.roleName,
 			apiPathPermissions: roleData.apiPathPermissions.map(apiPath => apiPath),
 		};
 		isShowEditRoleModal.value = true;
+		await fetchRbacApiPath();
+		unableToEditRole.value = false;
 	}
 
 	/**
 	 * 关闭编辑角色的模态框并清除数据
 	 */
 	function closeEditRoleModal() {
+		unableToEditRole.value = true;
 		isShowEditRoleModal.value = false;
 		updateApiPathPermissionsForRoleFormModal.value = EMPTY_ROLE_UPDATE_DATA;
 	}
@@ -248,7 +254,6 @@
 	 */
 	async function fetchAllDataInRolePage() {
 		await fetchRbacRole();
-		await fetchRbacApiPath();
 	}
 
 	onMounted(fetchAllDataInRolePage);
@@ -370,6 +375,7 @@
 							label: apiPath.apiPath,
 							value: apiPath.apiPath,
 						}))"
+						:disabled="unableToEditRole"
 						sourceFilterable
 						targetFilterable
 					/>
