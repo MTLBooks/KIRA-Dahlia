@@ -101,3 +101,12 @@ export const adminGetUserInfo = async (AdminGetUserInfoRequest: AdminGetUserInfo
 export const adminClearUserInfo = async (AdminClearUserInfoRequest: AdminClearUserInfoRequestDto): Promise<AdminClearUserInfoResponseDto> => {
 	return await POST(`${USER_API_URI}/adminClearUserInfo`, AdminClearUserInfoRequest, { credentials: "include" }) as AdminClearUserInfoResponseDto;
 };
+
+/**
+ * 管理员编辑用户信息
+ * @param AdminEditUserInfoRequest 管理员编辑用户信息的请求载荷
+ * @returns 管理员编辑用户信息的请求响应
+ */
+export const adminEditUserInfo = async (AdminEditUserInfoRequest: AdminEditUserInfoRequestDto): Promise<AdminEditUserInfoResponseDto> => {
+	return await POST(`${USER_API_URI}/adminEditUserInfo`, AdminEditUserInfoRequest, { credentials: "include" }) as AdminEditUserInfoResponseDto;
+};

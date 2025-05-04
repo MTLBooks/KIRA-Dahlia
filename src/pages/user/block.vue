@@ -7,10 +7,10 @@
 		<NSpace>
 			<PageHeading>KIRAKIRA 用户封禁</PageHeading>
 		</NSpace>
-		<n-alert type="error" title="正在制作">
+		<n-alert type="error" title="用户封禁">
 			<n-marquee>
 				<div style="margin-right: 64px">
-					已经新建文件了！！！
+					TODO
 				</div>
 			</n-marquee>
 		</n-alert>

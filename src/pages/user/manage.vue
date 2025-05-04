@@ -6,11 +6,25 @@
 	const isShowEditUserInfoModal = ref(false);
 
 	const isClearingUserInfo = ref(false);
+	const isEditingUserInfo = ref(false);
 	const currentClearingUserInfo = ref("");
 	const userInputClearingUserInfo = ref("");
 	const currentClearingUserInfoByUid = ref(0);
 	const currentSortKey = ref<string | null>("uid");
 	const currentSortOrder = ref<"ascend" | "descend" | false>("ascend");
+	const defaultEditUserInfoData = {
+		uid: -1,
+		UUID: "",
+		email: "",
+		userNickname: "",
+		username: "",
+		signature: "",
+		gender: "",
+		userBirthday: -1,
+		userCreateDateTime: -1,
+		isUpdatedAfterReview: false,
+	};
+	const editUserInfoData = reactive({ ...defaultEditUserInfoData });
 
 	const options = [
 		{
@@ -24,11 +38,10 @@
 			icon: () => <Icon name="block" />,
 		}];
 
-	const handleSelect = (key: string) => {
+	const handleSelect = (key: string, row: NonNullable<UserList>[number]) => {
 		switch (key) {
 			case "editProfile":
-				isShowEditUserInfoModal.value = true;
-				message.info("编辑用户资料");
+				refreshEditUserInfo(row);
 				break;
 			case "ban":
 				message.info("封禁用户");
@@ -92,7 +105,7 @@
 			key: "actions",
 			render: row => (
 				<NSpace>
-					<NDropdown options={options} trigger="click" placement="bottom-end" onSelect={handleSelect}>
+					<NDropdown options={options} trigger="click" placement="bottom-end" onSelect={(key: string) => handleSelect(key, row)}>
 						<NButton strong secondary size="small" class="mie-2">更多</NButton>
 					</NDropdown>
 					<NButton type="error" strong secondary size="small" class="mie-2" onClick={() => openClearUserInfoModal(row.UUID ?? "", row.uid ?? 0)}>清空</NButton>
@@ -132,7 +145,7 @@
 					apiSortBy = "uid";
 					break;
 				case "userNickname":
-					apiSortBy = "usernickname";
+					apiSortBy = "userNickname";
 					break;
 				case "userCreateDateTime":
 					apiSortBy = "createDateTime";
@@ -199,6 +212,55 @@
 	}
 
 	/**
+	 * 编辑用户信息
+	 */
+	async function editUserInfo() {
+		if (editUserInfoData.userNickname === "" || editUserInfoData.username === "") {
+			message.error("昵称和用户名不能为空");
+			isEditingUserInfo.value = false;
+		}
+		isEditingUserInfo.value = true;
+		const editUserInfoRequest: AdminEditUserInfoRequestDto = {
+			uid: editUserInfoData.uid,
+			userInfo: {
+				userNickname: editUserInfoData.userNickname,
+				username: editUserInfoData.username,
+				signature: editUserInfoData.signature ?? "",
+				userBirthday: editUserInfoData.userBirthday ?? -1,
+				gender: editUserInfoData.gender,
+				isUpdatedAfterReview: editUserInfoData.isUpdatedAfterReview,
+			},
+		};
+		const editUserInfoResult = await adminEditUserInfo(editUserInfoRequest);
+		if (editUserInfoResult.success) {
+			message.success("修改用户信息成功。");
+			closeEditUserInfoModal();
+			await getUserInfo();
+		} else {
+			message.error("修改用户信息失败。");
+			isEditingUserInfo.value = false;
+		}
+	}
+
+	/**
+	 * 刷新编辑用户信息
+	 */
+	function refreshEditUserInfo(row: NonNullable<UserList>[number]) {
+		if (!row) return;
+		Object.assign(editUserInfoData, {
+			uid: row.uid,
+			UUID: row.UUID,
+			email: row.email,
+			userNickname: row.userNickname,
+			username: row.username,
+			signature: row.signature,
+			userBirthday: row.userBirthday,
+			gender: row.gender,
+		});
+		isShowEditUserInfoModal.value = true;
+	}
+
+	/**
 	 * 更新正在删除的用户 UUID，并打开删除用户信息的表单
 	 * @param deleteUUID 正在删除的用户信息
 	 */
@@ -221,6 +283,7 @@
 	 */
 	function closeEditUserInfoModal() {
 		isShowEditUserInfoModal.value = false;
+		isEditingUserInfo.value = false;
 	}
 
 	onMounted(() => { getUserInfo(); });
@@ -277,49 +340,50 @@
 			<br />
 			<NAlert type="warning" title="注意"><div>修改请慎重！</div></NAlert>
 			<br />
-			<NForm
-				labelPlacement="left"
-				labelWidth="auto"
-				requireMarkPlacement="right-hanging"
-			>
+			<NForm labelPlacement="left" labelWidth="auto">
 				<NRow :gutter="24">
-					<!-- 左列 -->
+
 					<NCol :span="10">
-						<NFormItem label="UID：">
-							<NInput placeholder="UID" :disabled="true" />
+						<NFormItem label="UID">
+							<NInput :value="String(editUserInfoData.uid)" disabled />
 						</NFormItem>
-						<NFormItem label="邮箱：">
-							<NInput placeholder="邮箱" :disabled="false" />
+						<NFormItem label="邮箱">
+							<NInput :value="editUserInfoData.email" disabled />
 						</NFormItem>
-						<NFormItem label="昵称：">
-							<NInput placeholder="昵称" :disabled="false" />
+						<NFormItem label="昵称">
+							<NInput v-model:value="editUserInfoData.userNickname" />
 						</NFormItem>
-						<NFormItem label="生日日期：">
-							<NDatePicker type="date" style="width: 100%" />
-						</NFormItem>
-					</NCol>
-					<!-- 右列 -->
-					<NCol :span="14">
-						<NFormItem label="UUID：">
-							<NInput placeholder="UUID" :disabled="true" />
-						</NFormItem>
-						<NFormItem label="名称：">
-							<NInput placeholder="名称" :disabled="false" />
-						</NFormItem>
-						<NFormItem label="简介：">
-							<NInput
-								type="textarea"
-								:autosize="{ minRows: 2, maxRows: 5 }"
-								placeholder="简介"
-								:disabled="false"
+						<NFormItem label="出生日期">
+							<NDatePicker
+								v-model:value="editUserInfoData.userBirthday"
+								type="date"
+								style="width: 100%"
 							/>
 						</NFormItem>
-						<NFormItem label="性别：">
-							<NRadioGroup name="gender">
-								<NSpace> <!-- 添加间距 -->
-									<NRadio value="man">男</NRadio>
-									<NRadio value="woman">女</NRadio>
-									<NRadio value="other">其他</NRadio>
+						<NFormItem label="未通过审核">
+							<NSwitch v-model:value="editUserInfoData.isUpdatedAfterReview" />
+						</NFormItem>
+					</NCol>
+
+					<NCol :span="14">
+						<NFormItem label="UUID">
+							<NInput :value="editUserInfoData.UUID" disabled />
+						</NFormItem>
+						<NFormItem label="用户名">
+							<NInput v-model:value="editUserInfoData.username" />
+						</NFormItem>
+						<NFormItem label="简介">
+							<NInput
+								v-model:value="editUserInfoData.signature"
+								type="textarea"
+								:autosize="{ minRows: 3, maxRows: 5 }"
+							/>
+						</NFormItem>
+						<NFormItem label="性别">
+							<NRadioGroup v-model:value="editUserInfoData.gender">
+								<NSpace>
+									<NRadio value="male">男</NRadio>
+									<NRadio value="female">女</NRadio>
 								</NSpace>
 							</NRadioGroup>
 						</NFormItem>
@@ -328,15 +392,22 @@
 			</NForm>
 			<template #action>
 				<NButton @click="closeEditUserInfoModal">放弃更改</NButton>
-				<NButton
-					:disabled="currentClearingUserInfo !== userInputClearingUserInfo"
-					:loading="isClearingUserInfo"
-					type="warning"
-					:secondary="true"
-					@click="message.info('保存')"
+				<NPopconfirm
+					@negativeClick="message.info(`$(editUserInfoData.userBirthday)`)"
+					@positiveClick="editUserInfo()"
 				>
-					保存
-				</NButton>
+					<template #trigger>
+						<NButton
+							:disabled="editUserInfoData.email === '' || editUserInfoData.userNickname === '' || editUserInfoData.username === ''"
+							:loading="isEditingUserInfo"
+							type="warning"
+							:secondary="true"
+						>
+							保存
+						</NButton>
+					</template>
+					你确定要保存吗？
+				</NPopconfirm>
 			</template>
 		</NModal>
 
