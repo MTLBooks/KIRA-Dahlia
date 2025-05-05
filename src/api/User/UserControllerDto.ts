@@ -705,6 +705,8 @@ export type AdminGetUserInfoRequestDto = {
 	sortBy: string;
 	/** 排序方法 */
 	sortOrder: string;
+	/** 查询 UID */
+	uid?: number;
 	/** 分页查询 */
 	pagination: {
 		/** 当前在第几页 */
@@ -778,8 +780,6 @@ export type AdminEditUserInfoRequestDto = {
 	uid: number;
 	/** 编辑用户的信息 */
 	userInfo?: {
-		/** 用户的邮箱 */
-		email?: string;
 		/** 用户名 */
 		username?: string;
 		/** 用户昵称 */

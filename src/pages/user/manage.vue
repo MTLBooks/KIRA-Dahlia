@@ -9,6 +9,7 @@
 	const isEditingUserInfo = ref(false);
 	const currentClearingUserInfo = ref("");
 	const userInputClearingUserInfo = ref("");
+	const searchUserUid = ref<number | null>(null);
 	const currentClearingUserInfoByUid = ref(0);
 	const currentSortKey = ref<string | null>("uid");
 	const currentSortOrder = ref<"ascend" | "descend" | false>("ascend");
@@ -161,6 +162,7 @@
 		}
 		const getUserListRequest: AdminGetUserInfoRequestDto = {
 			isOnlyShowUserInfoUpdatedAfterReview: false,
+			uid: searchUserUid.value ?? -1,
 			sortBy: apiSortBy ?? "uid",
 			sortOrder: apiSortOrder ?? "ascend",
 			pagination: {
@@ -303,8 +305,8 @@
 				</NCollapseItem>
 			</NCollapse>
 			<NFlex align="center" justify="right">
-				<NInputNumber placeholder="要查询的用户的 UID" :showButton="false" />
-				<NButton><template #icon><Icon name="search" /></template>查询</NButton>
+				<NInputNumber v-model:value="searchUserUid" placeholder="要查询的用户的 UID" :showButton="false" />
+				<NButton @click="getUserInfo()"><template #icon><Icon name="search" /></template>查询</NButton>
 			</NFlex>
 		</NSpace>
 		<NDataTable
