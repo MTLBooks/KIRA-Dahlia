@@ -7,17 +7,20 @@ export default function getCorrectUri(): string {
 	 * 读取环境变量中 VITE_BACKEND_URI 的值，作为后端 API 的 URI
 	 * 如果 VITE_BACKEND_URI 的值为 none，则返回空字符串，KIRAKRIA-Lycoris 将会以无后端模式启动
 	 */
-
 	try {
 		const backendUriInput = import.meta.env.VITE_BACKEND_URI;
 
 		if (!backendUriInput) {
-			console.error("ERROR", "Server startup failed,  the value of the environment variable VITE_BACKEND_URI was not specified.");
+			console.error("ERROR", "Server startup failed, the value of the environment variable VITE_BACKEND_URI was not specified.");
 			return "";
 		}
 
 		if (backendUriInput === "none")
 			return "";
+
+		// DEV 环境下无法正常登录的补丁。
+		if (import.meta.env.DEV)
+			return "/api/";
 
 		const backendUri = new URL(backendUriInput.trim());
 		const backendUriHref = backendUri.href;

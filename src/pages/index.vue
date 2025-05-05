@@ -22,8 +22,10 @@
 		};
 
 		const loginResult = await userLogin(userLoginRequest);
-		if (loginResult.success && loginResult.UUID)
+		if (loginResult.success && loginResult.UUID) {
+			await Promise.all((["UUID", "uid", "email", "token"] as const).map(async key => cookieStore.set(key.toLowerCase(), loginResult[key])));
 			location.reload(); // 登入成功后刷新页面...
+		}
 	}
 
 	/**
@@ -31,6 +33,7 @@
 	 */
 	async function logout() {
 		await userLogout();
+		await Promise.all((await cookieStore.getAll()).map(({ name }) => cookieStore.delete(name)));
 		location.reload(); // 尝试刷新页面...
 	}
 
