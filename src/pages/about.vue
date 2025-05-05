@@ -24,11 +24,17 @@
 				{{ branch }}
 			</NTag>
 		</div>
+
 		<NH4>GitHub</NH4>
 		<NFlex>
 			<NButton dashed color="#00dc82" tag="a" target="_blank" href="https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-Cerasus">Cerasus</NButton><!-- Color of Nuxt -->
 			<NButton dashed color="#3178c6" tag="a" target="_blank" href="https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-Rosales">Rosales</NButton><!-- Color of TypeScript -->
 			<NButton dashed color="#63e2b7" tag="a" target="_blank" href="https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-Lycoris">Lycoris</NButton><!-- Color of Naive UI -->
+		</NFlex>
+
+		<NH4>Powered by</NH4>
+		<NFlex>
+			<NButton dashed color="#63e2b7" tag="a" target="_blank" href="https://www.naiveui.com/">Naive UI</NButton>
 		</NFlex>
 	</div>
 </template>
