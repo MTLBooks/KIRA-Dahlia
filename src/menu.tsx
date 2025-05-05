@@ -84,12 +84,12 @@ const menu: MenuItem[] = [
 				icon: "api",
 			},
 			{
-				label: "角色",
+				label: "身份",
 				key: "role",
 				icon: "badge",
 			},
 			{
-				label: "用户的角色",
+				label: "用户身份",
 				key: "user-roles",
 				icon: "person",
 			},

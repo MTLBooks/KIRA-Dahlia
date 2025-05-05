@@ -75,7 +75,7 @@
 		<div v-else>
 			<NFlex vertical size="large">
 				<NAlert type="success">你已登入</NAlert>
-				<NCard title="你的角色是">
+				<NCard title="你的身份是">
 					<NFlex>
 						<NTag v-for="role in selfUserInfoStore.roles" :key="role">{{ role }}</NTag>
 					</NFlex>

@@ -30,7 +30,7 @@
 	});
 
 	/**
-	 * 通过 UID 获取一个用户的角色
+	 * 通过 UID 获取一个用户的身份
 	 */
 	async function adminFetchUserRole() {
 		if (inputUid.value === undefined || inputUid.value === null) return;
@@ -50,7 +50,7 @@
 	}
 
 	/**
-	 * 获取 RBAC 角色
+	 * 获取 RBAC 身份
 	 */
 	async function fetchRbacRole() {
 		const getRbacRoleRequest: GetRbacRoleRequestDto = {
@@ -64,11 +64,11 @@
 		if (rbacRoleResult.success)
 			rbacRole.value = rbacRoleResult.result;
 		else
-			console.error("ERROR", "获取 RBAC 角色失败。");
+			console.error("ERROR", "获取 RBAC 身份失败。");
 	}
 
 	/**
-	 * 管理员更新用户的角色
+	 * 管理员更新用户的身份
 	 */
 	async function adminUpdateUserRoles() {
 		if (!userRolesFormModel.value.uuid || !userRolesFormModel.value.userRoles) return;
@@ -88,7 +88,7 @@
 			isShowSubmitUserRolesModal.value = false;
 		} else
 			dialog.error({
-				title: "管理员更新用户的角色失败",
+				title: "管理员更新用户的身份失败",
 				content: adminUpdateUserRolesResult.message,
 				positiveText: "知道了",
 			});
@@ -101,19 +101,19 @@
 
 <template>
 	<div class="container">
-		<PageHeading>KIRAKIRA RBAC 用户角色管理</PageHeading>
+		<PageHeading>KIRAKIRA RBAC 用户身份管理</PageHeading>
 		<NCollapse class="mlb-4">
 			<NCollapseItem title="使用说明">
 				<NP>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</NP>
 				<NUl>
-					<NLi>一个用户可以拥有多个角色</NLi>
-					<NLi>一个角色可以对应多位用户</NLi>
-					<NLi>一个角色可以拥有对多个 API 的访问权限</NLi>
-					<NLi>一个 API 可以对应多个角色</NLi>
+					<NLi>一个用户可以拥有多个身份</NLi>
+					<NLi>一个身份可以对应多位用户</NLi>
+					<NLi>一个身份可以拥有对多个 API 的访问权限</NLi>
+					<NLi>一个 API 可以对应多个身份</NLi>
 				</NUl>
 				<NP>
-					你可以查询一个用户的角色，或为其绑定或解除绑定角色。<br />
-					拥有以下特殊名称的角色具有特殊效果，在绑定或解除绑定时请多加注意：
+					你可以查询一个用户的身份，或为其绑定或解除绑定身份。<br />
+					拥有以下特殊名称的身份具有特殊效果，在绑定或解除绑定时请多加注意：
 				</NP>
 				<NUl>
 					<NLi><b>root</b> - 拥有 RBAC 的管理权限</NLi>
@@ -122,7 +122,7 @@
 					<NLi><b>user</b> - 普通用户</NLi>
 					<NLi><b>blocked</b> - 已封禁的用户</NLi>
 				</NUl>
-				<NP>注意: blocked 角色与其他角色互斥</NP>
+				<NP>注意: blocked 身份与其他身份互斥</NP>
 			</NCollapseItem>
 		</NCollapse>
 		<NFlex justify="center">
@@ -152,7 +152,7 @@
 			<NFormItem label="启用编辑">
 				<NSwitch v-model:value="isEnableEditUserRole" />
 			</NFormItem>
-			<NFormItem label="用户的角色" path="userRoles">
+			<NFormItem label="用户的身份" path="userRoles">
 				<NTransfer
 					:disabled="!isEnableEditUserRole || !userRolesFormModel.uuid"
 					v-model:value="userRolesFormModel.userRoles"
@@ -164,7 +164,7 @@
 			<!-- TODO: 我想要 label 的占位又不想显示 label 文本，难道只能用 label=" " 这种不优雅的方式吗？ -->
 			<NFormItem label=" ">
 				<NButton :disabled="!isEnableEditUserRole || !userRolesFormModel.uuid" @click="isShowSubmitUserRolesModal = true">
-					更新用户角色
+					更新用户身份
 				</NButton>
 			</NFormItem>
 		</NForm>
@@ -173,7 +173,7 @@
 			v-model:show="isShowSubmitUserRolesModal"
 			:maskClosable="false"
 			preset="dialog"
-			title="确认要更新用户的角色吗？"
+			title="确认要更新用户的身份吗？"
 			negativeText="算了"
 			@positiveClick="adminUpdateUserRoles"
 		>
@@ -184,7 +184,7 @@
 				<NFormItem label="用户 UUID">
 					<NInput v-model:value="userRolesFormModel.uuid" :showButton="false" :disabled="true" />
 				</NFormItem>
-				<NFormItem label="用户的角色将会更新为下列角色">
+				<NFormItem label="用户的身份将会更新为下列身份">
 					<NFlex>
 						<NTag v-for="role in userRolesFormModel.userRoles" :key="role">{{ role }}</NTag>
 					</NFlex>

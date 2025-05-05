@@ -33,9 +33,9 @@ export const createRbacApiPathController = async (createRbacApiPathRequest: Crea
 };
 
 /**
- * 获取 RBAC 角色
- * @param getRbacRoleRequest 获取 RBAC 角色的请求载荷
- * @returns RBAC 角色
+ * 获取 RBAC 身份
+ * @param getRbacRoleRequest 获取 RBAC 身份的请求载荷
+ * @returns RBAC 身份
  */
 export const getRbacRoleController = async (getRbacRoleRequest: GetRbacRoleRequestDto): Promise<GetRbacRoleResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
@@ -43,8 +43,8 @@ export const getRbacRoleController = async (getRbacRoleRequest: GetRbacRoleReque
 };
 
 /**
- * 删除 RBAC 角色
- * @param deleteRbacRoleRequest 删除 RBAC 角色的请求载荷
+ * 删除 RBAC 身份
+ * @param deleteRbacRoleRequest 删除 RBAC 身份的请求载荷
  * @returns 删除结果
  */
 export const deleteRbacRoleController = async (deleteRbacRoleRequest: DeleteRbacRoleRequestDto): Promise<DeleteRbacRoleResponseDto> => {
@@ -53,9 +53,9 @@ export const deleteRbacRoleController = async (deleteRbacRoleRequest: DeleteRbac
 };
 
 /**
- * 创建 RBAC 角色
- * @param createRbacRoleRequest 创建 RBAC 角色的请求载荷
- * @returns 创建 RBAC 角色的请求响应
+ * 创建 RBAC 身份
+ * @param createRbacRoleRequest 创建 RBAC 身份的请求载荷
+ * @returns 创建 RBAC 身份的请求响应
  */
 export const createRbacRoleController = async (createRbacRoleRequest: CreateRbacRoleRequestDto): Promise<CreateRbacRoleResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
@@ -63,9 +63,9 @@ export const createRbacRoleController = async (createRbacRoleRequest: CreateRbac
 };
 
 /**
- * 为角色更新 API 路径权限
- * @param updateApiPathPermissionsForRoleRequest 为角色更新 API 路径权限的请求载荷
- * @returns 为角色更新 API 路径权限的请求响应
+ * 为身份更新 API 路径权限
+ * @param updateApiPathPermissionsForRoleRequest 为身份更新 API 路径权限的请求载荷
+ * @returns 为身份更新 API 路径权限的请求响应
  */
 export const updateApiPathPermissionsForRoleController = async (updateApiPathPermissionsForRoleRequest: UpdateApiPathPermissionsForRoleRequestDto): Promise<UpdateApiPathPermissionsForRoleResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
@@ -73,9 +73,9 @@ export const updateApiPathPermissionsForRoleController = async (updateApiPathPer
 };
 
 /**
- * 通过 UID 获取一个用户的角色
- * @param adminGetUserRolesByUidRequest 通过 UID 获取一个用户的角色的请求载荷
- * @returns 通过 UID 获取一个用户的角色的请求响应
+ * 通过 UID 获取一个用户的身份
+ * @param adminGetUserRolesByUidRequest 通过 UID 获取一个用户的身份的请求载荷
+ * @returns 通过 UID 获取一个用户的身份的请求响应
  */
 export const adminGetUserRolesController = async (adminGetUserRolesByUidRequest: AdminGetUserRolesByUidRequestDto): Promise<AdminGetUserRolesByUidResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
@@ -83,9 +83,9 @@ export const adminGetUserRolesController = async (adminGetUserRolesByUidRequest:
 };
 
 /**
- * 管理员更新用户角色
- * @param adminUpdateUserRoleRequest 管理员更新用户角色的请求载荷
- * @returns 管理员更新用户角色的请求响应
+ * 管理员更新用户身份
+ * @param adminUpdateUserRoleRequest 管理员更新用户身份的请求载荷
+ * @returns 管理员更新用户身份的请求响应
  */
 export const adminUpdateUserRoleController = async (adminUpdateUserRoleRequest: AdminUpdateUserRoleRequestDto): Promise<AdminUpdateUserRoleResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
