@@ -342,7 +342,7 @@
 			<br />
 			<NAlert type="warning" title="注意"><div>修改请慎重！</div></NAlert>
 			<br />
-			<NForm labelPlacement="left" labelWidth="auto">
+			<NForm labelPlacement="left" labelWidth="100px">
 				<NRow :gutter="24">
 
 					<NCol :span="10">
@@ -362,9 +362,7 @@
 								style="width: 100%"
 							/>
 						</NFormItem>
-						<NFormItem label="未通过审核">
-							<NSwitch v-model:value="editUserInfoData.isUpdatedAfterReview" />
-						</NFormItem>
+
 					</NCol>
 
 					<NCol :span="14">
@@ -381,6 +379,11 @@
 								:autosize="{ minRows: 3, maxRows: 5 }"
 							/>
 						</NFormItem>
+					</NCol>
+				</NRow>
+
+				<NRow :gutter="24">
+					<NCol :span="12">
 						<NFormItem label="性别">
 							<NRadioGroup v-model:value="editUserInfoData.gender">
 								<NSpace>
@@ -390,8 +393,14 @@
 							</NRadioGroup>
 						</NFormItem>
 					</NCol>
+					<NCol :span="12">
+						<NFormItem label="未通过审核">
+							<NSwitch v-model:value="editUserInfoData.isUpdatedAfterReview" />
+						</NFormItem>
+					</NCol>
 				</NRow>
 			</NForm>
+
 			<template #action>
 				<NButton @click="closeEditUserInfoModal">放弃更改</NButton>
 				<NPopconfirm
