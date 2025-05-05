@@ -22,12 +22,15 @@
 		{
 			title: "API 路径",
 			key: "apiPath",
-			render: row => <NTag color={{ color: row.isAssignedOnce ? row.apiPathColor : "#EEEEEEFF" }}>{row.apiPath}</NTag>,
+			render: row => {
+				const color = row.isAssignedOnce && row.apiPathColor || "#EEEEEEFF";
+				return <NTag color={{ color, textColor: getContrastiveColor(color) }}>{row.apiPath}</NTag>;
+			},
 		},
 		{
 			title: "是否至少绑定到一个角色",
 			key: "isAssignedOnce",
-			render: row => <div id={`${row.apiPath}-isAssignedOnce-col`}>{row.isAssignedOnce}</div>,
+			render: row => <div id={`${row.apiPath}-isAssignedOnce-col`}><Icon name={row.isAssignedOnce ? "check" : "close"} /></div>,
 		},
 		{
 			title: "类型",
