@@ -152,7 +152,7 @@
 			<NFormItem label="启用编辑">
 				<NSwitch v-model:value="isEnableEditUserRole" />
 			</NFormItem>
-			<NFormItem label="用户的身份" path="userRoles">
+			<NFormItem label="用户身份" path="userRoles">
 				<NTransfer
 					:disabled="!isEnableEditUserRole || !userRolesFormModel.uuid"
 					v-model:value="userRolesFormModel.userRoles"

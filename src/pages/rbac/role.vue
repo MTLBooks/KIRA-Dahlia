@@ -28,24 +28,38 @@
 	};
 	const updateApiPathPermissionsForRoleFormModal = ref<UpdateApiPathPermissionsForRoleRequestDto>(EMPTY_ROLE_UPDATE_DATA);
 
+	const apiPathEls = reactive<(Element | ComponentPublicInstance)[]>([]);
+	function fixEllipsis() {
+		for (let element of apiPathEls) {
+			if ("$el" in element) element = element.$el as Element;
+			if (!element?.parentElement || !(element instanceof HTMLElement)) continue;
+			const right = element.offsetLeft + element.offsetWidth;
+			const visibleWidth = element.parentElement.offsetWidth;
+			element.classList.toggle("invisible", right - visibleWidth > -22.5)
+		}
+	}
+	watch(apiPathEls, () => fixEllipsis());
+	useEventListener(window, "resize", () => fixEllipsis());
+
 	const columns: DataTableColumns<NonNullable<RbacRole>[number]> = [
 		{
 			title: "身份名",
 			key: "roleName",
-			render: row => <NTag color={{ color: row.roleColor }}>{row.roleName}</NTag>,
+			render: row => <NTag color={{ color: row.roleColor, textColor: getContrastiveColor(row.roleColor!) }}>{row.roleName}</NTag>,
 		},
 		{
 			title: "可以访问以下 API 路径",
 			key: "apiPathPermissions",
 			ellipsis: true,
 			width: "min(400px, 40dvw)",
-			render: row => row.apiPathPermissions.map(apiPath => <NTag class="mie-2">{apiPath}</NTag>),
+			render: row => row.apiPathPermissions.map(apiPath => <NTag class="mie-2" ref={el => el && apiPathEls.push(el)}>{apiPath}</NTag>),
+			className: "[&>*]:relative",
 		},
 		{
 			type: "expand",
 			renderExpand: rowData => [
 				<div id={`${rowData.roleName}-expand-title`} class="mbe-2">{`身份 ${rowData.roleName} 有以下 API 路径的访问权限`}</div>,
-				...rowData.apiPathList.map(apiPath => <NTag color={{ color: apiPath.apiPathColor }} class="mie-2 mbe-1">{apiPath.apiPath}</NTag>),
+				...rowData.apiPathList.map(apiPath => <NTag color={{ color: apiPath.apiPathColor, textColor: getContrastiveColor(apiPath.apiPathColor!) }} class="mie-2 mbe-1">{apiPath.apiPath}</NTag>),
 			],
 		},
 		{
@@ -64,10 +78,10 @@
 			title: "操作",
 			key: "actions",
 			render: row => (
-				<>
-					<NButton strong secondary size="small" class="mie-2" onClick={() => openEditRoleModal(row)}>编辑</NButton>
-					<NButton strong secondary size="small" type="warning" onClick={() => openDeleteRoleModal(row.roleName ?? "")}>删除</NButton>
-				</>
+				<NFlex size="small">
+					<NButton strong secondary size="small" onClick={() => openEditRoleModal(row)}>{{ icon: <Icon name="edit" /> }}</NButton>
+					<NButton strong secondary size="small" type="error" onClick={() => openDeleteRoleModal(row.roleName ?? "")}>{{ icon: <Icon name="delete" /> }}</NButton>
+				</NFlex>
 			),
 		},
 	];

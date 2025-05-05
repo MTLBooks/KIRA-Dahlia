@@ -37,6 +37,7 @@ export default defineConfig(({ mode }) => {
 						],
 						pinia: ["defineStore"],
 						"vue-router": ["RouterLink"],
+						"vue/jsx-runtime": ["Fragment"],
 					},
 					{
 						from: "naive-ui",

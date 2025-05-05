@@ -47,7 +47,7 @@
 		{
 			title: "操作",
 			key: "actions",
-			render: row => <NButton strong secondary size="small" onClick={() => openDeleteApiPathModal(row.apiPath ?? "")}>删除</NButton>,
+			render: row => <NButton strong secondary size="small" type="error" onClick={() => openDeleteApiPathModal(row.apiPath ?? "")}>{{ icon: <Icon name="delete" /> }}</NButton>,
 		},
 	];
 
