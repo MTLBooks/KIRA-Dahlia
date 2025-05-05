@@ -1,5 +1,16 @@
 <script setup lang="ts">
-
+	const { VITE_BACKEND_URI: BACKEND_URI, BRANCH, COMMIT_REF } = import.meta.env;
+	const branch = computed(() => {
+		const items: string[] = [];
+		if (BACKEND_URI.includes("localhost")) items.push("Local Backend");
+		else if (BACKEND_URI.includes("kirafile")) items.push("Staging");
+		else if (BACKEND_URI.includes("kirakira")) items.push("Live");
+		else if (BACKEND_URI === "none") items.push("No Backend");
+		if (import.meta.env.DEV) items.push("Dev");
+		if (BRANCH) items.push(BRANCH);
+		if (COMMIT_REF) items.push(COMMIT_REF);
+		return items.join(" ");
+	});
 </script>
 
 <template>
@@ -10,9 +21,8 @@
 				<template #icon>
 					<Icon name="forkRight" />
 				</template>
-				Develop
+				{{ branch }}
 			</NTag>
-			<!-- FIXME: 这里模仿 Cerasus 做一个显示当前分支的 tag。 -->
 		</div>
 		<NH4>GitHub</NH4>
 		<NFlex>
