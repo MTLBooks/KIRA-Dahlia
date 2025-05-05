@@ -73,9 +73,17 @@
 			</NCard>
 		</div>
 		<div v-else>
-			<p>你已登入</p>
-			<p>你的角色是：{{ selfUserInfoStore.roles }}</p>
-			<NButton type="primary" round attrType="button" @click="logout">登出</NButton>
+			<NFlex vertical size="large">
+				<NAlert type="success">你已登入</NAlert>
+				<NCard title="你的角色是">
+					<NFlex>
+						<NTag v-for="role in selfUserInfoStore.roles" :key="role">{{ role }}</NTag>
+					</NFlex>
+				</NCard>
+				<div>
+					<NButton type="error" round attrType="button" @click="logout">登出</NButton>
+				</div>
+			</NFlex>
 		</div>
 	</div>
 </template>
