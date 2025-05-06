@@ -18,10 +18,6 @@ export default function getCorrectUri(): string {
 		if (backendUriInput === "none")
 			return "";
 
-		// DEV 环境下无法正常登录的补丁。
-		if (import.meta.env.DEV)
-			return "/api/";
-
 		const backendUri = new URL(backendUriInput.trim());
 		const backendUriHref = backendUri.href;
 		if (!backendUriHref) {

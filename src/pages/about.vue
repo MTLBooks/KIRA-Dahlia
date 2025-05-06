@@ -3,7 +3,6 @@
 	const branch = computed(() => {
 		const items: string[] = [];
 		if (BACKEND_URI.includes("localhost")) items.push("Local Backend");
-		else if (BACKEND_URI.includes("kirafile")) items.push("Staging");
 		else if (BACKEND_URI.includes("kirakira")) items.push("Live");
 		else if (BACKEND_URI === "none") items.push("No Backend");
 		if (import.meta.env.DEV) items.push("Dev");

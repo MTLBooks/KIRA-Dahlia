@@ -122,14 +122,6 @@ export default defineConfig(({ mode }) => {
 				cert: fs.readFileSync("./ssl/cert.pem"),
 				key: fs.readFileSync("./ssl/key.pem"),
 			} : undefined,
-			proxy: isDevelopment && env.VITE_BACKEND_URI ? {
-				"/api": {
-					target: env.VITE_BACKEND_URI,
-					changeOrigin: true,
-					secure: false,
-					rewrite: path => path.replace(/^\/api/, ""),
-				},
-			} : undefined,
 		},
 	};
 });
