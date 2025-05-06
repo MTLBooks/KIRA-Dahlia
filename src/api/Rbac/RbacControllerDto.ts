@@ -87,7 +87,7 @@ export type DeleteRbacApiPathResponseDto = {
 	success: boolean;
 	/** 附加的文本消息 */
 	message?: string;
-	/** 该 API 路径是否已经绑定到角色（如果绑定了角色则无法删除） */
+	/** 该 API 路径是否已经绑定到身份（如果绑定了身份则无法删除） */
 	isAssigned: boolean;
 };
 
@@ -130,20 +130,20 @@ export type GetRbacApiPathResponseDto = {
 };
 
 /**
- * RBAC 角色
+ * RBAC 身份
  */
 type RbacRole = {
-	/** 角色的 UUID */
+	/** 身份的 UUID */
 	roleUuid: string;
-	/** 角色的名字 */
+	/** 身份的名字 */
 	roleName: string;
-	/** 角色的类型 */
+	/** 身份的类型 */
 	roleType?: string;
-	/** 角色的颜色 - 例子：#66CCFFFF */
+	/** 身份的颜色 - 例子：#66CCFFFF */
 	roleColor?: string;
-	/** 角色的描述 */
+	/** 身份的描述 */
 	roleDescription?: string;
-	/** 这个角色有哪些 API 路径的访问权 */
+	/** 这个身份有哪些 API 路径的访问权 */
 	apiPathPermissions: string[];
 	/** API 路径创建者 - 非空 */
 	creatorUuid: string;
@@ -156,21 +156,21 @@ type RbacRole = {
 };
 
 /**
- * 创建 RBAC 角色的请求载荷
+ * 创建 RBAC 身份的请求载荷
  */
 export type CreateRbacRoleRequestDto = {
-	/** 角色的名字 */
+	/** 身份的名字 */
 	roleName: string;
-	/** 角色的类型 */
+	/** 身份的类型 */
 	roleType?: string;
-	/** 角色的颜色 - 例子：#66CCFFFF */
+	/** 身份的颜色 - 例子：#66CCFFFF */
 	roleColor?: string;
-	/** 角色的描述 */
+	/** 身份的描述 */
 	roleDescription?: string;
 };
 
 /**
- * 创建 RBAC 角色的请求响应
+ * 创建 RBAC 身份的请求响应
  */
 export type CreateRbacRoleResponseDto = {
 	/** 是否请求成功 */
@@ -182,15 +182,15 @@ export type CreateRbacRoleResponseDto = {
 };
 
 /**
- * 删除 RBAC 角色的请求载荷
+ * 删除 RBAC 身份的请求载荷
  */
 export type DeleteRbacRoleRequestDto = {
-	/** 角色的名字 */
+	/** 身份的名字 */
 	roleName: string;
 };
 
 /**
- * 删除 RBAC 角色的请求响应
+ * 删除 RBAC 身份的请求响应
  */
 export type DeleteRbacRoleResponseDto = {
 	/** 是否请求成功 */
@@ -200,18 +200,18 @@ export type DeleteRbacRoleResponseDto = {
 };
 
 /**
- * 获取 RBAC 角色的请求载荷
+ * 获取 RBAC 身份的请求载荷
  */
 export type GetRbacRoleRequestDto = {
 	/** 搜索项 */
 	search: {
-		/** 角色的名字 */
+		/** 身份的名字 */
 		roleName?: string;
-		/** 角色的类型 */
+		/** 身份的类型 */
 		roleType?: string;
-		/** 角色的颜色 - 例子：#66CCFFFF */
+		/** 身份的颜色 - 例子：#66CCFFFF */
 		roleColor?: string;
-		/** 角色的描述 */
+		/** 身份的描述 */
 		roleDescription?: string;
 	};
 	/** 分页查询 */
@@ -224,7 +224,7 @@ export type GetRbacRoleRequestDto = {
 };
 
 /**
- * 获取 RBAC 角色的请求响应
+ * 获取 RBAC 身份的请求响应
  */
 export type GetRbacRoleResponseDto = {
 	/** 是否请求成功 */
@@ -241,17 +241,17 @@ export type GetRbacRoleResponseDto = {
 };
 
 /**
- * 为角色更新 API 路径权限的请求载荷
+ * 为身份更新 API 路径权限的请求载荷
  */
 export type UpdateApiPathPermissionsForRoleRequestDto = {
-	/** 角色的名字 */
+	/** 身份的名字 */
 	roleName: string;
-	/** 这个角色有哪些 API 路径的访问权 */
+	/** 这个身份有哪些 API 路径的访问权 */
 	apiPathPermissions: string[];
 };
 
 /**
- * 为角色更新 API 路径权限的请求响应
+ * 为身份更新 API 路径权限的请求响应
  */
 export type UpdateApiPathPermissionsForRoleResponseDto = {
 	/** 是否请求成功 */
@@ -263,7 +263,7 @@ export type UpdateApiPathPermissionsForRoleResponseDto = {
 };
 
 /**
- * 通过 UID 获取一个用户的角色的请求载荷
+ * 通过 UID 获取一个用户的身份的请求载荷
  */
 export type AdminGetUserRolesByUidRequestDto = {
 	/** 用户的 UID */
@@ -271,7 +271,7 @@ export type AdminGetUserRolesByUidRequestDto = {
 };
 
 /**
- * 通过 UID 获取一个用户的角色的请求响应
+ * 通过 UID 获取一个用户的身份的请求响应
  */
 export type AdminGetUserRolesByUidResponseDto = {
 	/** 是否请求成功 */
@@ -290,23 +290,23 @@ export type AdminGetUserRolesByUidResponseDto = {
 		userNickname: string;
 		/** 用户头像 */
 		avatar: string;
-		/** 用户的角色 */
+		/** 用户的身份 */
 		roles: RbacRole[];
 	};
 };
 
 /**
- * 管理员更新用户角色的请求载荷
+ * 管理员更新用户身份的请求载荷
  */
 export type AdminUpdateUserRoleRequestDto = {
-	/** 要被更新角色的用户的 UUID */
+	/** 要被更新身份的用户的 UUID */
 	uuid: string;
-	/** 新的角色 */
+	/** 新的身份 */
 	newRoles: string[];
 };
 
 /**
- * 管理员更新用户角色的请求响应
+ * 管理员更新用户身份的请求响应
  */
 export type AdminUpdateUserRoleResponseDto = {
 	/** 是否请求成功 */

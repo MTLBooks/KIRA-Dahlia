@@ -52,3 +52,9 @@
 @theme {
 	--font-mono: v-mono, "Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
 }
+
+.n-tag {
+	text-wrap-mode: wrap;
+	height: auto;
+	min-height: var(--n-height);
+}

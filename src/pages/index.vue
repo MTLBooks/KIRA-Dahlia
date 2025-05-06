@@ -75,13 +75,17 @@
 			</NCard>
 		</div>
 		<div v-else>
-			<p>你已登入</p>
-			<n-space>
-				<p>你所拥有的角色：</p>
-				<!-- TODO: 颜色需要和数据库同步 但是用 fetchRbacRole 的话太重了 -->
-				<n-tag :color="{ color: rbacColor[role] || '#9FCEFF' }" size="small" v-for="(role) in selfUserInfoStore.roles" :key="role">{{ role }}</n-tag>
-			</n-space>
-			<NButton type="primary" round attrType="button" @click="logout">登出</NButton>
+			<NFlex vertical size="large">
+				<NAlert type="success">你已登入</NAlert>
+				<NCard title="你的身份是">
+					<NFlex>
+						<NTag v-for="role in selfUserInfoStore.roles" :key="role">{{ role }}</NTag>
+					</NFlex>
+				</NCard>
+				<div>
+					<NButton type="error" round attrType="button" @click="logout">登出</NButton>
+				</div>
+			</NFlex>
 		</div>
 	</div>
 </template>

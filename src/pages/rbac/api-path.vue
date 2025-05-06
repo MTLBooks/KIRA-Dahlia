@@ -22,12 +22,15 @@
 		{
 			title: "API 路径",
 			key: "apiPath",
-			render: row => <NTag color={{ color: row.isAssignedOnce ? row.apiPathColor : "#EEEEEEFF" }}>{row.apiPath}</NTag>,
+			render: row => {
+				const color = row.isAssignedOnce && row.apiPathColor || "#EEEEEEFF";
+				return <NTag color={{ color, textColor: getContrastiveColor(color) }}>{row.apiPath}</NTag>;
+			},
 		},
 		{
-			title: "是否至少绑定到一个角色",
+			title: "是否至少绑定到一个身份",
 			key: "isAssignedOnce",
-			render: row => <div id={`${row.apiPath}-isAssignedOnce-col`}>{row.isAssignedOnce}</div>,
+			render: row => <div id={`${row.apiPath}-isAssignedOnce-col`}><Icon name={row.isAssignedOnce ? "check" : "close"} /></div>,
 		},
 		{
 			title: "类型",
@@ -44,7 +47,7 @@
 		{
 			title: "操作",
 			key: "actions",
-			render: row => <NButton strong secondary size="small" onClick={() => openDeleteApiPathModal(row.apiPath ?? "")}>删除</NButton>,
+			render: row => <NButton strong secondary size="small" type="error" onClick={() => openDeleteApiPathModal(row.apiPath ?? "")}>{{ icon: <Icon name="delete" /> }}</NButton>,
 		},
 	];
 
@@ -176,16 +179,16 @@
 			<NCollapseItem title="使用说明">
 				<NP>KIRAKIRA RBAC 权限控制的最小单位是 API 路径。</NP>
 				<NUl>
-					<NLi>一个用户可以拥有多个角色</NLi>
-					<NLi>一个角色可以对应多位用户</NLi>
-					<NLi>一个角色可以拥有对多个 API 的访问权限</NLi>
-					<NLi>一个 API 可以对应多个角色</NLi>
+					<NLi>一个用户可以拥有多个身份</NLi>
+					<NLi>一个身份可以对应多位用户</NLi>
+					<NLi>一个身份可以拥有对多个 API 的访问权限</NLi>
+					<NLi>一个 API 可以对应多个身份</NLi>
 				</NUl>
 				<NP>
 					你可以添加新的 API 路径，前提是后端中该 API 的 Controller 层受 RBAC 管制，否则添加 API 路径无效。<br />
-					你也可以删除 API 路径，前提是该 API 路径没有绑定到任何角色。
+					你也可以删除 API 路径，前提是该 API 路径没有绑定到任何身份。
 				</NP>
-				<NP>没有绑定到角色的 API 路径会显示为灰色，已经绑定到角色的 API 路径会显示用户设置的颜色。</NP>
+				<NP>没有绑定到身份的 API 路径会显示为灰色，已经绑定到身份的 API 路径会显示用户设置的颜色。</NP>
 			</NCollapseItem>
 		</NCollapse>
 		<NFlex class="mlb-2">
