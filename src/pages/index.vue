@@ -1,11 +1,6 @@
 <script setup lang="ts">
 	const selfUserInfoStore = useSelfUserInfoStore();
 
-	const rbacColor: Record<string, string> = {
-		administrator: "#e4f0fd",
-		root: "#faeaed",
-	};
-
 	const email = ref("");
 	const password = ref("");
 	const clientOtp = ref(""); // TOTP 验证码

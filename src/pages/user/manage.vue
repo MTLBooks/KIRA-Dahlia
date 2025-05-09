@@ -4,15 +4,20 @@
 
 	const isShowClearUserInfoModal = ref(false);
 	const isShowEditUserInfoModal = ref(false);
+	const isShowBanUserModal = ref(false);
 
 	const isClearingUserInfo = ref(false);
 	const isEditingUserInfo = ref(false);
+	const isBanUser = ref(false);
+
 	const currentClearingUserInfo = ref("");
 	const userInputClearingUserInfo = ref("");
+	const userInputBanUserInfo = ref("");
 	const searchUserUid = ref<number | null>(null);
 	const currentClearingUserInfoByUid = ref(0);
 	const currentSortKey = ref<string | null>("uid");
 	const currentSortOrder = ref<"ascend" | "descend" | false>("ascend");
+	const currentBanUserInfo = ref("");
 	const defaultEditUserInfoData = {
 		uid: -1,
 		UUID: "",
@@ -34,7 +39,7 @@
 			icon: () => <Icon name="edit" />,
 		},
 		{
-			label: "封禁",
+			label: () => <span class="text-red-500">封禁</span>,
 			key: "ban",
 			icon: () => <Icon name="block" />,
 		}];
@@ -45,7 +50,7 @@
 				refreshEditUserInfo(row);
 				break;
 			case "ban":
-				message.info("封禁用户");
+				openBanUserModal(row.UUID ?? "");
 				break;
 
 			default:
@@ -107,9 +112,9 @@
 			render: row => (
 				<NSpace>
 					<NDropdown options={options} trigger="click" placement="bottom-end" onSelect={(key: string) => handleSelect(key, row)}>
-						<NButton strong secondary size="small" class="mie-2">更多</NButton>
+						<NButton strong secondary size="small" class="mie-2">{{ icon: <Icon name="moreHoriz" /> }}</NButton>
 					</NDropdown>
-					<NButton type="error" strong secondary size="small" class="mie-2" onClick={() => openClearUserInfoModal(row.UUID ?? "", row.uid ?? 0)}>清空</NButton>
+					<NButton type="error" strong secondary size="small" class="mie-2" onClick={() => openClearUserInfoModal(row.UUID ?? "", row.uid ?? 0)}>{{ icon: <Icon name="delete" /> }}</NButton>
 				</NSpace>
 			),
 		},
@@ -194,6 +199,27 @@
 	}
 
 	/**
+	 * 封禁用户
+	 */
+	async function banUser() {
+		if (userInputBanUserInfo.value === "") return;
+		if (userInputBanUserInfo.value !== currentBanUserInfo.value) return;
+		isBanUser.value = true;
+		const banUserRequest: AdminUpdateUserRoleRequestDto = {
+			uuid: currentBanUserInfo.value,
+			newRoles: ["blocked-user"],
+		};
+		const banUserResult = await adminUpdateUserRoleController(banUserRequest);
+		if (banUserResult.success) {
+			closeBanUserModal();
+			message.success("封禁用户成功");
+			await getUserInfo();
+		} else
+			message.error("封禁用户失败");
+		isBanUser.value = false;
+	}
+
+	/**
 	 * 清空用户信息
 	 */
 	async function clearUserInfo() {
@@ -206,10 +232,10 @@
 		const clearUserInfoResult = await adminClearUserInfo(clearUserInfoRequest);
 		if (clearUserInfoResult.success) {
 			closeClearUserInfoModal();
-			message.success("清除用户信息成功。");
+			message.success("清除用户信息成功");
 			await getUserInfo();
 		} else
-			message.error("清除用户信息失败。");
+			message.error("清除用户信息失败");
 		isClearingUserInfo.value = false;
 	}
 
@@ -235,11 +261,11 @@
 		};
 		const editUserInfoResult = await adminEditUserInfo(editUserInfoRequest);
 		if (editUserInfoResult.success) {
-			message.success("修改用户信息成功。");
+			message.success("修改用户信息成功");
 			closeEditUserInfoModal();
 			await getUserInfo();
 		} else {
-			message.error("修改用户信息失败。");
+			message.error("修改用户信息失败");
 			isEditingUserInfo.value = false;
 		}
 	}
@@ -270,6 +296,23 @@
 		currentClearingUserInfo.value = clearUUID;
 		currentClearingUserInfoByUid.value = clearUid;
 		isShowClearUserInfoModal.value = true;
+	}
+
+	/**
+	 * 更新正在封禁的用户 UUID，并打开封禁用户信息的表单
+	 * @param banUUID 正在封禁的用户信息
+	 */
+	function openBanUserModal(banUUID: string) {
+		currentBanUserInfo.value = banUUID;
+		isShowBanUserModal.value = true;
+	}
+
+	/**
+	 * 关闭封禁用户信息的表单，并清除正在封禁的用户信息
+	 */
+	function closeBanUserModal() {
+		isShowBanUserModal.value = false;
+		currentBanUserInfo.value = "";
 	}
 
 	/**
@@ -394,7 +437,7 @@
 						</NFormItem>
 					</NCol>
 					<NCol :span="12">
-						<NFormItem label="未通过审核">
+						<NFormItem label="是否未审核">
 							<NSwitch v-model:value="editUserInfoData.isUpdatedAfterReview" />
 						</NFormItem>
 					</NCol>
@@ -436,6 +479,23 @@
 			<template #action>
 				<NButton @click="closeClearUserInfoModal">算了</NButton>
 				<NButton :disabled="currentClearingUserInfo !== userInputClearingUserInfo" :loading="isClearingUserInfo" type="warning" :secondary="true" @click="clearUserInfo()">确认删除</NButton>
+			</template>
+		</NModal>
+
+		<NModal
+			v-model:show="isShowBanUserModal"
+			:maskClosable="false"
+			preset="dialog"
+			:title="`确认要封禁该用户吗？`"
+		>
+			<br />
+			<NFormItem :label="`请输入用户的UUID来确定封禁 ${currentBanUserInfo}`">
+				<NInput v-model:value="userInputBanUserInfo" placeholder="用户 UUID" />
+			</NFormItem>
+
+			<template #action>
+				<NButton @click="closeBanUserModal">算了</NButton>
+				<NButton :disabled="currentBanUserInfo !== userInputBanUserInfo" :loading="isBanUser" type="warning" :secondary="true" @click="banUser()">确认封禁</NButton>
 			</template>
 		</NModal>
 
