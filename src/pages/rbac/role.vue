@@ -31,6 +31,7 @@
 
 	const apiPathEls = reactive<(Element | ComponentPublicInstance)[]>([]);
 	function fixEllipsis() {
+		// eslint-disable-next-line no-restricted-syntax
 		for (let element of apiPathEls) {
 			if ("$el" in element) element = element.$el as Element;
 			if (!element?.parentElement || !(element instanceof HTMLElement)) continue;

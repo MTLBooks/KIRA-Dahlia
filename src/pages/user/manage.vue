@@ -207,7 +207,7 @@
 		isBanUser.value = true;
 		const banUserRequest: AdminUpdateUserRoleRequestDto = {
 			uuid: currentBanUserInfo.value,
-			newRoles: ["blocked-user"],
+			newRoles: ["blocked"],
 		};
 		const banUserResult = await adminUpdateUserRoleController(banUserRequest);
 		if (banUserResult.success) {
@@ -352,6 +352,7 @@
 				<NButton @click="getUserInfo()"><template #icon><Icon name="search" /></template>查询</NButton>
 			</NFlex>
 		</NSpace>
+
 		<NDataTable
 			:columns="columns"
 			:data="userList"
