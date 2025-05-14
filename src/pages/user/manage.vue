@@ -284,6 +284,7 @@
 			signature: row.signature,
 			userBirthday: row.userBirthday,
 			gender: row.gender,
+			isUpdatedAfterReview: row.isUpdatedAfterReview,
 		});
 		isShowEditUserInfoModal.value = true;
 	}
