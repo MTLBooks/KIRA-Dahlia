@@ -727,6 +727,8 @@ export type AdminGetUserInfoResponseDto = {
 	/** 请求响应 */
 	result?: (
 		GetSelfUserInfoResponseDto["result"]
+		& { avatar: string }
+		& { userBannerImage: string }
 		& { editDateTime: number }
 		& { editOperatorUUID: string }
 		& { isUpdatedAfterReview: boolean }
