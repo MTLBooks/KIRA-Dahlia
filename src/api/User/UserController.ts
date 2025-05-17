@@ -1,5 +1,5 @@
 import { GET, POST } from "api/tools/fetch";
-import { GetSelfUserInfoRequestDto, GetSelfUserInfoResponseDto, CheckUserTokenResponseDto, UserLogoutResponseDto, UserLoginRequestDto, UserLoginResponseDto } from "./UserControllerDto";
+import { GetSelfUserInfoRequestDto, GetSelfUserInfoResponseDto, CheckUserTokenResponseDto, UserLogoutResponseDto, UserLoginRequestDto, UserLoginResponseDto, GetBlockedUserRequestDto } from "./UserControllerDto";
 
 const USER_API_URI = `${backendUri}user`;
 
@@ -91,6 +91,13 @@ export async function userLogout(usePinia: boolean = true): Promise<UserLogoutRe
  */
 export const adminGetUserInfo = async (AdminGetUserInfoRequest: AdminGetUserInfoRequestDto): Promise<AdminGetUserInfoResponseDto> => {
 	return await GET(`${USER_API_URI}/adminGetUserInfo?isOnlyShowUserInfoUpdatedAfterReview=${AdminGetUserInfoRequest.isOnlyShowUserInfoUpdatedAfterReview}&page=${AdminGetUserInfoRequest.pagination.page}&pageSize=${AdminGetUserInfoRequest.pagination.pageSize}&sortBy=${AdminGetUserInfoRequest.sortBy}&sortOrder=${AdminGetUserInfoRequest.sortOrder}&uid=${AdminGetUserInfoRequest.uid}`, { credentials: "include" }) as AdminGetUserInfoResponseDto;
+};
+
+/**
+ * 管理员获取封禁用户信息
+ */
+export const adminGetBlockedUserInfo = async (GetBlockedUserRequest: GetBlockedUserRequestDto): Promise<GetBlockedUserResponseDto> => {
+	return await GET(`${USER_API_URI}/blocked/info?uid=${GetBlockedUserRequest.uid}&page=${GetBlockedUserRequest.pagination.page}&pageSize=${GetBlockedUserRequest.pagination.pageSize}`, { credentials: "include" }) as GetBlockedUserResponseDto;
 };
 
 /**

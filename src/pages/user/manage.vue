@@ -300,6 +300,14 @@
 	}
 
 	/**
+	 * 关闭删除用户信息的表单，并清除正在删除的用户信息
+	 */
+	function closeClearUserInfoModal() {
+		isShowClearUserInfoModal.value = false;
+		currentClearingUserInfo.value = "";
+	}
+
+	/**
 	 * 更新正在封禁的用户 UUID，并打开封禁用户信息的表单
 	 * @param banUUID 正在封禁的用户信息
 	 */
@@ -314,14 +322,6 @@
 	function closeBanUserModal() {
 		isShowBanUserModal.value = false;
 		currentBanUserInfo.value = "";
-	}
-
-	/**
-	 * 关闭删除用户信息的表单，并清除正在删除的用户信息
-	 */
-	function closeClearUserInfoModal() {
-		isShowClearUserInfoModal.value = false;
-		currentClearingUserInfo.value = "";
 	}
 
 	/**
@@ -341,11 +341,19 @@
 		<NSpace align="center" justify="space-between">
 			<NCollapse class="mlb-4">
 				<NCollapseItem title="使用说明">
-					<NP>TODO</NP>
+					<NP>排序选项</NP>
 					<NUl>
-						<NLi>And TODO</NLi>
-						<NLi>...</NLi>
+						<NLi>点击 UID, 昵称, 注册时间可以对表格排序</NLi>
+						<NLi>再次点击可以切换“升序”及“降序”</NLi>
+						<NLi>默认以 UID 升序排列</NLi>
 					</NUl>
+					<NP>操作</NP>
+					<NUl>
+						<NLi>点击编辑按钮可以编辑用户信息，输入用户的 UUID 来确认编辑</NLi>
+						<NLi>点击封禁按钮可以封禁用户，输入用户的 UUID 来确认封禁</NLi>
+						<NLi>点击删除按钮可以删除用户信息，输入用户的 UUID 来确认删除</NLi>
+					</NUl>
+					<NP>在编辑页面里你可以编辑用户的信息<br />但在修改前请慎重考虑是否符合规范</NP>
 				</NCollapseItem>
 			</NCollapse>
 			<NFlex align="center" justify="right">

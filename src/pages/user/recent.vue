@@ -78,7 +78,7 @@
 			key: "actions",
 			render: row => (
 				<NFlex>
-					<NButton strong secondary size="small" onClick={() => openUserInfoModal(row)}>{{ icon: () => <Icon name="description" /> }}</NButton>
+					<NButton strong secondary size="small" type="info" onClick={() => openUserInfoModal(row)}>{{ icon: () => <Icon name="description" /> }}</NButton>
 					<NPopconfirm onPositiveClick={() => clearUserInfo(row.uid)}>
 						{{
 							trigger: () =>
@@ -241,11 +241,14 @@
 		<NSpace align="center" justify="space-between">
 			<NCollapse class="mlb-4">
 				<NCollapseItem title="使用说明">
-					<NP>TODO</NP>
+					<NP>排序选项</NP>
 					<NUl>
-						<NLi>And TODO</NLi>
-						<NLi>...</NLi>
+						<NLi>点击 UID, 昵称, 注册时间可以对表格排序</NLi>
+						<NLi>再次点击可以切换“升序”及“降序”</NLi>
+						<NLi>默认以 UID 升序排列</NLi>
 					</NUl>
+					<NP>点击通过按钮可以通过用户信息，输入用户的 UUID 来确认通过<br />通过后，用户将恢复为普通用户</NP>
+					<NP>点击清除按钮可以清除用户信息，输入用户的 UID 来确认清除<br />清除后，用户信息将被清除</NP>
 				</NCollapseItem>
 			</NCollapse>
 			<NFlex align="center" justify="right">
