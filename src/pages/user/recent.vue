@@ -154,7 +154,7 @@
 			} else
 				console.error("ERROR", "获取用户列表失败。");
 		} catch (error) {
-			console.error("ERROR", "请求用户列表时出错:", error);
+			console.error("ERROR", "请求用户列表时出错：", error);
 		}
 	}
 
