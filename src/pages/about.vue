@@ -37,21 +37,3 @@
 		</NFlex>
 	</div>
 </template>
-
-<style scoped>
-.mlb-4 {
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.build-info-tooltip {
-  padding: 8px;
-  line-height: 1.6;
-}
-
-.build-info-tooltip p {
-  margin: 4px 0;
-}
-</style>

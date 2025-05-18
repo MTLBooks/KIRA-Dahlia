@@ -7,7 +7,7 @@
 	const isDeleteUser = ref(false);
 	const searchUserUid = ref<number | null>(null);
 	const currentSortKey = ref<string | null>("uid");
-	const currentSortOrder = ref<"ascend" | "descend" | false>("ascend");
+	const currentSortOrder = ref<"ascend" | "descend" | undefined>("ascend");
 	const defaultUserInfoData = {
 		uid: -1,
 		avatar: "",
@@ -70,7 +70,7 @@
 				if (row.userCreateDateTime === undefined) return h(NText, { depth: 3 }, () => "未记录");
 				const result = formatDateTime(row.userCreateDateTime);
 				if (!result) return h(NText, { depth: 3 }, () => "未记录");
-				return h("div", { class: "time-wrapper" }, [h("div", result.formatted), h(NText, { depth: 3, class: "text-xs" }, () => `(${result.relative})`),
+				return h("div", { class: "time-wrapper" }, [h("div", result.formatted),
 				]);
 			} },
 		{
@@ -81,9 +81,8 @@
 					<NButton strong secondary size="small" type="info" onClick={() => openUserInfoModal(row)}>{{ icon: () => <Icon name="description" /> }}</NButton>
 					<NPopconfirm onPositiveClick={() => clearUserInfo(row.uid)}>
 						{{
-							trigger: () =>
-								<NButton type="error" strong secondary size="small">{{ icon: () => <Icon name="delete" /> }}</NButton>,
-							default: () => "确认驳回该用户修改信息审核吗？",
+							trigger: <NButton type="error" strong secondary size="small">{{ icon: <Icon name="delete" /> }}</NButton>,
+							default: "确认驳回该用户修改信息审核吗？",
 						}}
 					</NPopconfirm>
 				</NFlex>
@@ -114,28 +113,14 @@
 	 * 获取用户列表
 	 */
 	async function getUserInfo() {
-		let apiSortBy: string | undefined = undefined;
-		let apiSortOrder: "ascend" | "descend" | undefined = undefined;
-		if (currentSortKey.value && currentSortOrder.value) {
-			switch (currentSortKey.value) {
-				case "uid":
-					apiSortBy = "uid";
-					break;
-				case "userNickname":
-					apiSortBy = "userNickname";
-					break;
-				case "userCreateDateTime":
-					apiSortBy = "createDateTime";
-					break;
-				default:
-					apiSortBy = "uid";
-					break;
-			}
-			apiSortOrder = currentSortOrder.value;
-		} else {
-			apiSortBy = undefined;
-			apiSortOrder = undefined;
-		}
+		let apiSortBy: string | undefined;
+		let apiSortOrder: "ascend" | "descend" | undefined;
+		if (currentSortKey.value && currentSortOrder.value)
+			apiSortBy = ["uid", "userNickname"].includes(currentSortKey.value) ? currentSortKey.value :
+				currentSortKey.value === "userCreateDateTime" ? "createDateTime" : "uid";
+		else
+			apiSortBy = apiSortOrder = undefined;
+
 		const getUserListRequest: AdminGetUserInfoRequestDto = {
 			isOnlyShowUserInfoUpdatedAfterReview: true,
 			uid: searchUserUid.value ?? -1,
@@ -154,7 +139,7 @@
 			} else
 				console.error("ERROR", "获取用户列表失败。");
 		} catch (error) {
-			console.error("ERROR", "请求用户列表时出错：", error);
+			console.error("ERROR", "请求用户列表时出错:", error);
 		}
 	}
 
@@ -162,7 +147,7 @@
 	 * 处理排序变化
 	 * @param options 排序选项
 	 */
-	async function handleSorterChange(options: { columnKey: string | number | null; sorter: string; order: "ascend" | "descend" | false }) {
+	async function handleSorterChange(options: { columnKey: string | number | null; sorter: string; order: "ascend" | "descend" | undefined }) {
 		currentSortKey.value = options.columnKey as string | null;
 		currentSortOrder.value = options.order;
 		pagination.page = 1;
@@ -243,7 +228,7 @@
 				<NCollapseItem title="使用说明">
 					<NP>排序选项</NP>
 					<NUl>
-						<NLi>点击 UID、昵称、注册时间可以对表格排序</NLi>
+						<NLi>点击 UID, 昵称, 注册时间可以对表格排序</NLi>
 						<NLi>再次点击可以切换“升序”及“降序”</NLi>
 						<NLi>默认以 UID 升序排列</NLi>
 					</NUl>
@@ -266,7 +251,7 @@
 			:remote="true"
 			@update:sorter="handleSorterChange"
 		/>
-		<NFlex justify="end" class="mbs-4">
+		<div class="flex justify-end mt-4">
 			<NPagination
 				:displayOrder="['quick-jumper', 'pages', 'size-picker']"
 				:pageCount="userListPageCount"
@@ -278,7 +263,7 @@
 				showQuickJumper
 				showSizePicker
 			/>
-		</NFlex>
+		</div>
 
 		<NModal
 			v-model:show="isOpenUserInfoModal"
@@ -291,39 +276,39 @@
 			<NImage
 				width="100%"
 				height="120"
-				:src="userInfoData.userBannerImage || 'https://kirakira.moe/_vercel/image?url=%2Fstatic%2Fimages%2Fbanner-20220717.png&w=1536&q=100'"
-				style="object-fit: cover; border-radius: 6px"
+				:src="userInfoData.userBannerImage || '/assets/default-bannar.png'"
+				class="object-cover rounded-md"
 			/>
 
-			<div style="display: flex; align-items: center; margin-top: 16px">
+			<div class="flex items-center mt-4">
 				<NAvatar
 					round
 					:size="50"
-					:src="userInfoData.avatar || 'https://kirakira.moe/_nuxt/icons.B7aRh8zS.svg'"
+					:src="userInfoData.avatar || '/assets/avatar.svg#person'"
 				/>
-				<div style="margin-left: 12px; flex: 1">
-					<div style="font-weight: bold">
+				<div class="ml-3 flex-1">
+					<div class="font-bold">
 						{{ userInfoData.userNickname }}
-						<span style="color: #aaa">@{{ userInfoData.username }}</span>
+						<span class="text-gray-500">@{{ userInfoData.username }}</span>
 					</div>
 				</div>
-				<div style="white-space: nowrap">
+				<div class="whitespace-nowrap">
 					性别：{{ genderMap[userInfoData.gender] || '未知' }}
 				</div>
 			</div>
 
-			<div style="margin-top: 16px">
-				<div style="font-weight: bold; margin-bottom: 6px;">用户简介</div>
-				<div style="min-height: 80px; background-color: #f5f5f5; padding: 8px; border-radius: 6px;">
+			<div class="mt-4">
+				<div class="font-bold mb-2">用户简介</div>
+				<div class="min-h-[80px] bg-gray-100 p-2 rounded-md">
 					{{ userInfoData.signature || '暂无简介' }}
 				</div>
 			</div>
 
-			<div style="margin-top: 16px">
-				<div style="font-weight: bold; margin-bottom: 6px;">用户标签</div>
-				<div style="display: flex; flex-wrap: wrap; gap: 8px">
+			<div class="mt-4">
+				<div class="font-bold mb-2">用户标签</div>
+				<div class="flex flex-wrap gap-2">
 					<NTag
-						v-for="(tag, index) in (userInfoData.label || [])" 添加空值保护
+						v-for="(tag, index) in (userInfoData.label || [])"
 						:key="index"
 						type="default"
 						size="small"

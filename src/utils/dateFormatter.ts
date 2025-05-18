@@ -1,11 +1,3 @@
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import "dayjs/locale/zh-cn";
-
-// 配置中文语言和相对时间插件
-dayjs.locale("zh-cn");
-dayjs.extend(relativeTime);
-
 export const formatDateTime = (timestamp: number) => {
 	if (!timestamp) return null;
 
@@ -13,7 +5,14 @@ export const formatDateTime = (timestamp: number) => {
 	const ts = timestamp > 9999999999 ? timestamp : timestamp * 1000;
 
 	return {
-		formatted: dayjs(ts).format("YYYY-MM-DD HH:mm:ss"),
-		relative: dayjs(ts).fromNow(),
+		formatted: Intl.DateTimeFormat("zh-CN", {
+			timeZone: "Asia/Shanghai",
+			year: "numeric",
+			month: "2-digit",
+			day: "2-digit",
+			hour: "2-digit",
+			minute: "2-digit",
+			second: "2-digit",
+		}).format(ts),
 	};
 };

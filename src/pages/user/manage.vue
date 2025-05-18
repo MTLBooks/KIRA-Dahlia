@@ -103,7 +103,7 @@
 				if (row.userCreateDateTime === undefined) return h(NText, { depth: 3 }, () => "未记录");
 				const result = formatDateTime(row.userCreateDateTime);
 				if (!result) return h(NText, { depth: 3 }, () => "未记录");
-				return h("div", { class: "time-wrapper" }, [h("div", result.formatted), h(NText, { depth: 3, class: "text-xs" }, () => `(${result.relative})`),
+				return h("div", { class: "time-wrapper" }, [h("div", result.formatted),
 				]);
 			} },
 		{

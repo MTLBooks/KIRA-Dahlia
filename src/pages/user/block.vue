@@ -9,7 +9,7 @@
 
 	const searchUserUid = ref<number | null>(null);
 	const currentSortKey = ref<string | null>("uid");
-	const currentSortOrder = ref<"ascend" | "descend" | false>("ascend");
+	const currentSortOrder = ref<"ascend" | "descend" | undefined>("ascend");
 
 	const columns = computed<DataTableColumns<NonNullable<UserList>[number]>>(() => [
 		{
@@ -56,7 +56,7 @@
 				if (row.userCreateDateTime === undefined) return h(NText, { depth: 3 }, () => "未记录");
 				const result = formatDateTime(row.userCreateDateTime);
 				if (!result) return h(NText, { depth: 3 }, () => "未记录");
-				return h("div", { class: "time-wrapper" }, [h("div", result.formatted), h(NText, { depth: 3, class: "text-xs" }, () => `(${result.relative})`),
+				return h("div", { class: "time-wrapper" }, [h("div", result.formatted),
 				]);
 			} },
 		{
@@ -140,7 +140,7 @@
 	 * 处理排序变化
 	 * @param options 排序选项
 	 */
-	async function handleSorterChange(options: { columnKey: string | number | null; sorter: string; order: "ascend" | "descend" | false }) {
+	async function handleSorterChange(options: { columnKey: string | number | null; sorter: string; order: "ascend" | "descend" | undefined }) {
 		currentSortKey.value = options.columnKey as string | null;
 		currentSortOrder.value = options.order;
 		pagination.page = 1;
@@ -196,7 +196,7 @@
 				<NCollapseItem title="使用说明">
 					<NP>排序选项</NP>
 					<NUl>
-						<NLi>点击 UID, 昵称, 注册时间可以对表格排序</NLi>
+						<NLi>点击 UID、昵称、注册时间可以对表格排序</NLi>
 						<NLi>再次点击可以切换“升序”及“降序”</NLi>
 						<NLi>默认以 UID 升序排列</NLi>
 					</NUl>
