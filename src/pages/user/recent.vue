@@ -243,7 +243,7 @@
 				<NCollapseItem title="使用说明">
 					<NP>排序选项</NP>
 					<NUl>
-						<NLi>点击 UID, 昵称, 注册时间可以对表格排序</NLi>
+						<NLi>点击 UID、昵称、注册时间可以对表格排序</NLi>
 						<NLi>再次点击可以切换“升序”及“降序”</NLi>
 						<NLi>默认以 UID 升序排列</NLi>
 					</NUl>
