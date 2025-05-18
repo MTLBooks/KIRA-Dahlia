@@ -240,7 +240,7 @@
 			:title="`确认要解封该用户吗？`"
 		>
 			<br />
-			<NFormItem :label="`请输入用户的UUID来确定解封 ${currentUnbanUserInfo}`">
+			<NFormItem :label="`请输入用户的 UUID 来确定解封 ${currentUnbanUserInfo}`">
 				<NInput v-model:value="userInputUnbanUserInfo" placeholder="用户 UUID" />
 			</NFormItem>
 
