@@ -15,7 +15,7 @@ const naiveUIComponents = naiveUIJson.contributions.html["vue-components"].map(c
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
 	const isDevelopment = mode === "development";
-	const env = loadEnv(mode, process.cwd());
+	const env = loadEnv(mode, process.cwd(), "");
 	return {
 		plugins: [
 			tsconfigPaths(),
@@ -122,6 +122,10 @@ export default defineConfig(({ mode }) => {
 				cert: fs.readFileSync("./ssl/cert.pem"),
 				key: fs.readFileSync("./ssl/key.pem"),
 			} : undefined,
+		},
+		define: {
+			BRANCH: env.BRANCH,
+			COMMIT_REF: env.COMMIT_REF,
 		},
 	};
 });

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-	const { VITE_BACKEND_URI: BACKEND_URI } = import.meta.env;
-	const { BRANCH, COMMIT_REF } = process.env;
+	const { VITE_BACKEND_URI: BACKEND_URI, BRANCH, COMMIT_REF } = import.meta.env;
 	const branch = computed(() => {
 		const items: string[] = [];
 		if (BACKEND_URI.includes("localhost")) items.push("Local Backend");
