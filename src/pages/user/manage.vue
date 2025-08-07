@@ -165,6 +165,7 @@
 			apiSortBy = undefined;
 			apiSortOrder = undefined;
 		}
+
 		const getUserListRequest: AdminGetUserInfoRequestDto = {
 			isOnlyShowUserInfoUpdatedAfterReview: false,
 			uid: searchUserUid.value ?? -1,
@@ -175,6 +176,7 @@
 				pageSize: pagination.pageSize,
 			},
 		};
+
 		try {
 			const getUserInfoResult = await adminGetUserInfo(getUserListRequest);
 			if (getUserInfoResult.success) {
