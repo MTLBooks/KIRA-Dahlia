@@ -6,7 +6,7 @@
 		else if (BACKEND_URI.includes("kirakira")) items.push("Live");
 		else if (BACKEND_URI === "none") items.push("No Backend");
 		if (import.meta.env.DEV) items.push("Dev");
-		if (BRANCH) items.push(BRANCH);
+		if (BRANCH) items.push(BRANCH.slice(0, 7));
 		if (COMMIT_SHA) items.push(COMMIT_SHA);
 		return items.join(" ");
 	});
