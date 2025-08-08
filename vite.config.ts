@@ -123,9 +123,5 @@ export default defineConfig(({ mode }) => {
 				key: fs.readFileSync("./ssl/key.pem"),
 			} : undefined,
 		},
-		define: {
-			BRANCH: JSON.stringify(env.VERCEL_GIT_COMMIT_REF),
-			COMMIT_REF: JSON.stringify(env.VERCEL_GIT_COMMIT_SHA),
-		},
 	};
 });
