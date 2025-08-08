@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	const { VITE_BACKEND_URI: BACKEND_URI, VITE_VERCEL_GIT_COMMIT_REF: BRANCH, VERCEL_GIT_COMMIT_SHA: COMMIT_SHA } = import.meta.env;
+	const { VITE_BACKEND_URI: BACKEND_URI, VITE_VERCEL_GIT_COMMIT_REF: BRANCH, VITE_VERCEL_GIT_COMMIT_SHA: COMMIT_SHA } = import.meta.env;
 	const branch = computed(() => {
 		const items: string[] = [];
 		if (BACKEND_URI.includes("localhost")) items.push("Local Backend");
