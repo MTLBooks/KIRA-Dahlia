@@ -16,7 +16,7 @@
 	<div class="container">
 		<Logo :width="400" />
 		<div class="mlb-4">
-			<NTag>
+			<NTag type="info">
 				<template #icon>
 					<Icon name="forkRight" />
 				</template>

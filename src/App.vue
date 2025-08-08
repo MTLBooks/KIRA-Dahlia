@@ -15,7 +15,7 @@
 		themeColorOverrides.value,
 		{
 			common: {
-				fontFamilyMono: 'var(--font-mono)', // Naive UI default: v-mono, SFMono-Regular, Menlo, Consolas, Courier, monospace
+				fontFamilyMono: "var(--font-mono)", // Naive UI default: v-mono, SFMono-Regular, Menlo, Consolas, Courier, monospace
 			},
 		},
 	));

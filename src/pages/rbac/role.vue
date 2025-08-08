@@ -4,6 +4,7 @@
 	type RbacRole = GetRbacRoleResponseDto["result"];
 
 	const isShowDeleteRoleModal = ref(false);
+	const unableToEditRole = ref(true);
 	const currentDeletingRole = ref("");
 	const userInputDeleteingRole = ref("");
 	const isDeletingRole = ref(false);
@@ -30,12 +31,13 @@
 
 	const apiPathEls = reactive<(Element | ComponentPublicInstance)[]>([]);
 	function fixEllipsis() {
+		// eslint-disable-next-line no-restricted-syntax
 		for (let element of apiPathEls) {
 			if ("$el" in element) element = element.$el as Element;
 			if (!element?.parentElement || !(element instanceof HTMLElement)) continue;
 			const right = element.offsetLeft + element.offsetWidth;
 			const visibleWidth = element.parentElement.offsetWidth;
-			element.classList.toggle("invisible", right - visibleWidth > -22.5)
+			element.classList.toggle("invisible", right - visibleWidth > -22.5);
 		}
 	}
 	watch(apiPathEls, () => fixEllipsis());
@@ -172,6 +174,7 @@
 		};
 		const rbacApiPathResult = await getRbacApiPathController(getRbacApiPathRequest);
 		if (rbacApiPathResult.success)
+
 			rbacApiPath.value = rbacApiPathResult.result;
 		else
 			console.error("ERROR", "获取 RBAC API 路径失败。");
@@ -223,18 +226,22 @@
 	 * 设置数据并打开编辑身份的模态框
 	 * @param roleData 正在更新的身份数据
 	 */
-	function openEditRoleModal(roleData: NonNullable<RbacRole>[number]) {
+	async function openEditRoleModal(roleData: NonNullable<RbacRole>[number]) {
+		unableToEditRole.value = true;
 		updateApiPathPermissionsForRoleFormModal.value = {
 			roleName: roleData.roleName,
 			apiPathPermissions: roleData.apiPathPermissions.map(apiPath => apiPath),
 		};
 		isShowEditRoleModal.value = true;
+		await fetchRbacApiPath();
+		unableToEditRole.value = false;
 	}
 
 	/**
 	 * 关闭编辑身份的模态框并清除数据
 	 */
 	function closeEditRoleModal() {
+		unableToEditRole.value = true;
 		isShowEditRoleModal.value = false;
 		updateApiPathPermissionsForRoleFormModal.value = EMPTY_ROLE_UPDATE_DATA;
 	}
@@ -262,7 +269,6 @@
 	 */
 	async function fetchAllDataInRolePage() {
 		await fetchRbacRole();
-		await fetchRbacApiPath();
 	}
 
 	onMounted(fetchAllDataInRolePage);
@@ -384,6 +390,7 @@
 							label: apiPath.apiPath,
 							value: apiPath.apiPath,
 						}))"
+						:disabled="unableToEditRole"
 						sourceFilterable
 						targetFilterable
 					/>

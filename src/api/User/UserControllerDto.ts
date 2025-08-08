@@ -161,9 +161,9 @@ export type UserLabel = {
 /**
  * 用户的关联账户
  */
-export type UserLinkAccounts = {
-	/** 关联账户类型 - 例："X" */
-	accountType: string;
+export type UserLinkedAccounts = {
+	/** 关联账户的平台 - 例："X" */
+	platformId: string;
 	/** 关联账户唯一标识 */
 	accountUniqueId: string;
 };
@@ -201,7 +201,7 @@ export type UpdateOrCreateUserInfoRequestDto = {
 	/** 用户主页 Markdown */
 	userProfileMarkdown?: string;
 	/** 用户的关联账户 */
-	userLinkAccounts?: UserLinkAccounts[];
+	userLinkedAccounts?: UserLinkedAccounts[];
 	/** 用户的关联网站 */
 	userWebsite?: UserWebsite;
 };
@@ -257,10 +257,12 @@ export type GetSelfUserInfoResponseDto = {
 			email?: string;
 			/** 用户创建时间 */
 			userCreateDateTime?: number;
-			/** 用户的身份 */
+			/** 用户的角色 */
 			roles?: string[];
 			/** 2FA 的类型 */
 			typeOf2FA?: string;
+			/** 使用的邀请码 */
+			invitationCode?: string;
 		}
 		& UpdateOrCreateUserInfoRequestDto
 	);
@@ -278,6 +280,11 @@ export type GetUserInfoByUidRequestDto = {
 	/** 目标用户的 UID */
 	uid: number;
 };
+
+/**
+ * 用户被屏蔽的状态
+ */
+type BlockState = { isBlockedByOther: boolean; isBlocked: boolean; isHidden: boolean };
 
 /**
  * 通过 UID 获取用户信息的请求响应
@@ -305,10 +312,17 @@ export type GetUserInfoByUidResponseDto = {
 		label?: UserLabel[];
 		/** 用户创建时间 */
 		userCreateDateTime?: number;
-		/** 用户的身份 */
+		/** 用户的角色 */
 		roles?: string[];
+		/** 是否正在关注该用户 */
+		isFollowing: boolean;
+		/**
+		 * 查询的用户是否是自己。
+		 * 如果该字段的值为 true，则通常意味着发生了错误的请求，因为有专用的接口用于查询用户自己的信息。
+		 */
+		isSlef: boolean;
 	};
-};
+} & BlockState;
 
 /**
  * 通过 UID 和 TOKEN 校验用户的返回结果
@@ -347,13 +361,23 @@ export type GetUserAvatarUploadSignedUrlResponseDto = {
 };
 
 /**
- * 用户关联账户的隐私设置
+ * 用户隐私数据可见性设置
  */
-type UserLinkAccountsPrivacySettingDto = {
-	/** 关联账户类型 - 非空 - 例："X" */
-	accountType: string;
+type UserPrivaryVisibilitiesSettingDto = {
+	/** 用户隐私数据项的 ID - 非空 - 例：'birthday', 'follow', 'fans' */
+	privaryId: string;
 	/** 显示方式 - 非空 - 允许的值有：{public: 公开, following: 仅关注, private: 隐藏} */
-	privacyType: "public" | "following" | "private";
+	visibilitiesType: "public" | "following" | "private";
+};
+
+/**
+ * 用户关联平台的隐私可见性设置
+ */
+type UserLinkedAccountsVisibilitiesSettingDto = {
+	/** 关联账户类型 - 非空 - 例："X" */
+	platformId: string;
+	/** 显示方式 - 非空 - 允许的值有：{public: 公开, following: 仅关注, private: 隐藏} */
+	visibilitiesType: "public" | "following" | "private";
 };
 
 /**
@@ -392,16 +416,16 @@ export type BasicUserSettingsDto = {
 	unitSystemType?: string;
 	/** 是否进入了开发者模式 - 布尔 */
 	devMode?: boolean;
-	/** 实验性：启用动态背景 - 布尔 */
-	showCssDoodle?: boolean;
-	/** 实验性：启用直角模式 - 布尔 */
-	sharpAppearanceMode?: boolean;
-	/** 实验性：启用扁平模式 - 布尔 */
-	flatAppearanceMode?: boolean;
 	/** 用户关联网站的隐私设置 - 允许的值有：{public: 公开, following: 仅关注, private: 隐藏} */
 	userWebsitePrivacySetting?: "public" | "following" | "private";
+	/** 用户隐私数据可见性设置 */
+	userPrivaryVisibilitiesSetting?: UserPrivaryVisibilitiesSettingDto[];
 	/** 用户关联账户的隐私设置 */
-	userLinkAccountsPrivacySetting?: UserLinkAccountsPrivacySettingDto[];
+	userLinkedAccountsVisibilitiesSetting?: UserLinkedAccountsVisibilitiesSettingDto[];
+	// /** 实验性：启用直角模式 - 布尔 */
+	// sharpAppearanceMode?: boolean;
+	// /** 实验性：启用扁平模式 - 布尔 */
+	// flatAppearanceMode?: boolean;
 };
 
 /**
@@ -464,8 +488,10 @@ export type RequestSendVerificationCodeResponseDto = {
  * 邀请码类型
  */
 type InvitationCode = {
-	/** 生成邀请码的用户 - 非空 */
+	/** 生成邀请码的用户 UID - 非空 */
 	creatorUid: number;
+	/** 生成邀请码的用户 UUID - 非空 */
+	creatorUUID: string;
 	/** 邀请码 - 非空 */
 	invitationCode: string;
 	/** 生成邀请码的时间 - 非空 */
@@ -507,19 +533,36 @@ export type GetMyInvitationCodeResponseDto = {
 };
 
 /**
- * 获取用户自己注册的邀请码的请求响应
+ * 管理员根据 UID 查询用户邀请码的请求响应
  */
-export type GetUserInvitationCodeResponseDto = {
+export type AdminGetUserInvitationCodeResponseDto = {
 	/** 执行结果，程序执行成功，返回 true，程序执行失败，返回 false */
 	success: boolean;
 	/** 附加的文本消息 */
 	message?: string;
 	/** 注册时使用的邀请码 */
-	invitationCode?: string;
+	invitationCodeResult: InvitationCode[];
 };
 
 /**
- * 使用邀请码的参数
+ * 管理员根据邀请码查询用户的请求响应
+ */
+export type AdminGetUserByInvitationCodeResponseDto = {
+	/** 执行结果，程序执行成功，返回 true，程序执行失败，返回 false */
+	success: boolean;
+	/** 附加的文本消息 */
+	message?: string;
+	/** 邀请码查询结果 */
+	userInfoResult: {
+		/** 用户 UID */
+		uid?: number;
+		/** 用户 UUID */
+		uuid?: string;
+	};
+};
+
+/**
+ * 使用邀请码的的请求载荷
  */
 export type UseInvitationCodeDto = {
 	/** 被使用的邀请码 */
@@ -531,7 +574,7 @@ export type UseInvitationCodeDto = {
 };
 
 /**
- * 使用邀请码的结果
+ * 使用邀请码的请求响应
  */
 export type UseInvitationCodeResultDto = {
 	/** 是否成功使用验证码 */
@@ -681,6 +724,25 @@ export type ReactivateUserByUIDResponseDto = {
 };
 
 /**
+ * 管理员获取用户信息的请求载荷
+ */
+export type GetBlockedUserRequestDto = {
+	/** 排序字段 */
+	sortBy: string;
+	/** 排序方法 */
+	sortOrder: string;
+	/** 查询 UID */
+	uid?: number;
+	/** 分页查询 */
+	pagination: {
+		/** 当前在第几页 */
+		page: number;
+		/** 一页显示多少条 */
+		pageSize: number;
+	};
+};
+
+/**
  * 获取所有被封禁用户的信息的请求响应
  */
 export type GetBlockedUserResponseDto = {
@@ -690,9 +752,13 @@ export type GetBlockedUserResponseDto = {
 	message?: string;
 	/** 请求响应，被封禁的用户 */
 	result?: (
-		GetUserInfoByUidResponseDto["result"]
-		& { uid: number }
+		GetUserInfoByUidResponseDto["result"] & {
+			uid: number;
+			UUID: string;
+		}
 	)[];
+	/** 数据总长度 */
+	totalCount: number;
 };
 
 /**
@@ -701,6 +767,12 @@ export type GetBlockedUserResponseDto = {
 export type AdminGetUserInfoRequestDto = {
 	/** 是否只展示在上一次审核通过后修改了用户信息的用户 */
 	isOnlyShowUserInfoUpdatedAfterReview: boolean;
+	/** 排序字段 */
+	sortBy: string;
+	/** 排序方法 */
+	sortOrder: string;
+	/** 查询 UID */
+	uid?: number;
 	/** 分页查询 */
 	pagination: {
 		/** 当前在第几页 */
@@ -720,9 +792,15 @@ export type AdminGetUserInfoResponseDto = {
 	message?: string;
 	/** 请求响应 */
 	result?: (
-		GetSelfUserInfoResponseDto["result"]
-		& { uid: number }
-		& { UUID: string }
+		GetSelfUserInfoResponseDto["result"] & {
+			avatar: string;
+			userBannerImage: string;
+			editDateTime: number;
+			editOperatorUUID: string;
+			isUpdatedAfterReview: boolean;
+			uid: number;
+			UUID: string;
+		}
 	)[];
 	/** 数据总长度 */
 	totalCount: number;
@@ -758,6 +836,45 @@ export type AdminClearUserInfoRequestDto = {
  * 管理员清空某个用户的信息的请求响应
  */
 export type AdminClearUserInfoResponseDto = {
+	/** 执行结果 */
+	success: boolean;
+	/** 附加的文本消息 */
+	message?: string;
+};
+
+/**
+ * 管理员编辑用户信息的请求载荷
+ */
+export type AdminEditUserInfoRequestDto = {
+	/** 用户的 UID */
+	uid: number;
+	/** 编辑用户的信息 */
+	userInfo?: {
+		/** 用户名 */
+		username?: string;
+		/** 用户昵称 */
+		userNickname?: string;
+		/** 用户头像的链接 */
+		avatar?: string;
+		/** 用户背景图片的链接 */
+		userBannerImage?: string;
+		/** 用户的个性签名 */
+		signature?: string;
+		/** 用户的性别，男、女和自定义（字符串） */
+		gender?: string;
+		/** 用户生日 */
+		userBirthday?: number;
+		/** 用户主页 Markdown */
+		userProfileMarkdown?: string;
+		/** 审核状态 */
+		isUpdatedAfterReview?: boolean;
+	};
+};
+
+/**
+ * 管理员编辑用户信息的请求响应
+ */
+export type AdminEditUserInfoResponseDto = {
 	/** 执行结果 */
 	success: boolean;
 	/** 附加的文本消息 */
@@ -950,6 +1067,26 @@ export type CheckUserHave2FAResponseDto = {
 	type?: "email" | "totp";
 	/** 如果存在且结果为 totp，则返回 2FA 的创建时间 */
 	totpCreationDateTime?: number;
+	/** 附加的文本消息 */
+	message?: string;
+};
+
+/**
+ * 根据 UUID 校验用户是否存在的请求载荷
+ */
+export type CheckUserExistsByUuidRequestDto = {
+	/** 用户的 UUID */
+	uuid: string;
+};
+
+/**
+ * 根据 UUID 校验用户是否存在的请求响应
+ */
+export type CheckUserExistsByUuidResponseDto = {
+	/** 执行结果 */
+	success: boolean;
+	/** 用户是否已存在 */
+	exists: boolean;
 	/** 附加的文本消息 */
 	message?: string;
 };

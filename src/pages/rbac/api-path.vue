@@ -91,7 +91,7 @@
 
 	/**
 	 * 更新正在删除的 API 路径名，并打开删除 API 路径的表单
-	 * @param apiPahtName 正在删除的 API 路径名
+	 * @param apiPathName 正在删除的 API 路径名
 	 */
 	function openDeleteApiPathModal(apiPahtName: string) {
 		currentDeletingApiPath.value = apiPahtName;
@@ -251,10 +251,11 @@
 			v-model:show="isShowDeleteApiPathModal"
 			:maskClosable="false"
 			preset="dialog"
-			:title="`确认要删除身份 ${currentDeletingApiPath} 吗？`"
+			:title="`确认要删除 API 路径 ${currentDeletingApiPath} 吗？`"
 		>
-			<NFormItem label="再次输入身份的名字来确定删除">
-				<NInput v-model:value="userInputDeleteingApiPath" placeholder="身份名字" />
+
+			<NFormItem label="再次输入 API 路径的名字来确定删除">
+				<NInput v-model:value="userInputDeleteingApiPath" placeholder="API 路径名字" />
 			</NFormItem>
 
 			<template #action>

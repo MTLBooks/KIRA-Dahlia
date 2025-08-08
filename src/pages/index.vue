@@ -6,7 +6,7 @@
 	const clientOtp = ref(""); // TOTP 验证码
 
 	/**
-	 * 登入。
+	 * 登入
 	 */
 	async function requestLogin() {
 		if (!email && !password) {
@@ -22,9 +22,8 @@
 		};
 
 		const loginResult = await userLogin(userLoginRequest);
-		if (loginResult.success && loginResult.UUID) {
+		if (loginResult.success && loginResult.UUID)
 			location.reload(); // 登入成功后刷新页面...
-		}
 	}
 
 	/**
