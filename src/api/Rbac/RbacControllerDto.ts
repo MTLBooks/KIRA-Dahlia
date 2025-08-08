@@ -296,14 +296,31 @@ export type AdminGetUserRolesByUidResponseDto = {
 };
 
 /**
- * 管理员更新用户身份的请求载荷
+ * 管理员使用 UUID 更新用户身份
  */
-export type AdminUpdateUserRoleRequestDto = {
-	/** 要被更新身份的用户的 UUID */
+type AdminUpdateUserRoleByUUID = {
+	/** 要被更新身份的用户的 UUID，不带有 UID */
 	uuid: string;
+	uid: never;
 	/** 新的身份 */
 	newRoles: string[];
 };
+
+/**
+ * 管理员使用 UID 更新用户身份
+ */
+type AdminUpdateUserRoleByUID = {
+	/** 要被更新身份的用户的 UID，不带有 UUID */
+	uid: number;
+	uuid: never;
+	/** 新的身份 */
+	newRoles: string[];
+};
+
+/**
+ * 管理员更新用户身份的请求载荷
+ */
+export type AdminUpdateUserRoleRequestDto = AdminUpdateUserRoleByUUID | AdminUpdateUserRoleByUID;
 
 /**
  * 管理员更新用户身份的请求响应

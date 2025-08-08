@@ -77,6 +77,7 @@
 
 		const adminUpdateUserRoleRequest: AdminUpdateUserRoleRequestDto = {
 			uuid: userRolesFormModel.value.uuid,
+			uid: undefined as never,
 			newRoles: userRolesFormModel.value.userRoles,
 		};
 

@@ -688,43 +688,7 @@ export type CheckUsernameResponseDto = {
 };
 
 /**
- * 封锁一个用户的请求载荷
- */
-export type BlockUserByUIDRequestDto = {
-	/** 将被封锁的用户的 UID */
-	criminalUid: number;
-};
-
-/**
- * 封锁一个用户的请求响应
- */
-export type BlockUserByUIDResponseDto = {
-	/** 执行结果，是否封锁成功 */
-	success: boolean;
-	/** 附加的文本消息 */
-	message?: string;
-};
-
-/**
- * 重新激活一个用户的请求载荷
- */
-export type ReactivateUserByUIDRequestDto = {
-	/** 将被重新激活的用户的 UID */
-	uid: number;
-};
-
-/**
- * 重新激活一个用户的请求响应
- */
-export type ReactivateUserByUIDResponseDto = {
-	/** 执行结果，是否重新激活成功 */
-	success: boolean;
-	/** 附加的文本消息 */
-	message?: string;
-};
-
-/**
- * 管理员获取用户信息的请求载荷
+ * 管理员获取所有被封禁用户信息的请求载荷
  */
 export type GetBlockedUserRequestDto = {
 	/** 排序字段 */
@@ -743,7 +707,7 @@ export type GetBlockedUserRequestDto = {
 };
 
 /**
- * 获取所有被封禁用户的信息的请求响应
+ * 管理员获取所有被封禁用户的信息的请求响应
  */
 export type GetBlockedUserResponseDto = {
 	/** 执行结果 */
@@ -793,13 +757,13 @@ export type AdminGetUserInfoResponseDto = {
 	/** 请求响应 */
 	result?: (
 		GetSelfUserInfoResponseDto["result"] & {
+			uid: number;
+			UUID: string;
 			avatar: string;
 			userBannerImage: string;
 			editDateTime: number;
 			editOperatorUUID: string;
 			isUpdatedAfterReview: boolean;
-			uid: number;
-			UUID: string;
 		}
 	)[];
 	/** 数据总长度 */

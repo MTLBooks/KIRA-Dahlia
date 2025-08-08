@@ -209,6 +209,7 @@
 		isBanUser.value = true;
 		const banUserRequest: AdminUpdateUserRoleRequestDto = {
 			uuid: currentBanUserInfo.value,
+			uid: undefined as never,
 			newRoles: ["blocked"],
 		};
 		const banUserResult = await adminUpdateUserRoleController(banUserRequest);

@@ -156,6 +156,7 @@
 		isUnbanUser.value = true;
 		const unbanUserRequest: AdminUpdateUserRoleRequestDto = {
 			uuid: currentUnbanUserInfo.value,
+			uid: undefined as never,
 			newRoles: ["user"],
 		};
 		const unbanUserResult = await adminUpdateUserRoleController(unbanUserRequest);
