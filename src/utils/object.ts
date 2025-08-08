@@ -29,5 +29,5 @@
  * foo; // Type is still "foo" | "bar", because it cannot increase the type.
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+// @ts-ignore
 export function asserts<T>(object: unknown): asserts object is T { }
