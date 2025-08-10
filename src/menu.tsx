@@ -7,102 +7,102 @@ interface MenuItem {
 	children?: MenuItem[];
 }
 
-const selfUserInfo = noBackend ? null! : await getSelfUserInfo(undefined, false); // 仅获取数据，不修改 pinia
+const selfUserInfo = noBackend ? null! : await getSelfUserInfo(undefined, false); // fetch only, don't update pinia
 
 const menu: MenuItem[] = [
 	{
-		label: "仪表盘",
+		label: "Dashboard",
 		to: "/",
 		key: "",
 		icon: "dashboard",
 	},
 	{
-		label: "用户",
+		label: "Users",
 		key: "user",
 		icon: "group",
 		children: [
 			{
-				label: "用户管理",
+				label: "Manage",
 				key: "manage",
 				icon: "manageAccounts",
 			},
 			{
-				label: "最近更改",
+				label: "Recently Changed",
 				key: "recent",
 				icon: "history",
 			},
 			{
-				label: "用户封禁",
+				label: "Blocked",
 				key: "block",
 				icon: "block",
 			},
 		],
 	},
 	{
-		label: "视频",
+		label: "Videos",
 		key: "video",
 		icon: "videoLibrary",
 		children: [
 			{
-				label: "视频管理",
+				label: "Manage",
 				key: "manage",
 				icon: "videoSettings",
 			},
 			{
-				label: "审核视频",
+				label: "Pending Review",
 				key: "pending-review",
 				icon: "approval",
 			},
 		],
 	},
 	{
-		label: "标签",
+		label: "Tags",
 		key: "tag",
 		icon: "sell",
 		children: [
 			{
-				label: "标签管理",
+				label: "Manage",
 				key: "manage",
 				icon: "sell",
 			},
 			{
-				label: "最近更改",
+				label: "Recently Changed",
 				key: "recent",
 				icon: "history",
 			},
 		],
 	},
 	{
-		label: "RBAC 管理",
+		label: "RBAC",
 		key: "rbac",
 		icon: "shield",
 		shown: checkUserRole(["root", "developer"], selfUserInfo),
 		children: [
 			{
-				label: "API 路径",
+				label: "API Paths",
 				key: "api-path",
 				icon: "api",
 			},
 			{
-				label: "身份",
+				label: "Roles",
 				key: "role",
 				icon: "badge",
 			},
 			{
-				label: "用户身份",
+				label: "User Roles",
 				key: "user-roles",
 				icon: "person",
 			},
 		],
 	},
 	{
-		label: "预生产环境密钥",
+		label: "Staging Secrets",
 		key: "stg-secret",
 		icon: "key",
 		shown: checkUserRole(["root", "developer"], selfUserInfo),
 	},
 	{
-		label: "关于",
+		label: "About",
 		key: "about",
 		icon: "info",
 	},

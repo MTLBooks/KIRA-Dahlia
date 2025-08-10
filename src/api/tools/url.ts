@@ -1,10 +1,10 @@
 /**
- * 生成 URL 后面的查询参数
- * @param obj 查询参数
- * @returns URL 后面的查询参数
+ * Build URL query string
+ * @param obj query params
+ * @returns query string prefixed with '?'
  */
 export function getUrlQuery(obj: Record<string, unknown>): string {
-	// 构建查询参数
+	// Build query params
 	const params = new URLSearchParams();
 
 	Object.entries(obj).forEach(([key, value]) => {

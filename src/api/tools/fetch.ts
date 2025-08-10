@@ -2,11 +2,11 @@ type RequestObject = Record<string, string>;
 type HeadersObject = Record<string, string>;
 
 /**
- * 带有超时停止的 fetch
- * @param resource 请求的目标
- * @param options 请求中附带的内容
- * @param timeout 请求超时时间（毫秒），默认：30000ms
- * @returns 请求结果
+ * fetch with timeout
+ * @param resource target URL
+ * @param options request init
+ * @param timeout timeout in milliseconds, default: 30000ms
+ * @returns Response
  */
 async function fetchWithTimeout(resource: RequestInfo, options: RequestInit = {}, timeout = 30000) {
 	const controller = new AbortController();
@@ -26,12 +26,12 @@ async function fetchWithTimeout(resource: RequestInfo, options: RequestInit = {}
 }
 
 /**
- * 发送 GET 请求
- * @param url 请求的网址
- * @param requestOptions 请求携带的请求标头
- * @param headerOptions 请求携带的 Header 内容
- * @param timeout 请求超时时间（毫秒），默认：30000ms
- * @returns 请取结果
+ * Send GET request
+ * @param url request URL
+ * @param requestOptions request options (e.g., credentials)
+ * @param headerOptions headers
+ * @param timeout timeout in milliseconds, default: 30000ms
+ * @returns JSON result
  */
 export async function GET(url: string, requestOptions: RequestObject = {}, headerOptions: HeadersObject = {}, timeout?: number): Promise<unknown> {
 	try {
@@ -48,13 +48,13 @@ export async function GET(url: string, requestOptions: RequestObject = {}, heade
 }
 
 /**
- * 发送 POST 请求
- * @param url 请求的网址
- * @param body 请求的 body 内容
- * @param requestOptions 请求携带的请求标头
- * @param headerOptions 请求携带的 Header 内容
- * @param timeout 请求超时时间（毫秒），默认：30000ms
- * @returns 请求结果
+ * Send POST request
+ * @param url request URL
+ * @param body request body
+ * @param requestOptions request options (e.g., credentials)
+ * @param headerOptions headers
+ * @param timeout timeout in milliseconds, default: 30000ms
+ * @returns JSON result
  */
 export async function POST(url: string, body: unknown, requestOptions: RequestObject = {}, headerOptions: HeadersObject = {}, timeout?: number): Promise<unknown> {
 	try {
@@ -76,13 +76,13 @@ export async function POST(url: string, body: unknown, requestOptions: RequestOb
 }
 
 /**
- * 发送 DELETE 请求
- * @param url 请求的网址
- * @param body 请求的 body 内容
- * @param requestOptions 请求携带的请求标头
- * @param headerOptions 请求携带的 Header 内容
- * @param timeout 请求超时时间（毫秒），默认：30000ms
- * @returns 请求结果
+ * Send DELETE request
+ * @param url request URL
+ * @param body request body
+ * @param requestOptions request options (e.g., credentials)
+ * @param headerOptions headers
+ * @param timeout timeout in milliseconds, default: 30000ms
+ * @returns JSON result
  */
 export async function DELETE(url: string, body: unknown, requestOptions: RequestObject = {}, headerOptions: HeadersObject = {}, timeout?: number): Promise<unknown> {
 	try {
