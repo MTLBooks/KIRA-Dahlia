@@ -298,7 +298,7 @@ export type AdminGetUserRolesByUidResponseDto = {
 /**
  * 管理员使用 UUID 更新用户身份
  */
-type AdminUpdateUserRoleByUUID = {
+export type AdminUpdateUserRoleByUUID = {
 	/** 要被更新身份的用户的 UUID，不带有 UID */
 	uuid: string;
 	uid: never;
