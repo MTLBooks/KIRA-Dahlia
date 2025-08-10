@@ -28,3 +28,6 @@ desktop.ini
 
 # Real-time generated files
 src/types/auto-*.d.ts
+
+#env
+.env
