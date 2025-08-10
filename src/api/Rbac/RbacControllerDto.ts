@@ -296,13 +296,13 @@ export type AdminGetUserRolesByUidResponseDto = {
 };
 
 /**
- * 管理员使用 UUID 更新用户身份
+ * Admin updates user roles using UUID
  */
 export type AdminUpdateUserRoleByUUID = {
-	/** 要被更新身份的用户的 UUID，不带有 UID */
+	/** UUID of the user whose roles will be updated; UID must not be provided */
 	uuid: string;
 	uid: never;
-	/** 新的身份 */
+	/** New roles to set */
 	newRoles: string[];
 };
 
