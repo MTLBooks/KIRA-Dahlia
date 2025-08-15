@@ -14,16 +14,15 @@
 	},
 	"homepage": "https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-Lycoris#readme",
 	"scripts": {
-		"dev-nobackend": "cross-env VITE_BACKEND_URI=none vite --host",
-		"dev-local": "cross-env VITE_BACKEND_URI=https://localhost:9999 vite --host",
-		"dev-stg-demo": "cross-env VITE_BACKEND_URI=https://stg-rosales.kirafile.com vite --host",
-		"dev-prod-demo": "cross-env VITE_BACKEND_URI=https://rosales.kirakira.moe vite --host",
-		"build": "vue-tsc -b && vite build",
+		"dev": "vite --host",
+		"generate-types": "vite build --mode production --emptyOutDir false",
+		"build": "pnpm run generate-types && vue-tsc -b && vite build",
 		"preview": "vite preview"
 	},
 	"dependencies": {
 		"highlight.js": "^11.11.1",
 		"lodash-es": "^4.17.21",
+		"vite-plugin-svg-icons": "^2.0.1",
 		"vue": "^3.5.13"
 	},
 	"devDependencies": {

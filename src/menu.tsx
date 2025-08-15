@@ -7,102 +7,95 @@ interface MenuItem {
 	children?: MenuItem[];
 }
 
-const selfUserInfo = noBackend ? null! : await getSelfUserInfo(undefined, false); // 仅获取数据，不修改 pinia
+const selfUserInfo = noBackend ? null! : await getSelfUserInfo(undefined, false); // fetch only, don't update pinia
 
 const menu: MenuItem[] = [
 	{
-		label: "仪表盘",
+		label: "Dashboard",
 		to: "/",
 		key: "",
 		icon: "dashboard",
 	},
 	{
-		label: "用户",
+		label: "Users",
 		key: "user",
 		icon: "group",
 		children: [
 			{
-				label: "用户管理",
+				label: "Manage",
 				key: "manage",
 				icon: "manageAccounts",
 			},
 			{
-				label: "最近更改",
+				label: "Recently Changed",
 				key: "recent",
 				icon: "history",
 			},
 			{
-				label: "用户封禁",
+				label: "Blocked",
 				key: "block",
 				icon: "block",
 			},
 		],
 	},
 	{
-		label: "视频",
-		key: "video",
-		icon: "videoLibrary",
+		label: "Novels",
+		key: "novel",
+		icon: "menuBook",
 		children: [
-			{
-				label: "视频管理",
-				key: "manage",
-				icon: "videoSettings",
-			},
-			{
-				label: "审核视频",
-				key: "pending-review",
-				icon: "approval",
-			},
+			{ label: "Manage", key: "manage", icon: "libraryBooks" },
+			{ label: "Chapters", key: "chapter", icon: "article" },
+			{ label: "Reading Lists", key: "reading-list", icon: "playlistAdd" },
+			{ label: "Comment Moderation", key: "comment-moderation", icon: "comment" },
 		],
 	},
 	{
-		label: "标签",
-		key: "tag",
-		icon: "sell",
+		label: "Taxonomy",
+		key: "taxonomy",
+		icon: "category",
 		children: [
-			{
-				label: "标签管理",
-				key: "manage",
-				icon: "sell",
-			},
-			{
-				label: "最近更改",
-				key: "recent",
-				icon: "history",
-			},
+			{ label: "Tags", key: "tag", icon: "sell" },
+			{ label: "Genres", key: "genre", icon: "style" },
 		],
 	},
 	{
-		label: "RBAC 管理",
+		label: "RBAC",
 		key: "rbac",
 		icon: "shield",
 		shown: checkUserRole(["root", "developer"], selfUserInfo),
 		children: [
 			{
-				label: "API 路径",
+				label: "API Paths",
 				key: "api-path",
 				icon: "api",
 			},
 			{
-				label: "身份",
+				label: "Roles",
 				key: "role",
 				icon: "badge",
 			},
 			{
-				label: "用户身份",
+				label: "User Roles",
 				key: "user-roles",
 				icon: "person",
 			},
 		],
 	},
 	{
-		label: "预生产环境密钥",
+		label: "Reports",
+		to: "/report/manage",
+		key: "report",
+		icon: "report",
+		shown: checkUserRole(["root", "developer"], selfUserInfo),
+	},
+	{
+		label: "Staging Secrets",
 		key: "stg-secret",
 		icon: "key",
 		shown: checkUserRole(["root", "developer"], selfUserInfo),
 	},
 	{
-		label: "关于",
+		label: "About",
 		key: "about",
 		icon: "info",
 	},

@@ -1,11 +1,11 @@
 /**
- * 根据当前环境返回正确的后端地址
- * @returns 正确的后端地址。
+ * Return the correct backend base URL according to current environment
+ * @returns Correct backend base URL.
  */
 export default function getCorrectUri(): string {
 	/**
-	 * 读取环境变量中 VITE_BACKEND_URI 的值，作为后端 API 的 URI
-	 * 如果 VITE_BACKEND_URI 的值为 none，则返回空字符串，KIRAKRIA-Lycoris 将会以无后端模式启动
+	 * Read VITE_BACKEND_URI from env as the backend API base URL.
+	 * If VITE_BACKEND_URI equals 'none', return an empty string so KIRAKIRA-Lycoris runs without backend.
 	 */
 	try {
 		const backendUriInput = import.meta.env.VITE_BACKEND_URI;
@@ -32,5 +32,5 @@ export default function getCorrectUri(): string {
 	}
 }
 
-export const backendUri = getCorrectUri(); // 后端 API URI
-export const noBackend = !backendUri; // 是否为无后端模式
+export const backendUri = getCorrectUri(); // Backend API URI
+export const noBackend = !backendUri; // Is running without backend

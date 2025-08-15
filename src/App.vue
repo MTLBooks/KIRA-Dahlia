@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { NThemeEditor, zhCN, dateZhCN, type GlobalThemeOverrides } from "naive-ui";
+	import { NThemeEditor, enUS, dateEnUS, type GlobalThemeOverrides } from "naive-ui";
 	import menuOptions from "./menu";
 	import hljs from "highlight.js/lib/core";
 	import powershell from "highlight.js/lib/languages/powershell";
@@ -36,8 +36,8 @@
 		:theme
 		:themeOverrides
 		:hljs="hljs"
-		:locale="zhCN"
-		:dateLocale="dateZhCN"
+		:locale="enUS"
+		:dateLocale="dateEnUS"
 	>
 		<NMessageProvider>
 			<NDialogProvider>
@@ -54,7 +54,7 @@
 							/>
 							<NFlex class="items-center shrink-0">
 								<NFlex class="items-center gap-1.5">
-									<!-- TODO: 头像的链接计算... 要根据生产环境还是测试环境计算吗？ -->
+									<!-- TODO: According to production environment or test environment calculation？ -->
 									<NAvatar round :size="20" />
 									<span>{{ selfUserInfoStore.userNickname }}</span>
 									<span class="text-slate-500">@{{ selfUserInfoStore.username }}</span>
