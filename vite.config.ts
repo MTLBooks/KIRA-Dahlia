@@ -11,7 +11,6 @@ import fs from "fs";
 import htmlMinifier from "vite-plugin-html-minifier";
 import naiveUIJson from "naive-ui/web-types.json" with { type: "json" };
 const naiveUIComponents = naiveUIJson.contributions.html["vue-components"].map(component => component.name);
-
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
 	const isDevelopment = mode === "development";
@@ -118,7 +117,10 @@ export default defineConfig(({ mode }) => {
 			jsxFragment: "Fragment",
 		},
 		server: {
-			https: undefined,
+			https: isDevelopment ? {
+				cert: fs.readFileSync("./ssl/cert.pem"),
+				key: fs.readFileSync("./ssl/key.pem"),
+			} : undefined,
 		},
 	};
 });
