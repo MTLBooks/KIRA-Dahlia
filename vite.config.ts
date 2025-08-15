@@ -118,10 +118,7 @@ export default defineConfig(({ mode }) => {
 			jsxFragment: "Fragment",
 		},
 		server: {
-			https: isDevelopment ? {
-				cert: fs.readFileSync("./ssl/cert.pem"),
-				key: fs.readFileSync("./ssl/key.pem"),
-			} : undefined,
+			https: undefined,
 		},
 	};
 });

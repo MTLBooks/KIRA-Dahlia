@@ -12,6 +12,7 @@ async function requestLogin() {
 	if (!email && !password) {
 		console.error("Please enter email and password to log in");
 		alert("Please enter email and password to log in");
+		return;
 	}
 
 	const passwordHash = await generateHash(password.value);
@@ -21,9 +22,23 @@ async function requestLogin() {
 		clientOtp: clientOtp.value,
 	};
 
-	const loginResult = await userLogin(userLoginRequest);
-	if (loginResult.success && loginResult.UUID)
-		location.reload(); // Refresh page after successful login...
+	try {
+		const loginResult = await userLogin(userLoginRequest);
+		if (loginResult.success && loginResult.UUID) {
+			// After successful login, fetch user info to update the store
+			await getSelfUserInfo(undefined, true);
+			// Clear the form
+			email.value = "";
+			password.value = "";
+			clientOtp.value = "";
+		} else {
+			console.error("Login failed:", loginResult.message);
+			alert("Login failed: " + (loginResult.message || "Unknown error"));
+		}
+	} catch (error) {
+		console.error("Login error:", error);
+		alert("Login error: " + (error as Error).message);
+	}
 }
 
 /**

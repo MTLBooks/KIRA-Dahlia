@@ -39,37 +39,23 @@ const menu: MenuItem[] = [
 		],
 	},
 	{
-		label: "Videos",
-		key: "video",
-		icon: "videoLibrary",
+		label: "Novels",
+		key: "novel",
+		icon: "menuBook",
 		children: [
-			{
-				label: "Manage",
-				key: "manage",
-				icon: "videoSettings",
-			},
-			{
-				label: "Pending Review",
-				key: "pending-review",
-				icon: "approval",
-			},
+			{ label: "Manage", key: "manage", icon: "libraryBooks" },
+			{ label: "Chapters", key: "chapter", icon: "article" },
+			{ label: "Reading Lists", key: "reading-list", icon: "playlistAdd" },
+			{ label: "Comment Moderation", key: "comment-moderation", icon: "comment" },
 		],
 	},
 	{
-		label: "Tags",
-		key: "tag",
-		icon: "sell",
+		label: "Taxonomy",
+		key: "taxonomy",
+		icon: "category",
 		children: [
-			{
-				label: "Manage",
-				key: "manage",
-				icon: "sell",
-			},
-			{
-				label: "Recently Changed",
-				key: "recent",
-				icon: "history",
-			},
+			{ label: "Tags", key: "tag", icon: "sell" },
+			{ label: "Genres", key: "genre", icon: "style" },
 		],
 	},
 	{
@@ -94,6 +80,13 @@ const menu: MenuItem[] = [
 				icon: "person",
 			},
 		],
+	},
+	{
+		label: "Reports",
+		to: "/report/manage",
+		key: "report",
+		icon: "report",
+		shown: checkUserRole(["root", "developer"], selfUserInfo),
 	},
 	{
 		label: "Staging Secrets",
