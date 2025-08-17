@@ -134,6 +134,7 @@ function saveChapter() {
 function deleteChapter(chapterId: number) {
   if (confirm('Are you sure you want to delete this chapter?')) {
     // TODO: Implement chapter delete API
+    console.log('🗑️ Deleting chapter:', chapterId)
     message.success('Chapter deleted successfully')
     load()
   }
@@ -141,6 +142,7 @@ function deleteChapter(chapterId: number) {
 
 function moveChapter(chapterId: number, direction: 'up' | 'down') {
   // TODO: Implement chapter reordering API
+  console.log(`🔄 Moving chapter ${chapterId} ${direction}`)
   message.success('Chapter order updated')
   load()
 }

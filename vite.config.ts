@@ -15,6 +15,7 @@ const naiveUIComponents = naiveUIJson.contributions.html["vue-components"].map(c
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
 	//const isDevelopment = mode === "development";
+	console.log(mode);
 	/* const env = loadEnv(mode, process.cwd(), ""); */
 	return {
 		plugins: [

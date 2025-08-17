@@ -107,7 +107,7 @@ const tagOptions = computed(() => taxonomyStore.tagOptions)
 const genreOptions = computed(() => taxonomyStore.genreOptions)
 const tagsGenresLoading = computed(() => taxonomyStore.tagsLoading || taxonomyStore.genresLoading)
 
-// Computed properties for current tag and genre names
+/*// Computed properties for current tag and genre names
 const currentTagNames = computed(() => {
   return taxonomyStore.getTagNames(novelEditForm.value.tagIds).join(', ')
 })
@@ -115,6 +115,7 @@ const currentTagNames = computed(() => {
 const currentGenreNames = computed(() => {
   return taxonomyStore.getGenreNames(novelEditForm.value.genreIds).join(', ')
 })
+*/
 
 const columns = computed<DataTableColumns<any>>(() => [
   { 
