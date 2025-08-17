@@ -14,17 +14,40 @@ export const novelDelete = async (payload: { novelId: number }) => {
 	return await POST(`${NOVEL_API}/delete`, payload, { credentials: "include" }) as any;
 };
 
-export const novelSearch = async (params: { q?: string; tagIds?: number[]; genreIds?: number[]; language?: string; status?: string; from?: number; size?: number; sort?: 'recent' | 'popular' } = {}) => {
+// Enhanced search with all parameters
+export const searchNovels = async (params: { q?: string; tagIds?: number[]; genreIds?: number[]; language?: string; status?: string; approvalStatus?: string; source?: number[]; from?: number; size?: number; sort?: 'recent' | 'popular' } = {}) => {
 	const qs = new URLSearchParams();
 	if (params.q) qs.set('q', params.q);
 	if (params.tagIds?.length) qs.set('tagIds', params.tagIds.join(','));
 	if (params.genreIds?.length) qs.set('genreIds', params.genreIds.join(','));
 	if (params.language) qs.set('language', params.language);
 	if (params.status) qs.set('status', params.status);
+	if (params.approvalStatus) qs.set('approvalStatus', params.approvalStatus);
+	if (params.source?.length) qs.set('source', params.source.join(','));
 	if (params.from != null) qs.set('from', String(params.from));
 	if (params.size != null) qs.set('size', String(params.size));
 	if (params.sort) qs.set('sort', params.sort);
 	return await GET(`${NOVEL_API}/search?${qs.toString()}`) as any;
+};
+
+// Legacy search method (keeping for backward compatibility)
+export const novelSearch = async (params: { q?: string; tagIds?: number[]; genreIds?: number[]; language?: string; status?: string; approvalStatus?: string; from?: number; size?: number; sort?: 'recent' | 'popular' } = {}) => {
+	return await searchNovels(params);
+};
+
+// Get individual novel
+export const getNovel = async (novelId: number) => {
+	return await GET(`${NOVEL_API}/${novelId}`) as any;
+};
+
+// Update novel (enhanced version)
+export const updateNovel = async (payload: { novelId: number; title?: string; description?: string; status?: string; language?: string; source?: number[]; approvalStatus?: string; tagIds?: number[]; genreIds?: number[]; coverImg?: string }) => {
+	return await POST(`${NOVEL_API}/update`, payload, { credentials: "include" }) as any;
+};
+
+// Delete novel (enhanced version)
+export const deleteNovel = async (payload: { novelId: number }) => {
+	return await POST(`${NOVEL_API}/delete`, payload, { credentials: "include" }) as any;
 };
 
 export const novelAddFavorite = async (payload: { novelId: number }) => {

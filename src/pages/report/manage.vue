@@ -77,7 +77,7 @@ onMounted(load)
 		<NSpace align="center" justify="space-between" class="mlb-4">
 			<NFlex align="center">
 				<NSelect v-model:value="statusFilter" :options="[
-					{ label: 'All', value: null },
+					{ label: 'All', value: '' },
 					{ label: 'Open', value: 'open' },
 					{ label: 'Reviewing', value: 'reviewing' },
 					{ label: 'Resolved', value: 'resolved' },

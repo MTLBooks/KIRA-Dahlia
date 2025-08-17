@@ -44,7 +44,7 @@ const menu: MenuItem[] = [
 		icon: "menuBook",
 		children: [
 			{ label: "Manage", key: "manage", icon: "libraryBooks" },
-			{ label: "Chapters", key: "chapter", icon: "article" },
+			{ label: "Chapters", key: "chapter", icon: "article", to: "/chapter" },
 			{ label: "Reading Lists", key: "reading-list", icon: "playlistAdd" },
 			{ label: "Comment Moderation", key: "comment-moderation", icon: "comment" },
 		],
